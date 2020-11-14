@@ -1,0 +1,52 @@
+source("/Users/jcervas/Google Drive/School/UCI/R Functions/Leeper/slopegraph.R")#
+source("/Users/jcervas/Google Drive/School/UCI/R Functions/Leeper/segmentize.R")#
+source("/Users/jcervas/Google Drive/School/UCI/R Functions/Leeper/bump_overlaps.R")#
+data("/Users/jcervas/Google Drive/School/UCI/R Functions/Leeper/states.RData")#
+#
+pdf("/Users/jcervas/Google Drive/School/UCI/R Functions/Leeper/state_order_1790_1870.pdf", width=6, height=6)#
+cols <- `[<-`(rep("black", 37), 7, "red")#
+slopegraph(states, xlim = c(-1, 12), ylim = c(37,0), offset.x = 0.06,#
+           col.lines = cols, col.lab = cols, #
+           main = 'Relative Rank of U.S. State Populations, 1790-1870', cex.num=0.5, cex.lab=0.5, x.cex.axis= 0.5)#
+           dev.off()
+source("/Users/jcervas/Google Drive/School/UCI/R Functions/Leeper/slopegraph.R")#
+source("/Users/jcervas/Google Drive/School/UCI/R Functions/Leeper/segmentize.R")#
+source("/Users/jcervas/Google Drive/School/UCI/R Functions/Leeper/bump_overlaps.R")#
+pdf("/Users/jcervas/Google Drive/School/UCI/R Functions/Leeper/state_order_1790_1870.pdf", width=6, height=6)#
+cols <- `[<-`(rep("black", 37), 7, "red")#
+slopegraph(states, xlim = c(-1, 12), ylim = c(37,0), offset.x = 0.06,#
+           col.lines = cols, col.lab = cols, #
+           main = 'Relative Rank of U.S. State Populations, 1790-1870', cex.num=0.5, cex.lab=0.5, x.cex.axis= 0.5)#
+           dev.off()
+states <- data("/Users/jcervas/Google Drive/School/UCI/R Functions/Leeper/states.RData")
+states <- data("https://raw.githubusercontent.com/leeper/slopegraph/master/data/states.RData, https://github.com/leeper/slopegraph/blob/master/data/states.RData")
+data("https://raw.githubusercontent.com/leeper/slopegraph/master/data/states.RData, https://github.com/leeper/slopegraph/blob/master/data/states.RData")
+states <- data("https://github.com/leeper/slopegraph/blob/master/data/states.RData")
+data("https://github.com/leeper/slopegraph/blob/master/data/states.RData")
+load("/Users/jcervas/Downloads/states (2).RData")
+states <- load("https://github.com/leeper/slopegraph/blob/master/data/states.RData")
+states <- load("/Users/jcervas/Google Drive/School/UCI/R Functions/Leeper/states.RData")
+source("/Users/jcervas/Google Drive/School/UCI/R Functions/Leeper/slopegraph.R")#
+source("/Users/jcervas/Google Drive/School/UCI/R Functions/Leeper/segmentize.R")#
+source("/Users/jcervas/Google Drive/School/UCI/R Functions/Leeper/bump_overlaps.R")#
+states <- load("/Users/jcervas/Google Drive/School/UCI/R Functions/Leeper/states.RData")#
+#
+pdf("/Users/jcervas/Google Drive/School/UCI/R Functions/Leeper/state_order_1790_1870.pdf", width=6, height=6)#
+cols <- `[<-`(rep("black", 37), 7, "red")#
+slopegraph(states, xlim = c(-1, 12), ylim = c(37,0), offset.x = 0.06,#
+           col.lines = cols, col.lab = cols, #
+           main = 'Relative Rank of U.S. State Populations, 1790-1870', cex.num=0.5, cex.lab=0.5, x.cex.axis= 0.5)#
+           dev.off()
+head(states)
+load("/Users/jcervas/Downloads/states (3).RData")
+source("/Users/jcervas/Google Drive/School/UCI/R Functions/Leeper/slopegraph.R")#
+source("/Users/jcervas/Google Drive/School/UCI/R Functions/Leeper/segmentize.R")#
+source("/Users/jcervas/Google Drive/School/UCI/R Functions/Leeper/bump_overlaps.R")#
+load("/Users/jcervas/Google Drive/School/UCI/R Functions/Leeper/states.RData")#
+#
+pdf("/Users/jcervas/Google Drive/School/UCI/R Functions/Leeper/state_order_1790_1870.pdf", width=6, height=6)#
+cols <- `[<-`(rep("black", 37), 7, "red")#
+slopegraph(states, xlim = c(-1, 12), ylim = c(37,0), offset.x = 0.06,#
+           col.lines = cols, col.lab = cols, #
+           main = 'Relative Rank of U.S. State Populations, 1790-1870', cex.num=0.5, cex.lab=0.5, x.cex.axis= 0.5)#
+           dev.off()

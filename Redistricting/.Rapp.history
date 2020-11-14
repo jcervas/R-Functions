@@ -1,0 +1,829 @@
+?writeORG
+??writeOGR
+writeOGR(sumter.blk.shp, dsn="/Users/cervas/Downloads", "GeoJSON", driver="GeoJSON")
+writeOGR(sumter.blk.shp, dsn="/Users/cervas/Downloads", "sumter.blk.shp", driver="GeoJSON")
+writeOGR(sumter.blk.shp, dsn="/Users/cervas/Downloads", "sumter.blk.shp", driver="ESRI Shapefile")
+plot(sumter.blk.shp)
+writeOGR(sumter.blk.shp, dsn="/Users/cervas/Downloads", "sumter.blk.shp", driver="ESRI Shapefile")
+key <- "7865f31139b09e17c5865a59c240bdf07f9f44fd"#
+    proj <- "+proj=tmerc +lat_0=30 +lon_0=-82.16666666666667 +k=0.9999 +x_0=200000.0001016002 +y_0=0 +ellps=GRS80 +datum=NAD83 +to_meter=0.3048006096012192 +no_defs" #https://spatialreference.org/ref/epsg/2239/#
+    url <- "http://api.census.gov/data/2010/sf1?"#
+sumterSF1_2010 <- getCensus(name="dec/sf1", vintage=2010, vars=c("P001001", "P003003"), region="block:*", regionin="state:13+county:261+tract:*", key=key)#
+states <- readOGR("/Users/cervas/Google Drive/Data/GIS/Shapefiles/States/tl_2017_us_state.shp")#
+    ga.st <- states[states@data$STATEFP %in% "13",]#
+counties <- readOGR("/Users/cervas/Google Drive/Data/GIS/Shapefiles/Counties/tl_2017_us_county.shp")#
+    ga.cty <- counties[counties@data$STATEFP %in% "13",]#
+    sumter.cty <- ga.cty[ga.cty@data$NAME %in% "Sumter",]
+sumter.blk.shp <- blocks(state="ga", county="261", year="2010")
+colnames(sumter.blk.shp@data) <- c("state", "county", "tract", "block", "GEOID10", "NAME10", "MTFCC10", "UR10", "UACE10", "UATYP10", "FUNCSTAT10", "ALAND10", "AWATER10", "INTPTLAT10", "INTPTLON10", "COUNTYFP", "STATEFP")
+sumter.blk.shp@data <- full_join(sumter.blk.shp@data, sumterSF1_2010)
+# sumter <- sumter[sumter@data$P001001 > 0,]
+sumter.blk.shp@data$aframerper <- round(((sumter.blk.shp@data$P003003)/(sumter.blk.shp@data$P001001)) * 100, d=2)
+sumter.blk.shp@data$aframerper[is.na(sumter.blk.shp@data$aframerper)] <- 0
+writeOGR(sumter.blk.shp, dsn="/Users/cervas/Downloads", "sumter.blk.shp", driver="ESRI Shapefile")
+sumter.blk.shp <- blocks(state="ga", county="261", year="2010")
+colnames(sumter.blk.shp@data) <- c("state", "county", "tract", "block", "GEOID10", "NAME10", "MTFCC10", "UR10", "UACE10", "UATYP10", "FUNCSTAT10", "ALAND10", "AWATER10", "INTPTLAT10", "INTPTLON10", "COUNTYFP", "STATEFP")
+sumter.blk.shp@data <- full_join(sumter.blk.shp@data, sumterSF1_2010)
+# sumter <- sumter[sumter@data$P001001 > 0,]
+sumter.blk.shp@data$aframerper <- round(((sumter.blk.shp@data$P003003)/(sumter.blk.shp@data$P001001)) * 100, d=2)
+writeOGR(sumter.blk.shp, dsn="/Users/cervas/Downloads", "sumter.blk.shp", driver="ESRI Shapefile")
+sumter.blk.shp <- blocks(state="ga", county="261", year="2010")
+colnames(sumter.blk.shp@data) <- c("state", "county", "tract", "block", "GEOID10", "NAME10", "MTFCC10", "UR10", "UACE10", "UATYP10", "FUNCSTAT10", "ALAND10", "AWATER10", "INTPTLAT10", "INTPTLON10", "COUNTYFP", "STATEFP")
+sumter.blk.shp@data <- full_join(sumter.blk.shp@data, sumterSF1_2010)
+# sumter <- sumter[sumter@data$P001001 > 0,]
+sumter.blk.shp@data$aframerper <- (sumter.blk.shp@data$P003003)/(sumter.blk.shp@data$P001001))
+# sumter.blk.shp@data$aframerper[is.na(sumter.blk.shp@data$aframerper)] <- 0
+sumter.blk.shp@data$aframerper <- ((sumter.blk.shp@data$P003003)/(sumter.blk.shp@data$P001001))
+# sumter.blk.shp@data$aframerper[is.na(sumter.blk.shp@data$aframerper)] <- 0
+writeOGR(sumter.blk.shp, dsn="/Users/cervas/Downloads", "sumter.blk.shp", driver="ESRI Shapefile")
+sumter.blk.shp <- spTransform(blocks(state="ga", county="261", year="2010"), CRS(proj))
+colnames(sumter.blk.shp@data) <- c("state", "county", "tract", "block", "GEOID10", "NAME10", "MTFCC10", "UR10", "UACE10", "UATYP10", "FUNCSTAT10", "ALAND10", "AWATER10", "INTPTLAT10", "INTPTLON10", "COUNTYFP", "STATEFP")
+sumter.blk.shp@data <- full_join(sumter.blk.shp@data, sumterSF1_2010)
+# sumter <- sumter[sumter@data$P001001 > 0,]
+sumter.blk.shp@data$aframerper <- ((sumter.blk.shp@data$P003003)/(sumter.blk.shp@data$P001001))
+# sumter.blk.shp@data$aframerper[is.na(sumter.blk.shp@data$aframerper)] <- 0
+writeOGR(sumter.blk.shp, dsn="/Users/cervas/Downloads", "sumter.blk.shp", driver="ESRI Shapefile")
+writeOGR(sumter.blk.shp, dsn="/Users/cervas/Downloads", "sumter.blk", driver="ESRI Shapefile")
+o
+proj <- "+proj=tmerc +lat_0=30 +lon_0=-82.16666666666667 +k=0.9999 +x_0=200000.0001016002 +y_0=0 +ellps=GRS80 +datum=NAD83 +to_meter=0.3048006096012192 +no_defs" #https://spatialreference.org/ref/epsg/2239/
+url <- "http://api.census.gov/data/2010/sf1?"
+sumterSF1_2010 <- getCensus(name="dec/sf1", vintage=2010, vars=c("P001001", "P003003"), region="block:*", regionin="state:13+county:261+tract:*", key=key)
+sumter.blk.shp <- spTransform(blocks(state="ga", county="261", year="2010"), CRS(proj))
+colnames(sumter.blk.shp@data) <- c("state", "county", "tract", "block", "GEOID10", "NAME10", "MTFCC10", "UR10", "UACE10", "UATYP10", "FUNCSTAT10", "ALAND10", "AWATER10", "INTPTLAT10", "INTPTLON10", "COUNTYFP", "STATEFP")
+sumter.blk.shp@data <- full_join(sumter.blk.shp@data, sumterSF1_2010)
+# sumter <- sumter[sumter@data$P001001 > 0,]
+sumter.blk.shp@data$aframerper <- as.numeric((sumter.blk.shp@data$P003003)/(sumter.blk.shp@data$P001001))
+writeOGR(sumter.blk.shp, dsn="/Users/cervas/Downloads", "sumter.blk", driver="ESRI Shapefile")
+?writeOGR
+sumter.blk.shp <- spTransform(blocks(state="ga", county="261", year="2010"), CRS(proj))#
+    colnames(sumter.blk.shp@data) <- c("state", "county", "tract", "block", "GEOID10", "NAME10", "MTFCC10", "UR10", "UACE10", "UATYP10", "FUNCSTAT10", "ALAND10", "AWATER10", "INTPTLAT10", "INTPTLON10", "COUNTYFP", "STATEFP")#
+    sumter.blk.shp@data <- full_join(sumter.blk.shp@data, sumterSF1_2010)#
+    # sumter <- sumter[sumter@data$P001001 > 0,]#
+    sumter.blk.shp@data$aframerper <- as.numeric((sumter.blk.shp@data$P003003)/(sumter.blk.shp@data$P001001))#
+sumter.blk.shp@data$aframerper[is.na(sumter.blk.shp@data$aframerper)] <- 0#
+writeOGR(sumter.blk.shp, dsn="/Users/cervas/Downloads", "sumter.blk.shp", driver="ESRI Shapefile")
+writeOGR(sumter.blk.shp, dsn="/Users/cervas/Downloads", "sumter.blk.shp", driver="ESRI Shapefile")
+sumter.blk.shp@data
+sumter.blk.shp@data@ aframerper
+sumter.blk.shp@data@aframerper
+sumter.blk.shp@data$aframerper <- as.numeric((sumter.blk.shp@data$P003003)/(sumter.blk.shp@data$P001001))
+sumter.blk.shp@data@aframerper
+sumter.blk.shp@data$aframerper
+str(sumter.blk.shp@data$aframerper)
+sumter.blk.shp@data$aframerper[is.na(sumter.blk.shp@data$aframerper)]
+writeOGR(sumter.blk.shp, dsn="/Users/cervas/Downloads", "sumter.blk.shp", driver="ESRI Shapefile")
+sumter.blk.shp <- blocks(state="ga", county="261", year="2010")
+colnames(sumter.blk.shp@data) <- c("state", "county", "tract", "block", "GEOID10", "NAME10", "MTFCC10", "UR10", "UACE10", "UATYP10", "FUNCSTAT10", "ALAND10", "AWATER10", "INTPTLAT10", "INTPTLON10", "COUNTYFP", "STATEFP")
+sumter.blk.shp@data <- full_join(sumter.blk.shp@data, sumterSF1_2010)
+# sumter <- sumter[sumter@data$P001001 > 0,]
+sumter.blk.shp@data$aframerper <- as.numeric((sumter.blk.shp@data$P003003)/(sumter.blk.shp@data$P001001))
+sumter.blk.shp@data$aframerper[is.na(sumter.blk.shp@data$aframerper)] <- 0
+writeOGR(sumter.blk.shp, dsn="/Users/cervas/Downloads", "sumter.blk.shp", driver="ESRI Shapefile")
+?writeOGR
+writeOGR(sumter.blk.shp, dsn="/Users/cervas/Downloads", driver="ESRI Shapefile")
+writeOGR(sumter.blk.shp, dsn="/Users/cervas/Downloads/sumter.blk.shp", driver="ESRI Shapefile")
+writeOGR(sumter.blk.shp, dsn="/Users/cervas/Downloads", "sumter.blk.shp", driver="ESRI Shapefile", drop\_unsupported\_fields=T)
+writeOGR(sumter.blk.shp, dsn="/Users/cervas/Downloads", "sumter.blk.shp", driver="ESRI Shapefile", drop_unsupported_fields=T)
+writeOGR(sumter.blk.shp, dsn="/Users/cervas/Downloads", "sumter.blk.shp", driver="ESRI Shapefile", drop_unsupported_fields=TRUE)
+writeOGR(sumter.blk.shp, dsn="/Users/cervas/Downloads", "sumter.blk.shp", driver="ESRI Shapefile", stringsAsFactors=F)
+writeOGR(sumter.blk.shp, dsn="/Users/cervas/Downloads", "sumter.blk.shp", driver="ESRI Shapefile", overwrite_layer=T)
+sumter.blk.shp@data$aframerper <- round(as.numeric(100 * (sumter.blk.shp@data$P003003)/(sumter.blk.shp@data$P001001)))
+sumter.blk.shp@data$aframerper[is.na(sumter.blk.shp@data$aframerper)] <- 0
+writeOGR(sumter.blk.shp, dsn="/Users/cervas/Downloads", driver="ESRI Shapefile", overwrite_layer=T)
+writeOGR(sumter.blk.shp, dsn="/Users/cervas/Downloads", layer="sumter.blk.shp", driver="ESRI Shapefile", overwrite_layer=T)
+sum(sumter.blk.shp@data$P001001)
+# Remove all objects just to be safe.#
+            rm(list=ls(all=TRUE))#
+library(maptools)#
+library(spdep)#
+library(tidyverse)#
+library(censusapi)#
+library(redist)#
+library(rgdal)#
+library(sp)#
+library(rgeos)#
+library(tigris)#
+library(cartogram)#
+tigris_cache_dir("/Users/cervas/Downloads")#
+# Restart R#
+options(tigris_use_cache = TRUE)#
+options(stringsAsFactors = FALSE)#
+options(scipen = 999) # Turn off Scientific Notation#
+#
+source("/Users/cervas/Google Drive/School/UCI/R Functions/getCensusApi.R")#
+key <- "7865f31139b09e17c5865a59c240bdf07f9f44fd"#
+setwd("/Users/cervas/Google Drive/School/UCI/R Functions/Redistricting")
+make.map <- function (shapefile, dataframe, Population, by="GEOID") {#
+    baseshape <- shapefile#
+            baseshape$shp@data <- full_join(baseshape$shp@data, dataframe, by=by)#
+            baseshape <- gUnaryUnion(baseshape, id = baseshape$shp@data$district)#
+            baseshape <- spChFIDs(baseshape, row.names(baseshape))#
+            row.names(baseshape) <- as.character(1:length(baseshape))#
+    new.data <- aggregate.data.frame(list(Population=as.numeric(dataframe[,Population])), by=list(district=dataframe$district), FUN=sum)#
+    colnames(new.data) <- c("district", Population)#
+baseshape <- SpatialPolygonsDataFrame(baseshape, new.data)#
+return(baseshape)#
+}
+redist.setup <- function(shp, uniqueid, population, vars, num.dist, ...) #
+    {#
+        redist.out <- NULL#
+        redist.out$shp <- shp#
+        redist.out$adj <- sort.adj(adjlist(shp))#
+        redist.out$GEOID <- as.character(uniqueid)#
+        redist.out$newID <- 1:length(redist.out$adj)#
+        redist.out$id <- 1:length(redist.out$adj)#
+        for (i in 1:length(vars)) #
+            {#
+                redist.out$data[[as.character(vars[i])]] <- shp@data[,vars[i]]#
+            }#
+        redist.out$pop <- redist.out$data[[as.character(population)]]#
+        redist.out$results <- as.list(1:length(redist.out$adj))#
+    # We now want to do our best to keep the maximum number of shape.1 whole, so we must discover how many districts can #
+    # fit inside each of the shape.1 wholly, so we can first set those shape.1. #
+    # Set ideal value to the zero devation population number for each district, ie, [total population] ÷ [# of districts]#
+        redist.out$meta$num.dist <- num.dist#
+        redist.out$meta$geoName <- "Unknown"#
+        redist.out$meta$date <- date()#
+        redist.out$ideal <- round(sum(as.numeric(redist.out$pop), na.rm=T) / redist.out$meta$num.dist, digits=0)#
+        return(redist.out)#
+    }
+# We now create a contiguity list using the poly2nb function with queen set to FALSE (this means point contiguity is not enough)#
+adjlist <- function (shp.file, queen=F)#
+    {#
+            shp.adj <- poly2nb(shp.file, queen = F)#
+            for(i in 1:length(shp.adj))#
+                {#
+                shp.adj[[i]] <- shp.adj[[i]]#
+                }#
+            class(shp.adj) <- "list"#
+            return(shp.adj)#
+    }
+read.shp <- function(x, proj) {#
+    shp <- readOGR(x)#
+    shp <- spTransform(shp, CRS(proj))#
+    return(shp)#
+}
+merge.adj <- function(redist.out, x, y) #
+    {#
+        cat("\nmerge", x, " and ", y, "\n\n")#
+        if (x[!is.na(x)] == y[!is.na(y)]) return(redist.out) #
+        redist.out$adj <- rapply(redist.out$adj, function(w) ifelse(w==y,x,w), how="replace")#
+        redist.out$adj <- lapply(redist.out$adj, function(w) w[!w %in% y])      #
+        redist.out$adj[[x]] <- c(redist.out$adj[[x]], redist.out$adj[[y]])#
+        redist.out$adj[[y]] <- NA#
+        redist.out$adj[[x]] <- unique(redist.out$adj[[x]])#
+#
+        redist.out$pop[[x]] <- redist.out$pop[[x]] + redist.out$pop[[y]]#
+        redist.out$pop[[y]] <- NA#
+                for (i in 1:length(redist.out$data)) #
+            {#
+                redist.out$data[[i]][[x]] <- redist.out$data[[i]][[x]] + redist.out$data[[i]][[y]] #
+                redist.out$data[[i]][[y]] <- NA#
+            }#
+#
+        redist.out$results[[x]] <- c(redist.out$results[[x]], redist.out$results[[y]])#
+        redist.out$results[[y]] <- NA#
+        redist.out$newID[[y]] <- x#
+            cat("Number of Polygons left to combine:", length(redist.out$pop[!is.na(redist.out$pop)]) - redist.out$meta$num.dist, "\n")#
+        redist.out <- single.adj(redist.out)#
+    return(redist.out) #
+    }#
+#
+sample.adj <- function(x, n=1)#
+    {#
+        if (length(x)>1)#
+        {#
+            smp <- sample(x,n)#
+            return(smp)#
+        } else {#
+            return(x[1])#
+        }#
+    }
+single.adj <- function(redist.out) {#
+        sgl.adj <- redist.out$id[sapply(redist.out$adj, function(x) (length(x[!is.na(x)]) == 1))]#
+        while (length(sgl.adj[!is.na(sgl.adj)]) > 0)     #
+            {#
+                w <- sample.adj(sgl.adj)#
+                m <- sample.adj(redist.out$adj[[w]])#
+                redist.out <- merge.adj(redist.out, m, w) # Send to merge.adj function#
+                sgl.adj <- redist.out$id[sapply(redist.out$adj, function(x) (length(x[!is.na(x)]) == 1))]#
+        # cat("Single Adjacencies units left: \n", sgl.adj)#
+            }#
+                return(redist.out)  #
+    }#
+zero.pop <- function(redist.out, x, y) #
+    {#
+        pop.adj <- which(redist.out$pop == 0)#
+        while (length(pop.adj[!is.na(pop.adj)]) > 0)#
+            {#
+                w <- sample.adj(pop.adj, 1)#
+                m <- sample.adj(redist.out$adj[[w]])#
+                redist.out <- merge.adj(redist.out, m, w) # Send to merge.adj function#
+        pop.adj <- which(redist.out$pop == 0)#
+        # cat("Zero-Pop units left: \n", pop.adj)#
+            }#
+        return(redist.out)#
+    }
+sort.adj <- function(x) lapply(x, function(x) sort(unique(x[!is.na(x)])))
+find.match <- function(redist.out)#
+    {#
+        merger <- mergee <- NA  #
+        n.units <- length(redist.out$adj)#
+        new.find <- function(n) sample(1:n.units, 1)#
+        while (is.na(merger))#
+            {#
+                merger <- new.find(n)#
+            }#
+                mergee <- sample.adj(redist.out$adj[[merger]])  #
+        return(c(merger, mergee))#
+    }#
+poly.label <- function (x) #
+    {#
+        tmp.data <-  numeric()#
+        for (k in x@data[,"DISTRICT"]) {#
+            tmp.shp <- x[x@data[,"DISTRICT"]==k,]#
+            tmp.data <- rbind(tmp.data, data.frame(DISTRICT=k, xtext=p$x, ytext=p$y))#
+            }#
+            x@data <- left_join(x@data, tmp.data, by="DISTRICT")#
+        return(invisible(x))#
+    }
+district <- function(redist.out) #
+    {#
+        redist.out <- single.adj(redist.out)#
+        redist.out <- zero.pop(redist.out)  #
+        # a <- new.check(a)#
+    while (length(redist.out$pop[!is.na(redist.out$pop)]) != redist.out$meta$num.dist) #
+        {#
+        redist.out <- single.adj(redist.out)#
+# Now we want to randomize which geographies get combined. #
+# We then merge the closest k geography, which attempts to increase compactness. #
+    b <- find.match(redist.out)#
+    while (is.na(b[2])) b <- find.match(redist.out)#
+            redist.out <- merge.adj(redist.out, b[1], b[2]) # Send to merge.adj function#
+#
+        }#
+        return(redist.out)#
+    }
+agg.new <- function(redist.out)#
+    {#
+        baseshape <- redist.out$shp#
+        pop <- redist.out$pop[!is.na(redist.out$pop)]#
+        redist.out$shp$DISTRICT <- rownames(redist.out$shp@data)#
+    for (d in 1:length(redist.out$results[!is.na(redist.out$results)]) )#
+        {#
+            dis <- redist.out$results[!is.na(redist.out$results)][[d]][1]#
+            to.merge.adj <- redist.out$results[!is.na(redist.out$results)][[d]]#
+            redist.out$shp@data$DISTRICT[redist.out$shp@data$DISTRICT %in% to.merge.adj] <- dis#
+        }#
+            agg.data <- data.frame(DISTRICT = unique(redist.out$shp@data$DISTRICT), pop)#
+                row.names(agg.data) <- as.character(1:length(agg.data[,1]))#
+                redist.out$shp <- gUnaryUnion(redist.out$shp, id = redist.out$shp@data$DISTRICT)#
+                redist.out$shp <- spChFIDs(redist.out$shp, row.names(redist.out$shp))#
+                row.names(redist.out$shp) <- as.character(1:length(redist.out$shp))#
+                redist.out$shp <- SpatialPolygonsDataFrame(redist.out$shp, agg.data)#
+                redist.out$shp@data$DISTRICT <- 1:length(redist.out$shp@data$DISTRICT)#
+            redist.out$data <- lapply(redist.out$data, function(w) w[!is.na(w)])#
+            return(redist.out)#
+    }
+sumter.blk.shp@data
+blocks <- readOGR("/Users/cervas/Google Drive/Projects/Sumter County/GIS/tl_2010_13261_tabblock10", "tl_2010_13261_tabblock10")
+blocks@data <- blocks@data[,c(1:5)]
+colnames(blocks@data) <- c("state", "county", "tract", "block", "GEOID10")
+sumterSF1_2010 <- getCensus(name="dec/sf1", vintage=2010, vars=c("P001001", "P003003"), region="block:*", regionin="state:13+county:261+tract:*", key=key)
+JSON("/Users/cervas/Google Drive/Projects/Sumter County/sumterSF1_2010.json")
+readJSON("/Users/cervas/Google Drive/Projects/Sumter County/sumterSF1_2010.json")
+?json
+??json
+fromJSON("/Users/cervas/Google Drive/Projects/Sumter County/sumterSF1_2010.json")
+library(JSON)
+library(jsonlite)
+fromJSON("/Users/cervas/Google Drive/Projects/Sumter County/sumterSF1_2010.json")
+sumterSF1_2010 <- fromJSON("/Users/cervas/Google Drive/Projects/Sumter County/sumterSF1_2010.json")
+sumterSF1_2010
+head(sumterSF1_2010)
+?readJSON
+fromJSON
+?fromJSON
+names(sumterSF1_2010) <- sumterSF1_2010[1,]
+sumterSF1_2010 <- sumterSF1_2010[-1,]
+sumterSF1_2010
+head(sumterSF1_2010)
+sumterSF1_2010 <- fromJSON("/Users/cervas/Google Drive/Projects/Sumter County/sumterSF1_2010.json")
+names(sumterSF1_2010) <- sumterSF1_2010[1,]
+head(sumterSF1_2010)
+colnames(sumterSF1_2010) <- sumterSF1_2010[1,]
+head(sumterSF1_2010)
+sumterSF1_2010 <- sumterSF1_2010[-1,]
+head(sumterSF1_2010)
+colnames(blocks@data) <- c("state", "county", "tract", "block", "GEOID10")
+blocks@data <- full_join(blocks@data, sumterSF1_2010)
+attachLibraries <- c("rgdal", "censusapi", "tigris", "tidyverse", "cartogram", "getcartr#
+    ")
+lapply(attachLibraries, library, character.only = TRUE)
+attachLibraries <- c("rgdal", "censusapi", "tigris", "tidyverse", "cartogram", "getcartr")
+lapply(attachLibraries, library, character.only = TRUE)
+blocks@data <- full_join(blocks@data, sumterSF1_2010)
+head(blocks@data)
+head(sumterSF1_2010)
+?fromJSON
+sumterSF1_2010 <- fromJSON("/Users/cervas/Google Drive/Projects/Sumter County/sumterSF1_2010.json", factor="integer")
+sumterSF1_2010 <- fromJSON("/Users/cervas/Google Drive/Projects/Sumter County/sumterSF1_2010.json", factor='integer')
+sumterSF1_2010 <- getCensus(name="dec/sf1", vintage=2010, vars=c("P001001", "P003003"), region="block:*", regionin="state:13+county:261+tract:*", key=key)
+sumterSF1_2010 <- getCensus(name="dec/sf1", vintage=2010, vars=c("P001001", "P003003"), region="block:*", regionin="state:13+county:261+tract:*", key=key)
+sumterSF1_2010 <- getCensus(name="dec/sf1", vintage=2010, vars=c("P001001", "P003003"), region="block:*", regionin="state:13+county:261+tract:*", key=key)
+sumterSF1_2010 <- getCensus(name="dec/sf1", vintage=2010, vars=c("P001001", "P003003"), region="block:*", regionin="state:13+county:261+tract:*", key=key)
+blk <- as.character(sumterSF1_2010)
+blk
+head(blk)
+head(sumterSF1_2010)
+sumterSF1_2010[,1] <- as.numeric(sumterSF1_2010[,1])
+sumterSF1_2010[,2] <- as.numeric(sumterSF1_2010[,2])
+sumterSF1_2010[,4] <- as.numeric(sumterSF1_2010[,4])
+sumterSF1_2010[,5] <- as.numeric(sumterSF1_2010[,5])
+sumterSF1_2010[,6] <- as.numeric(sumterSF1_2010[,6])
+sumterSF1_2010[,7] <- as.numeric(sumterSF1_2010[,7])
+head(sumterSF1_2010)
+str(sumterSF1_2010)
+sumterSF1_2010[,7] <- as.Numeric(sumterSF1_2010[,7])
+as.numeric(sumterSF1_2010[,7])
+sumterSF1_2010[,7] <- as.numeric(sumterSF1_2010[,7])
+sumterSF1_2010
+head(sumterSF1_2010)
+acs <- fromJSON("https://api.census.gov/data/2017/acs/acs1?get=B01003_001E,NAME&for=state:*&key=7865f31139b09e17c5865a59c240bdf07f9f44fd")
+head(acs)
+?fromJSON
+acs <- fromJSON("https://api.census.gov/data/2017/acs/acs1?get=B01003_001E,NAME&for=state:*&key=7865f31139b09e17c5865a59c240bdf07f9f44fd", header=T)
+acs <- fromJSON("https://api.census.gov/data/2017/acs/acs1?get=B01003_001E,NAME&for=state:*&key=7865f31139b09e17c5865a59c240bdf07f9f44fd", pretty=T)
+acs <- fromJSON("https://api.census.gov/data/2017/acs/acs1?get=B01003_001E,NAME&for=state:*&key=7865f31139b09e17c5865a59c240bdf07f9f44fd", flatten=T)
+head(acs)
+#### apportion(data,  column with state names, data with state pop, number of  seats to be allocated, number of minimum seats per state, minimum number of votes to be awarded any seat)#
+#
+apportion <- function(data, state, pop, seats, autoseats, threshold=0) {#
+#
+    num <- seats#
+#
+    data <- data[complete.cases(data[, pop]), ]#
+    data <- data[data[, pop]> threshold, ]#
+    priority <- seq(1, num + 5, by = 1)#
+#
+    dta <- data.frame(state = rep(data[, state], length(priority)), row.names = NULL)#
+#
+    pri <- length(data[, state]) * length(priority)#
+#
+    dta2 <- data.frame(state = rep(data[, state], autoseats), row.names = NULL)#
+    dta2[, 2] <- 99999999#
+    n <- 1#
+    l <- 0#
+    for (j in 1:length(priority)) {#
+        k <- l + 1#
+        l <- k + length(data[, state]) - 1#
+        multiplier <- 1/(sqrt(n * (n + 1)))#
+#
+        dta[k:l, 2] <- data[, pop] * multiplier#
+#
+        n <- n + 1#
+    }#
+#
+    #dta <- dta[(is.finite(dta[,2])),]#
+    dta <- rbind(dta, dta2)#
+    dta <- dta[order(-dta[, 2]), ]#
+    final <- dta#
+    final <- final[1:num, ]#
+    final[, 3] <- seq(1, num, by = 1)#
+    apportionment <- as.data.frame(table(final[, 1]))#
+    colnames(apportionment) <- c("state", "seats")#
+    return(apportionment)#
+}
+colnames(acs) <- acs[1,]
+acs <- acs[-1]
+head(acs)
+acs <- fromJSON("https://api.census.gov/data/2017/acs/acs1?get=B01003_001E,NAME&for=state:*&key=7865f31139b09e17c5865a59c240bdf07f9f44fd", flatten=T)
+colnames(acs) <- acs[1,]
+head(acs)
+acs <- acs[-1,]
+head(acs)
+acs[,1] <- as.numeric(acs[,1])
+acs
+acs
+apportion(acs, "NAME", "B01003_001E", 435, 1)
+#### apportion(data,  column with state names, data with state pop, number of  seats to be allocated, number of minimum seats per state, minimum number of votes to be awarded any seat)#
+#
+apportion <- function(data, state, pop, seats, autoseats, threshold=0) {#
+#
+    num <- seats#
+    dtapop <- as.numeric(data[, pop])#
+    data <- data[complete.cases(dtapop), ]#
+    data <- data[dtapop > threshold, ]#
+    priority <- seq(1, num + 5, by = 1)#
+#
+    dta <- data.frame(state = rep(data[, state], length(priority)), row.names = NULL)#
+#
+    pri <- length(data[, state]) * length(priority)#
+#
+    dta2 <- data.frame(state = rep(data[, state], autoseats), row.names = NULL)#
+    dta2[, 2] <- 99999999#
+    n <- 1#
+    l <- 0#
+    for (j in 1:length(priority)) {#
+        k <- l + 1#
+        l <- k + length(data[, state]) - 1#
+        multiplier <- 1/(sqrt(n * (n + 1)))#
+#
+        dta[k:l, 2] <- dtapop * multiplier#
+#
+        n <- n + 1#
+    }#
+#
+    #dta <- dta[(is.finite(dta[,2])),]#
+    dta <- rbind(dta, dta2)#
+    dta <- dta[order(-dta[, 2]), ]#
+    final <- dta#
+    final <- final[1:num, ]#
+    final[, 3] <- seq(1, num, by = 1)#
+    apportionment <- as.data.frame(table(final[, 1]))#
+    colnames(apportionment) <- c("state", "seats")#
+    return(apportionment)#
+}
+apportion(acs, "NAME", "B01003_001E", 435, 1)
+acs_est_2017 <- apportion(acs, "NAME", "B01003_001E", 435, 1)
+sf1 <- fromJSON("https://api.census.gov/data/2010/dec/sf1?get=P001001,NAME&for=state:*&key=7865f31139b09e17c5865a59c240bdf07f9f44fd")
+colnames(sf1) <- sf1[1,]
+sf1 <- sf1[-1,]
+dec_2010 <- apportion(sf1, "NAME", "P001001", 435, 1)
+dec_2010
+#### apportion(data,  column with state names, data with state pop, number of  seats to be allocated, number of minimum seats per state, minimum number of votes to be awarded any seat)#
+#
+apportion <- function(data, state, pop, seats, autoseats, threshold=0) {#
+#
+    num <- seats#
+data[, pop] <- as.numeric(data[, pop])#
+    data <- data[complete.cases(data[, pop]), ]#
+    data <- data[data[, pop]> threshold, ]#
+    priority <- seq(1, num + 5, by = 1)#
+#
+    dta <- data.frame(state = rep(data[, state], length(priority)), row.names = NULL)#
+#
+    pri <- length(data[, state]) * length(priority)#
+#
+    dta2 <- data.frame(state = rep(data[, state], autoseats), row.names = NULL)#
+    dta2[, 2] <- 99999999#
+    n <- 1#
+    l <- 0#
+    for (j in 1:length(priority)) {#
+        k <- l + 1#
+        l <- k + length(data[, state]) - 1#
+        multiplier <- 1/(sqrt(n * (n + 1)))#
+#
+        dta[k:l, 2] <- data[, pop] * multiplier#
+#
+        n <- n + 1#
+    }#
+#
+    #dta <- dta[(is.finite(dta[,2])),]#
+    dta <- rbind(dta, dta2)#
+    dta <- dta[order(-dta[, 2]), ]#
+    final <- dta#
+    final <- final[1:num, ]#
+    final[, 3] <- seq(1, num, by = 1)#
+    apportionment <- as.data.frame(table(final[, 1]))#
+    colnames(apportionment) <- c("state", "seats")#
+    return(apportionment)#
+}
+dec_2010 <- apportion(sf1, "NAME", "P001001", 435, 1)
+str(sf1_2010)
+str(dec_2010)
+str(sf1)
+#### apportion(data,  column with state names, data with state pop, number of  seats to be allocated, number of minimum seats per state, minimum number of votes to be awarded any seat)#
+#
+apportion <- function(data, state, pop, seats, autoseats, threshold=0) {#
+#
+    num <- seats#
+p <- as.numeric(data[, pop])#
+    data <- data[complete.cases(p), ]#
+    pop <- as.numeric(data[, pop])#
+    data <- pop > threshold, ]#
+    priority <- seq(1, num + 5, by = 1)#
+#
+    dta <- data.frame(state = rep(data[, state], length(priority)), row.names = NULL)#
+#
+    pri <- length(data[, state]) * length(priority)#
+#
+    dta2 <- data.frame(state = rep(data[, state], autoseats), row.names = NULL)#
+    dta2[, 2] <- 99999999#
+    n <- 1#
+    l <- 0#
+    for (j in 1:length(priority)) {#
+        k <- l + 1#
+        l <- k + length(data[, state]) - 1#
+        multiplier <- 1/(sqrt(n * (n + 1)))#
+#
+        dta[k:l, 2] <- pop * multiplier#
+#
+        n <- n + 1#
+    }#
+#
+    #dta <- dta[(is.finite(dta[,2])),]#
+    dta <- rbind(dta, dta2)#
+    dta <- dta[order(-dta[, 2]), ]#
+    final <- dta#
+    final <- final[1:num, ]#
+    final[, 3] <- seq(1, num, by = 1)#
+    apportionment <- as.data.frame(table(final[, 1]))#
+    colnames(apportionment) <- c("state", "seats")#
+    return(apportionment)#
+}
+#### apportion(data,  column with state names, data with state pop, number of  seats to be allocated, number of minimum seats per state, minimum number of votes to be awarded any seat)#
+#
+apportion <- function(data, state, pop, seats, autoseats, threshold=0) {#
+#
+    num <- seats#
+p <- as.numeric(data[, pop])#
+    data <- data[complete.cases(p), ]#
+    pop <- as.numeric(data[, pop])#
+    data <- pop > threshold, ]#
+    priority <- seq(1, num + 5, by = 1)#
+#
+    dta <- data.frame(state = rep(data[, state], length(priority)), row.names = NULL)#
+#
+    pri <- length(data[, state]) * length(priority)#
+#
+    dta2 <- data.frame(state = rep(data[, state], autoseats), row.names = NULL)#
+    dta2[, 2] <- 99999999#
+    n <- 1#
+    l <- 0#
+    for (j in 1:length(priority)) {#
+        k <- l + 1#
+        l <- k + length(data[, state]) - 1#
+        multiplier <- 1/(sqrt(n * (n + 1)))#
+#
+        dta[k:l, 2] <- pop * multiplier#
+#
+        n <- n + 1#
+    }#
+#
+    #dta <- dta[(is.finite(dta[,2])),]#
+    dta <- rbind(dta, dta2)#
+    dta <- dta[order(-dta[, 2]), ]#
+    final <- dta#
+    final <- final[1:num, ]#
+    final[, 3] <- seq(1, num, by = 1)#
+    apportionment <- as.data.frame(table(final[, 1]))#
+    colnames(apportionment) <- c("state", "seats")#
+    return(apportionment)#
+}
+#### apportion(data,  column with state names, data with state pop, number of  seats to be allocated, number of minimum seats per state, minimum number of votes to be awarded any seat)#
+#
+apportion <- function(data, state, pop, seats, autoseats, threshold=0) {#
+#
+    num <- seats#
+p <- as.numeric(data[, pop])#
+    data <- data[complete.cases(p), ]#
+    pop <- as.numeric(data[, pop])#
+    data <- data[pop > threshold, ]#
+    pop <- as.numeric(data[, pop])#
+    priority <- seq(1, num + 5, by = 1)#
+#
+    dta <- data.frame(state = rep(data[, state], length(priority)), row.names = NULL)#
+#
+    pri <- length(data[, state]) * length(priority)#
+#
+    dta2 <- data.frame(state = rep(data[, state], autoseats), row.names = NULL)#
+    dta2[, 2] <- 99999999#
+    n <- 1#
+    l <- 0#
+    for (j in 1:length(priority)) {#
+        k <- l + 1#
+        l <- k + length(data[, state]) - 1#
+        multiplier <- 1/(sqrt(n * (n + 1)))#
+#
+        dta[k:l, 2] <- pop * multiplier#
+#
+        n <- n + 1#
+    }#
+#
+    #dta <- dta[(is.finite(dta[,2])),]#
+    dta <- rbind(dta, dta2)#
+    dta <- dta[order(-dta[, 2]), ]#
+    final <- dta#
+    final <- final[1:num, ]#
+    final[, 3] <- seq(1, num, by = 1)#
+    apportionment <- as.data.frame(table(final[, 1]))#
+    colnames(apportionment) <- c("state", "seats")#
+    return(apportionment)#
+}
+dec_2010 <- apportion(sf1, "NAME", "P001001", 435, 1)
+#### apportion(data,  column with state names, data with state pop, number of  seats to be allocated, number of minimum seats per state, minimum number of votes to be awarded any seat)#
+#
+apportion <- function(data, state, pop, seats, autoseats, threshold=0) {#
+#
+    num <- seats#
+p <- as.numeric(data[, pop])#
+    data <- data[complete.cases(p), ]#
+    pop <- as.numeric(data[, pop])#
+    data <- data[pop > threshold, ]#
+    datapop <- as.numeric(data[, pop])#
+    priority <- seq(1, num + 5, by = 1)#
+#
+    dta <- data.frame(state = rep(data[, state], length(priority)), row.names = NULL)#
+#
+    pri <- length(data[, state]) * length(priority)#
+#
+    dta2 <- data.frame(state = rep(data[, state], autoseats), row.names = NULL)#
+    dta2[, 2] <- 99999999#
+    n <- 1#
+    l <- 0#
+    for (j in 1:length(priority)) {#
+        k <- l + 1#
+        l <- k + length(data[, state]) - 1#
+        multiplier <- 1/(sqrt(n * (n + 1)))#
+#
+        dta[k:l, 2] <- datapop * multiplier#
+#
+        n <- n + 1#
+    }#
+#
+    #dta <- dta[(is.finite(dta[,2])),]#
+    dta <- rbind(dta, dta2)#
+    dta <- dta[order(-dta[, 2]), ]#
+    final <- dta#
+    final <- final[1:num, ]#
+    final[, 3] <- seq(1, num, by = 1)#
+    apportionment <- as.data.frame(table(final[, 1]))#
+    colnames(apportionment) <- c("state", "seats")#
+    return(apportionment)#
+}
+dec_2010 <- apportion(sf1, "NAME", "P001001", 435, 1)
+#### apportion(data,  column with state names, data with state pop, number of  seats to be allocated, number of minimum seats per state, minimum number of votes to be awarded any seat)#
+#
+apportion <- function(data, state, pop, seats, autoseats, threshold=0) {#
+#
+    num <- seats#
+    p <- as.numeric(data[, pop])#
+    dta <- data[complete.cases(p), ]#
+    pop <- as.numeric(dta[, pop])#
+    dta <- dta[pop > threshold, ]#
+    datapop <- as.numeric(dta[, pop])#
+    priority <- seq(1, num + 5, by = 1)#
+#
+    dta <- data.frame(state = rep(dta[, state], length(priority)), row.names = NULL)#
+#
+    pri <- length(dta[, state]) * length(priority)#
+#
+    dta2 <- data.frame(state = rep(dta[, state], autoseats), row.names = NULL)#
+    dta2[, 2] <- 99999999#
+    n <- 1#
+    l <- 0#
+    for (j in 1:length(priority)) {#
+        k <- l + 1#
+        l <- k + length(dta[, state]) - 1#
+        multiplier <- 1/(sqrt(n * (n + 1)))#
+#
+        dta[k:l, 2] <- datapop * multiplier#
+#
+        n <- n + 1#
+    }#
+#
+    #dta <- dta[(is.finite(dta[,2])),]#
+    dta <- rbind(dta, dta2)#
+    dta <- dta[order(-dta[, 2]), ]#
+    final <- dta#
+    final <- final[1:num, ]#
+    final[, 3] <- seq(1, num, by = 1)#
+    apportionment <- as.data.frame(table(final[, 1]))#
+    colnames(apportionment) <- c("state", "seats")#
+    return(apportionment)#
+}
+dec_2010 <- apportion(sf1, "NAME", "P001001", 435, 1)
+#### apportion(data,  column with state names, data with state pop, number of  seats to be allocated, number of minimum seats per state, minimum number of votes to be awarded any seat)#
+#
+apportion <- function(data, state, pop, seats, autoseats, threshold=0) {#
+#
+    num <- seats#
+    p <- as.numeric(data[, pop])#
+    dta <- data[complete.cases(p), ]#
+    dpop <- as.numeric(dta[, pop])#
+    dta <- dta[dpop > threshold, ]#
+    datapop <- as.numeric(dta[, pop])#
+    priority <- seq(1, num + 5, by = 1)#
+#
+    dta <- data.frame(state = rep(dta[, state], length(priority)), row.names = NULL)#
+#
+    pri <- length(dta[, state]) * length(priority)#
+#
+    dta2 <- data.frame(state = rep(dta[, state], autoseats), row.names = NULL)#
+    dta2[, 2] <- 99999999#
+    n <- 1#
+    l <- 0#
+    for (j in 1:length(priority)) {#
+        k <- l + 1#
+        l <- k + length(dta[, state]) - 1#
+        multiplier <- 1/(sqrt(n * (n + 1)))#
+#
+        dta[k:l, 2] <- datapop * multiplier#
+#
+        n <- n + 1#
+    }#
+#
+    #dta <- dta[(is.finite(dta[,2])),]#
+    dta <- rbind(dta, dta2)#
+    dta <- dta[order(-dta[, 2]), ]#
+    final <- dta#
+    final <- final[1:num, ]#
+    final[, 3] <- seq(1, num, by = 1)#
+    apportionment <- as.data.frame(table(final[, 1]))#
+    colnames(apportionment) <- c("state", "seats")#
+    return(apportionment)#
+}
+dec_2010 <- apportion(sf1, "NAME", "P001001", 435, 1)
+#### apportion(data,  column with state names, data with state pop, number of  seats to be allocated, number of minimum seats per state, minimum number of votes to be awarded any seat)#
+#
+apportion <- function(data, state, pop, seats, autoseats, threshold=0) {#
+#
+    num <- seats#
+#
+    data <- data[complete.cases(as.numeric(data[, pop])), ]#
+    data <- data[as.numeric(data[, pop]) > threshold, ]#
+    datapop <- as.numeric(data[, pop])#
+    priority <- seq(1, num + 5, by = 1)#
+#
+    dta <- data.frame(state = rep(data[, state], length(priority)), row.names = NULL)#
+#
+    pri <- length(data[, state]) * length(priority)#
+#
+    dta2 <- data.frame(state = rep(data[, state], autoseats), row.names = NULL)#
+    dta2[, 2] <- 99999999#
+    n <- 1#
+    l <- 0#
+    for (j in 1:length(priority)) {#
+        k <- l + 1#
+        l <- k + length(data[, state]) - 1#
+        multiplier <- 1/(sqrt(n * (n + 1)))#
+#
+        dta[k:l, 2] <- datapop * multiplier#
+#
+        n <- n + 1#
+    }#
+#
+    #dta <- dta[(is.finite(dta[,2])),]#
+    dta <- rbind(dta, dta2)#
+    dta <- dta[order(-dta[, 2]), ]#
+    final <- dta#
+    final <- final[1:num, ]#
+    final[, 3] <- seq(1, num, by = 1)#
+    apportionment <- as.data.frame(table(final[, 1]))#
+    colnames(apportionment) <- c("state", "seats")#
+    return(apportionment)#
+}
+dec_2010 <- apportion(sf1, "NAME", "P001001", 435, 1)
+dec_2010
+attachLibraries <- c("rgdal", "censusapi", "tigris", "tidyverse", "cartogram", "getcartr")#
+	lapply(attachLibraries, library, character.only = TRUE)
+source("/Users/cervas/Google Drive/School/UCI/R Functions/censusAPI.R")
+key <- "7865f31139b09e17c5865a59c240bdf07f9f44fd"
+readOGR("/Users/cervas/Google Drive/Papers/Tools for Identifying a Partisan Gerrymander/PA_LWV/shapefiles/VTDs_Oct17/VTD_Oct17")
+readOGR("/Users/cervas/Google Drive/Papers/Tools for Identifying a Partisan Gerrymander/PA_LWV/shapefiles/VTDs_Oct17/VTD_Oct17.shp")
+readOGR("/Users/cervas/Google Drive/Papers/Tools for Identifying a Partisan Gerrymander/PA_LWV/shapefiles/VTDs_Oct17/VTDs_Oct17.shp")
+vtd <- readOGR("/Users/cervas/Google Drive/Papers/Tools for Identifying a Partisan Gerrymander/PA_LWV/shapefiles/VTDs_Oct17/VTDs_Oct17.shp")
+head(vtd@data)
+vtd <- readOGR("/Users/cervas/Google Drive/Papers/Tools for Identifying a Partisan Gerrymander/PA_LWV/shapefiles/VTDs_Oct17/VTDs_Oct17.shp")
+head(vtd@data)
+vtd@data <- vtd@data[,c(3,5, 24, 30,31)]
+head(vtd@data)
+writeOGR(vtd, dsn="/Users/cervas/Downloads", layer="vtd", driver="ESRI Shapefile", overwrite_layer=T)
+writeOGR(vtd, dsn="/Users/cervas/Downloads", layer="vtd", driver="ESRI Shapefile", overwrite_layer=T)
+writeOGR(vtd, dsn="/Users/cervas/Downloads", layer="vtd", driver="ESRI Shapefile", overwrite_layer=T)
+writeOGR(vtd, dsn="/Users/cervas/Google Drive/Papers/Tools for Identifying a Partisan Gerrymander/PA_LWV/shapefiles", layer="vtd", driver="ESRI Shapefile", overwrite_layer=T)
+head(vtd@data)
+vtd@data$dem <- round(vtd@data$T16PRESD/vtd@data$T16PRESR,2)
+writeOGR(vtd, dsn="/Users/cervas/Google Drive/Papers/Tools for Identifying a Partisan Gerrymander/PA_LWV/shapefiles", layer="vtd", driver="ESRI Shapefile", overwrite_layer=T)
+vtd@data$dem <- round(as.numeric(vtd@data$T16PRESD)/as.numeric(vtd@data$T16PRESR),2)
+head(vtd@data)
+vtd@data$dem[is.na(vtd@data$dem] <- 0
+vtd@data$dem[is.na(vtd@data$dem)] <- 0
+head(vtd@data)
+writeOGR(vtd, dsn="/Users/cervas/Google Drive/Papers/Tools for Identifying a Partisan Gerrymander/PA_LWV/shapefiles", layer="vtd", driver="ESRI Shapefile", overwrite_layer=T)
+vtd <- readOGR("/Users/cervas/Google Drive/Papers/Tools for Identifying a Partisan Gerrymander/PA_LWV/shapefiles/vtd/vtd.shp")
+head(vtd@data)
+vtd@data$dem <- round(as.numeric(vtd@data$T16PRESD)/as.numeric(vtd@data$T16PRESR),2)
+head(vtd@data)
+vtd@data$dem[is.na(vtd@data$dem)] <- 0
+writeOGR(vtd, dsn="/Users/cervas/Google Drive/Papers/Tools for Identifying a Partisan Gerrymander/PA_LWV/shapefiles", layer="vtd", driver="ESRI Shapefile", overwrite_layer=T)
+head(vtd@data)
+vtd@data$dem <- as.numeric(round(as.numeric(vtd@data$T16PRESD)/as.numeric(vtd@data$T16PRESR),2))
+head(vtd@data)
+vtd@data$dem[is.na(vtd@data$dem)] <- 0
+str(vtd@data$dem)
+writeOGR(vtd, dsn="/Users/cervas/Google Drive/Papers/Tools for Identifying a Partisan Gerrymander/PA_LWV/shapefiles", layer="vtd", driver="ESRI Shapefile", overwrite_layer=T)
+vtd@data$dem
+vtd@data$T16PRESD
+vtd@data$dem <- as.numeric(round(as.numeric(vtd@data$T16PRESD)/(as.numeric(vtd@data$T16PRESR)+as.numeric(vtd@data$T16PRESD,2))
+vtd@data$dem <- as.numeric(round(as.numeric(vtd@data$T16PRESD)/(as.numeric(vtd@data$T16PRESR)+as.numeric(vtd@data$T16PRESD,2))))
+head(vtd@data)
+vtd@data$dem[is.na(vtd@data$dem)] <- 0
+head(vtd@data)
+vtd@data$dem
+vtd@data$dem <- as.numeric(round(as.numeric(vtd@data$T16PRESD)/(as.numeric(vtd@data$T16PRESR)+as.numeric(vtd@data$T16PRESD)),2))
+vtd@data$dem[is.na(vtd@data$dem)] <- 0
+head(vtd@data)
+vtd@data$dem
+writeOGR(vtd, dsn="/Users/cervas/Google Drive/Papers/Tools for Identifying a Partisan Gerrymander/PA_LWV/shapefiles", layer="vtd", driver="ESRI Shapefile", overwrite_layer=T)
