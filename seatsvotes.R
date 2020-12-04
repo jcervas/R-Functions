@@ -55,7 +55,6 @@ if.inv <- function(R,SeatShare) {1 * (R < 0.5 & SeatShare > 0.5) + 1 * (R > 0.5 
 			colnames(coefs) <- c("Seats", "Votes", "Sim")
 			if (is.null(SEATS)){
 				SEATS <- rep(1, length(VOTES))
-				# cat("Seats weighted equally\n")
 			}
 # =================================================================
 # -- SIMULATE -- SIMULATE -- SIMULATE --  SIMULATE -- SIMULATE -- S 
@@ -99,36 +98,45 @@ mean.w(x.dem,POP)
 # =================================================================
 # -- COLLECT DATA -- COLLECT DATA -- COLLECT DATA --  COLLECT DATA 
 # =================================================================
-		bias.out <- list(year = year, 
+		bias.out <- data.frame(year = year, 
 			intercept=NA, 
+			intercept_se=NA,
 			intercept_Pr=NA, 
 			swing_ratio=NA, 
-			swing_ratio_se=NA, 
+			swing_ratio_se=NA,
+			swing_ratio_Pr=NA,
 			Log_Odds_SEATS=NA, 
 			Linear_Regression_SEATS=NA, 
 			Bias_low=NA,
 			Bias_point=NA, 
 			Bias_high=NA,
 			ActualSEATS=NA,
-			ActualVotes=NA
+			ActualVotes=NA,
+			vote_bias=NA,
+			seat_bias=NA
 			)
 		
 	s <- coefs2[,1]
 	v <- coefs2[,2]
 
 summary(reglin <- lm(s ~ v))  #Linear Regression
-summary(reg <- lm (log(s) ~ log(v)))   #### Log-Odds Regression
-
 summary(reg <- lm (log(sv(s)) ~ log(sv(v))))   #### Log-Odds Regression
+plot(coefs2[,2], coefs2[,1], main=years[i], xlab="Votes", ylab="Seats")
+abline(v=0.5, lty=3, col="gray70")
+abline(h=0.5, lty=3, col="gray70")
+abline(reglin, lwd=2)
+
 
 				# cat("YEAR:", year, " \n")
 				# cat("SEATS AT 50% VOTES = ", round(inv(((reg$coefficients[2] * log(sv(0.5))) + reg$coefficients[1])), digits=3) * 100, "%\n")
 				# cat("BIAS % = ", round(inv(reg$coefficients[1]) - 0.5, digits=3) * 100, "%\n\n")
 		bias.out$intercept <- round(reg$coefficients[1], 3)  #### Bias from Grofman 1983 equation 26
+		bias.out$intercept_se <- round(summary(reg)$coef[1,2], 3)
 		bias.out$intercept_Pr <- round(summary(reg)$coef[1,4], 5)
 			# round(1 / (exp(reg$coefficients[1]) / reg$coefficients[2] + 1) - 0.5, 3)  # Bias from Grofman 1983 equation 16
 		bias.out$swing_ratio <- round(reg$coefficients[2], 3)
 		bias.out$swing_ratio_se <- round(summary(reg)$coef[2,2], 3)
+		bias.out$swing_ratio_Pr <- round(summary(reg)$coef[2,4], 5)
 		bias.out$Linear_Regression_SEATS <- paste0(round(100 * (reglin$coefficients[1]+(reglin$coefficients[2] * 0.5) ), digits=3), "%")	# Seat Predictions from Linear Regression
 		bias.out$Log_Odds_SEATS <- round(100 * inv(reg$coefficients[1]), 3)	#Seat Prediction from Log-Odds Model
 		bias.out$Bias_low <- round(inv(reg$coefficients[1] - (1.96 * summary(reg)$coef[1,2])) - 0.5, 3)
@@ -137,6 +145,8 @@ summary(reg <- lm (log(sv(s)) ~ log(sv(v))))   #### Log-Odds Regression
 		bias.out$ActualSEATS <- round(sum(find.winner(VOTES) * SEATS)/sum(SEATS), 3)
 		bias.out$ActualVotes <- round(mean.w(VOTES, POP), 3)
 
+		bias.out$vote_bias <- 0.5-inv((-1*reg$coefficients[1])/reg$coefficients[2]) #set y to zero and solve
+		bias.out$seat_bias <- inv(reg$coefficients[1])-0.5 #set y to zero and solve
 		x <- bias.out 
 		if (output == "regression") return(summary(reg))
 		return(x)
@@ -250,13 +260,13 @@ function(sv) {
 
 			vbar.range <- vBar.range #create range from 35 to 65
 			inv.j.d <- inv.j.r <- min.shift.j <- nca.j <- sbar.50 <- sbar.5 <- sbar.95 <- sbar.1 <- sbar.99 <- rep(NA, length(vbar.range)) #empty vectors for storing results
-			dvote.j <- sbar_full <- list()
+			s50 <- dvote.j <- sbar_full <- list()
 		# Start looping over interavls of vbar_j
 			for (j in 1:length(vbar.range)){
 				cat(".")
 				vbar <- vbar.range[j]
 				inv.tmp.d <- inv.tmp.r <- sbar <- min.shift.i <- nca.i <- rep(NA, n.sims) 
-				dvote.i <- list()
+				dvote.i  <- list()
 			# Start looping through 1,000 simulations at vbar_i
 				for (i in 1:n.sims){
 					noisy <- rnorm(length(dvote.imp), dvote.imp, sigma) #add noise
@@ -274,6 +284,8 @@ function(sv) {
 				nca.j[j] <- mean(nca.i)
 				sbar_full[[j]] <- sbar
 				sbar.50[j] <- mean(sbar)
+				# s50[[j]] <- NA
+					s50[[j]] <- rep(vbar, length(sbar[round(sbar,d=3) == 0.5]))
 				sbar.5[j] <- quantile(sbar, 0.05)
 				sbar.95[j] <- quantile(sbar, 0.95)
 				sbar.1[j] <- quantile(sbar, 0.01)
@@ -286,6 +298,7 @@ function(sv) {
 
 		sv$biasmeans[[k]] <- cbind.data.frame(VoteShare=vbar.range, SeatShare=sbar.50, One=sbar.1, Five=sbar.5, NintyFive=sbar.95, NintyNine=sbar.99, MinShift=min.shift.j, NCA=nca.j, Inversions_Dem=inv.j.d, Inversions_Rep=inv.j.r)
 		sv$sbar[[k]] <- sbar_full
+		sv$votebias[[k]] <- mean(unlist(s50))
 		# sv$dvote[[k]] <- dvote.j
 	}
 		rm(dvote.j,sbar_full,dvote.i)
