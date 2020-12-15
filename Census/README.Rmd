@@ -54,7 +54,7 @@ P042004 - Total!!Institutionalized population (101-106, 201-203, 301, 401-405)!!
 
 Attach Libraries
 ```{r}
-attachLibraries <- c("rgdal", "censusapi", "tigris", "tidyverse", "cartogram", "getcartr", "spdep", "rmapshaper")
+attachLibraries <- c("rgdal", "censusapi", "tigris", "tidyverse", "spdep", "rmapshaper")
 lapply(attachLibraries, library, character.only = TRUE)
 key <- "7865f31139b09e17c5865a59c240bdf07f9f44fd"
 
@@ -76,6 +76,10 @@ write.csv(
 		get=c("P001001", "P010001","P010004","NAME"), 
 		region = "for=county:*&in=state:55"), 
 	"/Users/user/Downloads/wi_cnt.csv")
+
+write.csv(
+getCensus(name="acs/acs5", vintage=2011, vars=c("NAME","C02003_001E","C02003_002E","C02003_003E","C02003_004E"), region="county:*", regionin="state:55", key=key), 
+	"/Users/user/Downloads/wi_cnt_ACS.csv")
 ```
 
 ###### (Block Level Total Population, 2010 SF1)
@@ -91,10 +95,10 @@ sumterSF1_2010 <- getCensus(name="dec/sf1", vintage=2010, vars=c(vars, "PLACE","
 ```{r}
 # https://api.census.gov/data/2011/acs/acs5?get=C02003_001E,C02003_002E,C02003_003E,C02003_004E&for=county:261&in=state:13
 county.2011.ACS5 <- getCensus(name="acs/acs5", vintage=2011, vars=c("C02003_001E","C02003_002E","C02003_003E","C02003_004E"), region="county:261", regionin="state:13", key=key)
+
+
+county.2018.ACS5 <- getCensus(name="acs/acs5", vintage=2018, vars=c("B01001_001E","C02003_001E","C02003_002E","C02003_003E","C02003_004E"), region="county:*", regionin="state:55", key=key)
 ```
-
-county.2017.ACS5 <- getCensus(name="acs/acs5", vintage=2017, vars=c("B01001_001E","C02003_001E","C02003_002E","C02003_003E","C02003_004E"), region="county:261", regionin="state:13", key=key)
-
 
 #### Tract Data
 ###### Median Income
@@ -111,7 +115,9 @@ tracts.2011.ACS5 <- getCensus(name="acs/acs5", vintage=2011, vars=c("C02003_001E
 ```{r}
 # https://api.census.gov/data/2017/acs/acs5?get=C02003_001E,C02003_002E,C02003_003E,C02003_004E&for=block%20group&in=state:13%20county:261%20tract:*
 
-# bg.2017.ACS5 <- getCensusApi("https://api.census.gov/data/2017/acs/acs5?", key=key, get=c("C02003_001E","C02003_002E","C02003_003E","C02003_004E"), region = "for=block%20group&in=state:13%20county:261%20tract:*")
+bg.2018.ACS5 <- getCensusApi("https://api.census.gov/data/2019/acs/acs5?", key=key, get=c("C02003_001E","C02003_002E","C02003_003E","C02003_004E"), region = "for=block%20group&in=state:55%20county:001%20tract:*")
+
+getCensus(name="acs/acs5", vintage=2018, vars=c("B01001_001E","C02003_001E","C02003_002E","C02003_003E","C02003_004E"), region="block%20group:*", regionin="state:55%20county:001", key=key)
 
  # blockgroups.2011.ACS5 <- getCensus(name="acs/acs5", vintage=2011, vars=c("C02003_001E","C02003_002E","C02003_003E","C02003_004E"), region="block%20group", regionin="state:13+county:261+tract:*", key=key)
 ```
