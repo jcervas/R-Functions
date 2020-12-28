@@ -1,3 +1,7 @@
+cat("Seats-Votes Function - v1.0")
+
+
+
 bias <- 
 	function(x, ...) {
 		tmp <- SEATSvotes(VOTES = x)
@@ -121,10 +125,10 @@ mean.w(x.dem,POP)
 
 summary(reglin <- lm(s ~ v))  #Linear Regression
 summary(reg <- lm (log(sv(s)) ~ log(sv(v))))   #### Log-Odds Regression
-plot(coefs2[,2], coefs2[,1], main=years[i], xlab="Votes", ylab="Seats")
-abline(v=0.5, lty=3, col="gray70")
-abline(h=0.5, lty=3, col="gray70")
-abline(reglin, lwd=2)
+# plot(coefs2[,2], coefs2[,1], main=years[i], xlab="Votes", ylab="Seats")
+# abline(v=0.5, lty=3, col="gray70")
+# abline(h=0.5, lty=3, col="gray70")
+# abline(reglin, lwd=2)
 
 
 				# cat("YEAR:", year, " \n")
