@@ -41,6 +41,10 @@ if.inv <- function(R,SeatShare) {1 * (R < 0.5 & SeatShare > 0.5) + 1 * (R > 0.5 
 		output = "default",
 		...
 		) {
+			if (is.null(VOTES)) 
+			{	if (is.null(DEMvotes)) stop("No Election data found")
+				if(length(DEMvotes)!=length(REPvotes)) stop("Parties don't have the same number of districts")
+				VOTES <- two_party(DEMvotes, REPvotes)	}
 			if (is.null(POP)) {
 				POP <- rep(1, length(VOTES))
 				}
@@ -48,12 +52,7 @@ if.inv <- function(R,SeatShare) {1 * (R < 0.5 & SeatShare > 0.5) + 1 * (R > 0.5 
 			if (is.null(year)) {
 				year <- "MISSING"
 				cat("Year Missing\n")}
-			if (is.null(VOTES)) 
-				{
-					if (is.null(DEMvotes)) stop("No Election data found")
-					if(length(DEMvotes)!=length(REPvotes)) stop("Parties don't have the same number of districts")
-					VOTES <- two_party(DEMvotes, REPvotes)
-				}
+
 			sim <- seq(vBar.range[1], vBar.range[2], by= iterations)
 			coefs <- array(NA, c(length(sim), 3))
 			colnames(coefs) <- c("Seats", "Votes", "Sim")
