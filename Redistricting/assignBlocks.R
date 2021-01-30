@@ -36,3 +36,15 @@ block_shp <- "/Users/user/Library/Mobile Documents/com~apple~CloudDocs/Downloads
 
 a <- assignBlock(block_shp=block_shp, district_shp=district_shp, districtID="GEOID", blockID="GEOID10")
 head(a)
+
+mn_blocks <- rgdal::readOGR(block_shp)
+
+mn_blocks@data <- dplyr::full_join(mn_blocks@data, a, by= c("GEOID10"="ID"))
+
+
+mycolours <- c("red","yellow","purple","blue","green","pink","orange")
+mybreaks <- unique(mn_blocks$GEOID10)
+mycolourscheme <- mycolours[findInterval(mn_blocks@data$District, vec = mybreaks)]
+
+plot(mn_blocks)
+plot(mn_blocks[is.na(mn_blocks@data$District),])
