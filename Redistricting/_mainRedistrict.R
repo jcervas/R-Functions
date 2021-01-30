@@ -86,7 +86,7 @@ redist.setup <- function(shp, uniqueid, population, vars, num.dist, ...)
 # We now create a contiguity list using the poly2nb function with queen set to FALSE (this means point contiguity is not enough)
 adjlist <- function (shp.file, queen=F)
 	{
-			shp.adj <- poly2nb(shp.file, queen = F)
+			shp.adj <- spdep::poly2nb(shp.file, queen = F)
             for(i in 1:length(shp.adj))
             	{
                 shp.adj[[i]] <- shp.adj[[i]]
