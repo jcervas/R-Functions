@@ -26,7 +26,7 @@ assignBlock <- function(block_shp=NA, district_shp=NA, districtID=NA, blockID=NA
 			poly.tmp <- district.shp[district.shp@data[,districtID] %in% ID[j],]
 			blocks.subset <- block.shp[poly.tmp,]
 
-				master[[j]] <- data.frame(ID=blocks.subset[,blockID], District=ID[j])
+				master[[j]] <- data.frame(ID=blocks.subset@data[,blockID], District=ID[j])
 
 		}
 
@@ -35,13 +35,3 @@ assignBlock <- function(block_shp=NA, district_shp=NA, districtID=NA, blockID=NA
 
 a <- assignBlock(block_shp=block_shp, district_shp=district_shp, districtID="GEOID", blockID="GEOID10")
 head(a)
-
-
-
-
-	png("/Users/user/Library/Mobile Documents/com~apple~CloudDocs/Downloads/mn.png", units="px", width=2400, height=1500)
-		sp::plot(mn_cd)
-			sp::plot(block_shp, add=T, lwd=0.25)
-			sp::plot(mn_cd_7, add=T, col="red")
-			sp::plot(blocks_subset, add=T, border="blue")
-	dev.off()
