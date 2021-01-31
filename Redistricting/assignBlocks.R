@@ -23,9 +23,11 @@ assignPolys <- function(block_shp=NA, district_shp=NA, districtID=NA, blockID=NA
 		ID <- unique(district.shp@data[,districtID])
 		for (j in 1:length(ID)) {
 			poly.tmp <- district.shp[district.shp@data[,districtID] %in% ID[j],]
-			blocks.subset <- block.shp[poly.tmp,] #subset in base R
+			# blocks.subset <- block.shp[poly.tmp,] #subset in base R
+			# blocks.subset <- raster(block.shp)[poly.tmp,] #subset in base R, add buffer from raster
 			# blocks.subset <- rmapshaper::ms_clip(block.shp, poly.tmp) #subset using rmapshaper
 			# x <- raster::intersect(block.shp, poly.tmp) # subset using raster
+			blocks.subset <- rgeos::gIntersection(block.shp, poly.tmp) # subset using rgeos
 			cat(ID[j], "\n")
 				master[[j]] <- data.frame(ID=blocks.subset@data[,blockID], District=ID[j])
 
