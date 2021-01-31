@@ -46,7 +46,7 @@ a <- assignPolys(block_shp=block_shp, district_shp=district_shp, districtID="GEO
 head(a)
 
 # mn_blocks <- rgdal::readOGR(block_shp)
-mn_blocks <- block_shp
+mn_blocks <- block_poly
 mn_blocks@data <- dplyr::full_join(mn_blocks@data, a, by= c("GEOID10"="ID"))
  	mn_blocks@data$District[is.na(mn_blocks@data$District)] <- 0
 
