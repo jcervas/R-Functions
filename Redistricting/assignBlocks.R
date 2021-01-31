@@ -60,8 +60,8 @@ png("/Users/user/Library/Mobile Documents/com~apple~CloudDocs/Downloads/map.png"
 plot(block.shp.buffer)
 dev.off()
 
-png("/Users/user/Library/Mobile Documents/com~apple~CloudDocs/Downloads/map.png", height = 1600*10, width = 900*10, units = "px", pointsize = 19)
-plot(district_shp, border="gray70")
+png("/Users/user/Library/Mobile Documents/com~apple~CloudDocs/Downloads/map.png", height = 1600*10, width = 900*10, units = "px", pointsize = 12)
+plot(district_shp, border="gray50", lwd=3)
 plot(mn_blocks[is.na(mn_blocks@data$District),], add=T)
 dev.off()
 
