@@ -37,9 +37,9 @@ mn_blocks@data <- dplyr::full_join(mn_blocks@data, a, by= c("GEOID10"="ID"))
 mn_blocks@data <- dplyr::left_join(mn_blocks@data, cols, by="District")
 mn_blocks@data$cols[is.na(mn_blocks@data$cols)] <- "#000000"
 
-png("/Users/user/Library/Mobile Documents/com~apple~CloudDocs/Downloads/map.png", height = 1600*5, width = 900*5, units = "px", pointsize = 12)
-plot(district_shp, border="gray50", lwd=3)
-	plot(mn_blocks, border = "#FFFFFF", col = mn_blocks@data$cols, lty=1, lwd = 0.5, add=T)
+png("map.png", height = 1200*5, width = 900*5, units = "px", pointsize = 12)
+	plot(mn_blocks, border = "#FFFFFF", col = mn_blocks@data$cols, lty=1, lwd = 0.5)
+	plot(district_shp, border="gray50", lwd=3, add=T)
 dev.off()
 ```
 ###### Map of Minneapolis, with Census blocks assigned. A small number of blocks were not correctly assigned, because the district shapefile has a different boundary than the block shapefile. For most purposes, this is irrelevent, but we need to make note of this and may need to manually add them to the block equivalancy file.
