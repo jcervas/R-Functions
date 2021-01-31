@@ -16,9 +16,11 @@ block_poly <- rgdal::readOGR("tl_2019_27_tabblock10.shp")
 a <- assignPolys(block_shp=block_shp, district_shp=district_shp, districtID="GEOID", blockID="GEOID10")
 head(a)
 ```
+
 |Row|ID|District|
+|---|---|---|
 |1|270731802001335|2707|
-|2270731802001330|2707|
+|2|270731802001330|2707|
 |3|270731802001385|2707|
 |4|270731802001386|2707|
 |5|270731802001422|2707|
