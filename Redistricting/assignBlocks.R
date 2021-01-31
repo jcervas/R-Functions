@@ -48,21 +48,20 @@ head(a)
 # mn_blocks <- rgdal::readOGR(block_shp)
 mn_blocks <- block_shp
 mn_blocks@data <- dplyr::full_join(mn_blocks@data, a, by= c("GEOID10"="ID"))
+ 	mn_blocks@data$District[is.na(mn_blocks@data$District)] <- 0
+
+		cols <- cbind.data.frame(
+			District=unique(mn_blocks$District),
+			cols=sample(c("#A6CEE3", "#1F78B4", "#FFFF99", "#FF7F00", "#ADDD8E", "#B2DF8A", "#2b51a1", "#f9f934", "#f75167", "#80B1D3", "#FB8090", "#8dd3c7", "#ADDD8E", "#fdb462", "#FDDBC7", "#00B0F0", "#70AD47", "#305496", "#bc80bd", "#fb8072", "#e31a1c", "#3182BD", "#fdbf6f", "#ffff99", "#FF7F00", "#a6cee3"), length(unique(mn_blocks$District)))
+			)
+mn_blocks@data <- dplyr::left_join(mn_blocks@data, cols, by="District")
+mn_blocks@data$cols[is.na(mn_blocks@data$cols)] <- "#000000"
 
 
-mycolours <- c("red","yellow","purple","blue","green","pink","orange")
-mybreaks <- unique(mn_blocks$District)
-mybreaks
-
-mycolourscheme <- mycolours[findInterval(mn_blocks@data$District, vec = mybreaks)]
-
-png("/Users/user/Library/Mobile Documents/com~apple~CloudDocs/Downloads/map.png", width = 1600, height = 900, units = "px", pointsize = 19)
-plot(block.shp.buffer)
-dev.off()
 
 png("/Users/user/Library/Mobile Documents/com~apple~CloudDocs/Downloads/map.png", height = 1600*10, width = 900*10, units = "px", pointsize = 12)
 plot(district_shp, border="gray50", lwd=3)
-plot(mn_blocks[is.na(mn_blocks@data$District),], add=T)
+	plot(mn_blocks, border = "#FFFFFF", col = mn_blocks@data$cols, lty=1, lwd = 1.5, add=T)
 dev.off()
 
 # x <- block_poly
