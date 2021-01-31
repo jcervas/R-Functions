@@ -4,7 +4,7 @@ library(raster)
 
 assignPolys <- function(block_shp=NA, district_shp=NA, districtID=NA, blockID=NA, district_label=NA) {
 	library(rgdal)
-	if (class(district_shp) == "sp") {
+	if (class(district_shp) %in% "SpatialPolygonsDataFrame") {
 			district.shp <- district_shp
 		}  else if (class(district_shp) == "character") {
 			district.shp <- rgdal::readOGR(district_shp)
@@ -23,9 +23,9 @@ assignPolys <- function(block_shp=NA, district_shp=NA, districtID=NA, blockID=NA
 		ID <- unique(district.shp@data[,districtID])
 		for (j in 1:length(ID)) {
 			poly.tmp <- district.shp[district.shp@data[,districtID] %in% ID[j],]
-			# blocks.subset <- block.shp[poly.tmp,] #subset in base R
+			blocks.subset <- block.shp[poly.tmp,] #subset in base R
 			# blocks.subset <- rmapshaper::ms_clip(block.shp, poly.tmp) #subset using rmapshaper
-			x <- raster::intersect(block.shp, poly.tmp) # subset using raster
+			# x <- raster::intersect(block.shp, poly.tmp) # subset using raster
 			cat(ID[j], "\n")
 				master[[j]] <- data.frame(ID=blocks.subset@data[,blockID], District=ID[j])
 
@@ -50,6 +50,8 @@ mn_blocks@data <- dplyr::full_join(mn_blocks@data, a, by= c("GEOID10"="ID"))
 
 mycolours <- c("red","yellow","purple","blue","green","pink","orange")
 mybreaks <- unique(mn_blocks$District)
+mybreaks
+
 mycolourscheme <- mycolours[findInterval(mn_blocks@data$District, vec = mybreaks)]
 
 plot(mn_blocks)
