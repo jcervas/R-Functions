@@ -1,5 +1,5 @@
-source("https://raw.githubusercontent.com/jcervas/2020-Elections/main/NYT_json.R")
-
+# source("https://raw.githubusercontent.com/jcervas/2020-Elections/main/NYT_json.R")
+source("https://raw.githubusercontent.com/jcervas/R-Functions/main/GERRYfunctions.R")
 
 getPres <- function(x) {
 
@@ -13,10 +13,10 @@ election.dta <- election.dta[election.dta$year > 1867,]
 	state.fips <- read.csv("https://raw.githubusercontent.com/jcervas/Data/master/fips.csv")
 	state.fips <- cbind.data.frame(state=state.fips$name, fips=state.fips$fips)
 
-e.2020 <- getPresidential2020()
-election.dta[setdiff(names(e.2020), names(election.dta))] <- NA
-e.2020[setdiff(names(election.dta), names(e.2020))] <- NA
-election.dta <- rbind(election.dta, e.2020)
+# e.2020 <- getPresidential2020()
+# election.dta[setdiff(names(e.2020), names(election.dta))] <- NA
+# e.2020[setdiff(names(election.dta), names(e.2020))] <- NA
+# election.dta <- rbind(election.dta, e.2020)
 
 pres.data <- pres.data.lag <- pres.data.lag2 <- cbind.data.frame(
 	year= election.dta$year, 
@@ -76,6 +76,6 @@ miss.pop <- !is.na(pres$dem) & is.na(pres$pop)
 			pres_new <- pres_tmp
 		electiondata[[j]] <- pres_new
 	}
-
+electiondata <- do.call(rbind, electiondata)
 return(electiondata)
 }
