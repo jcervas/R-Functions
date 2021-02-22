@@ -219,12 +219,12 @@ function(sv) {
 # -----------------------------------------
 
 
-`elect.sim` <- function(VOTES, LAGVOTES, TOTAL, SEATS, POP, YEARS, years=NULL, vBar.range=c(0.35, 0.65), plot=F, path=NULL, seed=66) {
+`elect.sim` <- function(VOTES, LAGVOTES, TOTAL, SEATS, POP, YEARS, years=NULL, vBar.range=c(0.35, 0.65), n.sims=1000, plot=F, path=NULL, seed=66) {
 	set.seed(seed)
 	sv <- list(sv = list(), inversions = list(), sbar = list(), wins.total = list())
 			stopifnot(all.equal(length(VOTES),length(LAGVOTES)))
 			if (is.null(years)) years <- unique(YEARS)
-		n.sims <- 1000
+		
 		asv <- npv <- ppv <- ewv <- rep(NA, length(years)) #create empty vector for avg. state VOTES, 1868-2016
 		coefs <- array(NA, c(length(years), 2)) #create empty matrix to store coefficients
 		resid.errors <- rep(NA, length(years)) #empty vector to store residual errors
