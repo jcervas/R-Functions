@@ -288,7 +288,7 @@ function(sv) {
 				sbar_full[[j]] <- sbar
 				sbar.50[j] <- mean(sbar)
 				# s50[[j]] <- NA
-					s50[[j]] <- rep(vbar, length(sbar[round(sbar,d=3) == 0.5]))
+				s50[[j]] <- rep(vbar, length(sbar[round(sbar,d=3) == 0.5]))
 				sbar.5[j] <- quantile(sbar, 0.05)
 				sbar.95[j] <- quantile(sbar, 0.95)
 				sbar.1[j] <- quantile(sbar, 0.01)
