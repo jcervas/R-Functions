@@ -219,8 +219,8 @@ function(sv) {
 # -----------------------------------------
 
 
-`elect.sim` <- function(VOTES, LAGVOTES, TOTAL, SEATS, POP, YEARS, years=NULL, vBar.range=c(0.35, 0.65), plot=F, path=NULL) {
-	set.seed(66)
+`elect.sim` <- function(VOTES, LAGVOTES, TOTAL, SEATS, POP, YEARS, years=NULL, vBar.range=c(0.35, 0.65), plot=F, path=NULL, seed=66) {
+	set.seed(seed)
 	sv <- list(sv = list(), inversions = list(), sbar = list(), wins.total = list())
 			stopifnot(all.equal(length(VOTES),length(LAGVOTES)))
 			if (is.null(years)) years <- unique(YEARS)
