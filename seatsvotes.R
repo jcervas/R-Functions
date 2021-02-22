@@ -219,18 +219,18 @@ function(sv) {
 # -----------------------------------------
 
 
-`elect.sim` <- function(VOTES, LAGVOTES, TOTAL, SEATS, POP, YEARS, years=NULL, vBar.range=c(0.35, 0.65), n.sims=1000, plot=F, path=NULL, seed=66) {
+`elect.sim` <- function(VOTES, LAGVOTES, TOTAL, SEATS, POP, YEAR, years=NULL, vBar.range=c(0.35, 0.65), n.sims=1000, plot=F, path=NULL, seed=66) {
 	set.seed(seed)
 	sv <- list(sv = list(), inversions = list(), sbar = list(), wins.total = list())
 			stopifnot(all.equal(length(VOTES),length(LAGVOTES)))
-			if (is.null(years)) years <- unique(YEARS)
-		
+			# stopifnot(is.null(years))
+		if (is.null(years)) years  <- unique(YEAR)
 		asv <- npv <- ppv <- ewv <- rep(NA, length(years)) #create empty vector for avg. state VOTES, 1868-2016
 		coefs <- array(NA, c(length(years), 2)) #create empty matrix to store coefficients
 		resid.errors <- rep(NA, length(years)) #empty vector to store residual errors
 
 	for (i in 1:length(years)) {
-		y.i <- YEARS %in% years[i]
+		y.i <- YEAR %in% years[i]
 	    asv[i] <- mean.w(VOTES[y.i]) #get asv for each year, 1868-2016
 	    npv[i] <- mean.w(VOTES[y.i], TOTAL[y.i]) #get npv for each year, 1868-2016
 	    ppv[i] <- mean.w(VOTES[y.i], POP[y.i]) #get ppv for each year, 1868-2016
@@ -246,7 +246,7 @@ function(sv) {
 		for (k in 1:length(years)) {
 			cat(paste0("\n",years[k], "..."))
 
-			y.k <- YEARS %in% years[k]
+			y.k <- YEAR %in% years[k]
 			start.year.indicator <- k-2 #two elections prior
 				if (k == 1) start.year.indicator <- k
 				if (k == 2) start.year.indicator <- (k-1)
