@@ -259,7 +259,7 @@ function(sv) {
 			VOTES.denominator <- TOTAL[y.k]
 			ecvotes.k <- SEATS[y.k]
 			dvote.imp <- default.unc(VOTES[y.k]) #imputed VOTES
-			dvote.lag.k <- LAGVOTES[y.k] #use imputed lagged VOTES for prediction
+			dvote.lag.k <- default.unc(LAGVOTES[y.k]) #use imputed lagged VOTES for prediction
 
 			vbar.range <- vBar.range #create range from 35 to 65
 			inv.j.d <- inv.j.r <- min.shift.j <- nca.j <- sbar.50 <- sbar.5 <- sbar.95 <- sbar.1 <- sbar.99 <- rep(NA, length(vbar.range)) #empty vectors for storing results
@@ -274,8 +274,8 @@ function(sv) {
 				for (i in 1:n.sims){
 					noisy <- rnorm(length(dvote.imp), dvote.imp, sigma) #add noise
 					predict.d <- noisy + vbar - mean.w(noisy,VOTES.denominator)
-					winner <- find.winner(predict.d) #winner of each race (1 for Dems, 0 for GOP)
-					sbar[i] <- sum(winner * ecvotes.k)/sum(ecvotes.k) #percent of Dem seats
+					# winner <- find.winner(predict.d) #winner of each race (1 for Dems, 0 for GOP)
+					sbar[i] <- sum(find.winner(predict.d) * ecvotes.k)/sum(ecvotes.k) #percent of seats
 					dvote.i[[i]] <- predict.d
 					min.shift.i[i] <- min.shift(predict.d, ecvotes.k)
 					nca.i[i] <- nca(predict.d, ecvotes.k, VOTES.denominator)
@@ -296,11 +296,11 @@ function(sv) {
 				inv.j.d[j] <- sum(inv.tmp.d)
 				inv.j.r[j] <- sum(inv.tmp.r)
 			}
-			writeLines(jsonlite::toJSON(dvote.j, pretty=T, auto_unbox = T, na= "string"), paste0(path, "/sims_", years[k], ".json"))
+			if (!is.null(path)) {writeLines(jsonlite::toJSON(dvote.j, pretty=T, auto_unbox = T, na= "string"), paste0(path, "/sims_", years[k], ".json"))}
 			# sbar_full.u <- unlist(sbar_full)
-
+		sv$election_info[[k]] <- data.frame(year=years[k], Votes=mean.w(dvote,VOTES.denominator), Seats=sum(find.winner(dvote) * ecvotes.k)/sum(ecvotes.k), total_EC=sum(ecvotes.k))
 		sv$biasmeans[[k]] <- cbind.data.frame(VoteShare=vbar.range, SeatShare=sbar.50, One=sbar.1, Five=sbar.5, NintyFive=sbar.95, NintyNine=sbar.99, MinShift=min.shift.j, NCA=nca.j, Inversions_Dem=inv.j.d, Inversions_Rep=inv.j.r)
-		sv$sbar[[k]] <- sbar_full
+		# sv$sbar[[k]] <- sbar_full
 		sv$votebias[[k]] <- mean(unlist(s50))
 		# sv$dvote[[k]] <- dvote.j
 	}
