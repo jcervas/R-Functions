@@ -11,7 +11,7 @@ returns <- runif(100)
 election.dta <- read.csv("https://raw.githubusercontent.com/jcervas/Data/master/Elections/Presidential/Presidential%20Elections_General_Full.csv")
 election.dta <- election.dta[election.dta$year > 1867,]
 	state.fips <- read.csv("https://raw.githubusercontent.com/jcervas/Data/master/fips.csv")
-	state.fips <- cbind.data.frame(state=state.fips$name, fips=state.fips$fips)
+	state.fips <- cbind.data.frame(state=state.fips$state, fips=state.fips$fips)
 
 # e.2020 <- getPresidential2020()
 # election.dta[setdiff(names(e.2020), names(election.dta))] <- NA
