@@ -65,8 +65,8 @@
 				dvote.j[[j]] <- dvote.i
 				min.shift.j[j] <- mean(min.shift.i)
 				nca.j[j] <- mean(nca.i)
-				sbar_full[[j]] <- sbar
 				sbar.50[j] <- mean(sbar)
+				sbar.50.sd[j] <- sd(sbar)
 				# s50[[j]] <- NA
 				s50[[j]] <- rep(vbar, length(sbar[round(sbar,d=2) == 0.5]))
 				sbar.5[j] <- quantile(sbar, 0.05)
@@ -75,16 +75,18 @@
 				sbar.99[j] <- quantile(sbar, 0.99)
 				inv.j.d[j] <- sum(inv.tmp.d)
 				inv.j.r[j] <- sum(inv.tmp.r)
+				if (vbar == 0.5) {sbar_full[[j]] <- sbar}
 			}
 			if (!is.null(path)) {writeLines(jsonlite::toJSON(dvote.j, pretty=T, auto_unbox = T, na= "string"), paste0(path, "/sims_", years[k], ".json"))}
 			# sbar_full.u <- unlist(sbar_full)
 		sv$election_info[[k]] <- data.frame(year=years[k], Votes=mean.w(dvote,VOTES.denominator), Seats=sum(find.winner(dvote) * ecvotes.k)/sum(ecvotes.k), total_EC=sum(ecvotes.k))
-		sv$biasmeans[[k]] <- cbind.data.frame(VoteShare=vbar.range, SeatShare=sbar.50, One=sbar.1, Five=sbar.5, NintyFive=sbar.95, NintyNine=sbar.99, MinShift=min.shift.j, NCA=nca.j, Inversions_Dem=inv.j.d, Inversions_Rep=inv.j.r)
+		sv$biasmeans[[k]] <- cbind.data.frame(VoteShare=vbar.range, SeatShare=sbar.50, SeatSD=sbar.50.sd, One=sbar.1, Five=sbar.5, NintyFive=sbar.95, NintyNine=sbar.99, MinShift=min.shift.j, NCA=nca.j, Inversions_Dem=inv.j.d, Inversions_Rep=inv.j.r)
 		# sv$sbar[[k]] <- sbar_full
 		sv$votebias[[k]] <- mean(unlist(s50))
+		sv$seats50 <- sbar_full
 		# sv$dvote[[k]] <- dvote.j
 	}
-		rm(dvote.j,sbar_full,dvote.i)
+		# rm(dvote.j,sbar_full,dvote.i)
 	return(invisible(sv))
 }
 
