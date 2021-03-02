@@ -75,7 +75,7 @@
 				sbar.99[j] <- quantile(sbar, 0.99)
 				inv.j.d[j] <- sum(inv.tmp.d)
 				inv.j.r[j] <- sum(inv.tmp.r)
-				if (vbar == 0.5) {sbar_full[[j]] <- sbar}
+				# if (vbar[j] == 0.5) {sbar_full[[j]] <- sbar}
 			}
 			if (!is.null(path)) {writeLines(jsonlite::toJSON(dvote.j, pretty=T, auto_unbox = T, na= "string"), paste0(path, "/sims_", years[k], ".json"))}
 			# sbar_full.u <- unlist(sbar_full)
@@ -83,7 +83,7 @@
 		sv$biasmeans[[k]] <- cbind.data.frame(VoteShare=vbar.range, SeatShare=sbar.50, SeatSD=sbar.50.sd, One=sbar.1, Five=sbar.5, NintyFive=sbar.95, NintyNine=sbar.99, MinShift=min.shift.j, NCA=nca.j, Inversions_Dem=inv.j.d, Inversions_Rep=inv.j.r)
 		# sv$sbar[[k]] <- sbar_full
 		sv$votebias[[k]] <- mean(unlist(s50))
-		sv$seats50 <- sbar_full
+		# sv$seats50 <- sbar_full
 		# sv$dvote[[k]] <- dvote.j
 	}
 		# rm(dvote.j,sbar_full,dvote.i)
