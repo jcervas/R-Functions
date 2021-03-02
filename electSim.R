@@ -42,7 +42,7 @@
 			dvote.lag.k <- default.unc(LAGVOTES[y.k]) #use imputed lagged VOTES for prediction
 
 			vbar.range <- vBar.range #create range from 35 to 65
-			inv.j.d <- inv.j.r <- min.shift.j <- nca.j <- sbar.50 <- sbar.5 <- sbar.95 <- sbar.1 <- sbar.99 <- rep(NA, length(vbar.range)) #empty vectors for storing results
+			inv.j.d <- inv.j.r <- min.shift.j <- nca.j <- sbar.50.sd <- sbar.50 <- sbar.5 <- sbar.95 <- sbar.1 <- sbar.99 <- rep(NA, length(vbar.range)) #empty vectors for storing results
 			s50 <- dvote.j <- sbar_full <- list()
 		# Start looping over interavls of vbar_j
 			for (j in 1:length(vbar.range)){
