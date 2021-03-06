@@ -42,7 +42,8 @@ sv_plot <- function(biasmeans,year) {
 			at=seq(0.50,0.65,0.01), 
 			labels=paste0(seq(0.50,0.65,0.01)*100, "%"), 
 			cex.axis=0.75)
-		axis(side=1, 
+		axis(
+			side=1, 
 			at=seq(0.50,0.65,0.005), 
 			labels=F, 
 			lwd.ticks=0.2, 
