@@ -13,7 +13,7 @@ sv_plot <- function(biasmeans,year) {
 		yaxs="i",
 		ylim=c(0.45,0.95), 
 		xlim=c(0.5,0.65), 
-		main=paste(year, " Presidential Election"))
+		main=paste0(year, " Presidential Election"))
 		# polygon(x=c(x, rev(x)), y= c(0, y[x1:x2], 0), col="gray70", density=40, border=NA)
 		polygon(
 			x= c(
