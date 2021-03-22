@@ -11,15 +11,17 @@ library(sp)
 library(rgeos)
 library(tigris)
 library(cartogram)
-tigris_cache_dir("/Users/cervas/Downloads")
+tigris_cache_dir("/Users/user/Downloads")
 # Restart R
 options(tigris_use_cache = TRUE)
 options(stringsAsFactors = FALSE)
 options(scipen = 999) # Turn off Scientific Notation
 
-source("/Users/cervas/Google Drive/School/UCI/R Functions/getCensusApi.R")
+funct.dir <- "https://raw.githubusercontent.com/jcervas/R-Functions/main/"
+
+source(paste0(funct.dir, "getCensusApi.R"))
 key <- "7865f31139b09e17c5865a59c240bdf07f9f44fd"
-setwd("/Users/cervas/Google Drive/School/UCI/R Functions/Redistricting")
+setwd("/Users/user/Downloads")
 
 make.map <- function (shapefile, dataframe, Population, by="GEOID") {
 	baseshape <- shapefile
@@ -42,17 +44,17 @@ return(baseshape)
 # download.file("ftp://ftp2.census.gov/geo/tiger/TIGER2010/COUNTY/2010/tl_2010_51_county10.zip", destfile = tmp)
 # unzip(tmp, exdir = ".")
 
-
-# Use this code to let county label positions in the most ideal part for visualization
-# 		tmp.data <-  numeric()
-# 	for (k in shape.1@data[,1]) {
-# 	tmp.shp <- shape.1[shape.1@data$GEOID==k,]
-# 	p <- polylabelr::poi(fortify(tmp.shp)[,1:2], precision = 0.01)
-# 	tmp.data <- rbind(tmp.data, data.frame(GEOID=k, xtext=p$x, ytext=p$y))
-# 		}
-# 		shape.1@data <- left_join(shape.1@data, tmp.data)
-# va.coor <- coordinates(shape.1)
-# rownames(va.coor) <- paste(1:length(shape.1@data$GEOID),shape.1@data$GEOID)
+# shape.1 <- readOGR("/Users/user/Downloads/tl_2010_51_county10.shp")
+# # # Use this code to let county label positions in the most ideal part for visualization
+# # 		tmp.data <-  numeric()
+# # 	for (k in shape.1@data[,1]) {
+# # 	tmp.shp <- shape.1[shape.1@data$GEOID==k,]
+# # 	p <- polylabelr::poi(fortify(tmp.shp)[,1:2], precision = 0.01)
+# # 	tmp.data <- rbind(tmp.data, data.frame(GEOID=k, xtext=p$x, ytext=p$y))
+# # 		}
+# # 		shape.1@data <- left_join(shape.1@data, tmp.data)
+# # va.coor <- coordinates(shape.1)
+# # rownames(va.coor) <- paste(1:length(shape.1@data$GEOID),shape.1@data$GEOID)
 
 
 
@@ -224,18 +226,19 @@ poly.label <- function (x)
 # 	}
 
 
-
-
+shape.1 <- readOGR("/Users/user/Google Drive/GitHub/Data Files/GIS/Tigerline/2019/counties/tl_2019_us_county.shp")
+shape.1 <- shape.1[shape.1@data$STATEFP %in% 13,]
+xxnb <- spdep::poly2nb(shape.1, queen=F)
 # We can map the contiguous boundaries to help get a sense of how places will be combined
 # Queen == FALSE
-# res <- 4
-# png("VA_county_contiquity.png", units="px", width=800*res, height=500*res)
-# 	xxnb <- poly2nb(shape.1, queen=F)
-# 	plot(shape.1, lwd=4)
-# 		points(cbind(shape.1@data$xtext, shape.1@data$ytext), col=paste0("#000000", opacity[120]), cex=res, pch=16)
-# 		text(shape.1@data$xtext, shape.1@data$ytext, labels = shape.1@data$NAME, col=paste0("#000000", opacity[30]), cex=2.5)
-# 	plot(xxnb, cbind(shape.1@data$xtext, shape.1@data$ytext), add=TRUE, col="blue", lwd=4)
-# dev.off()
+res <- 4
+svg("GA_county_contiquity.svg", width=8, height=9)
+par(mar=c(0,0,0,0))
+	plot(shape.1, lwd=0.5, border="#11111111")
+		points(coordinates(shape.1)[,1], coordinates(shape.1)[,2], col="blue", cex=1, pch=16)
+		text(coordinates(shape.1)[,1], coordinates(shape.1)[,2], labels = shape.1@data$NAME, col="#33333333", cex=0.6)
+	plot(xxnb, cbind(coordinates(shape.1)[,1], coordinates(shape.1)[,2]), add=TRUE, col="blue", lwd=1)
+dev.off()
 
 
 #################################################################
