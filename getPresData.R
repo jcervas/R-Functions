@@ -73,6 +73,7 @@ miss.pop <- !is.na(pres$dem) & is.na(pres$pop)
 		pres_lag <- pres[pres$year %in% (year-4),]
 		pres_tmp$year <- year
 		pres_tmp$house <- pres_tmp$ecvotes-2
+		pres_tmp$house[pres_tmp$state %in% "D. C."] <- 0
 			pres_new <- pres_tmp
 		electiondata[[j]] <- pres_new
 	}
