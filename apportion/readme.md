@@ -29,12 +29,12 @@ https://www.census.gov/programs-surveys/popest/technical-documentation/research/
 | tot_covid_cases_4_1_20 | Total cases of COVID as of 4/1/2020 |
 | tot_covid_death_4_1_20 | Total deaths of COVID as of 4/1/2020 |
 | new_covid_death_4_1_20 | I think this is deaths reported on 3/31/2020 (need to confirm) |
-| land_area_miles |  Area of the state in miles (https | //www.census.gov/prod/cen2010/cph-2-1.pdf, Table |8) |
+| land_area_miles |  Area of the state in miles (https://www.census.gov/prod/cen2010/cph-2-1.pdf, Table 18) |
 | density_per_mile | pop2020/land_area_miles |
 | density_rank | most to least dense, Most=1, Least=51 |
-| hispanic_per | Percent Hispanic of any Race (DP05_0071PE, https | //data.census.gov/cedsci/table?|=hispanic- &g=0100000US.04000.001&tid=ACSDP1Y2019.DP05&hidePreview=true) |
+| hispanic_per | Percent Hispanic of any Race (DP05_0071PE, https://data.census.gov/cedsci/table?q=hispanic&g=0100000US.04000.001&tid=ACSDP1Y2019.DP05&hidePreview=true) |
 | hispanic_rank | most to least Hispanic, Most=1, Least=51 |
 | biden |  Biden 2020 vote share (two-party)  |
 | biden_rank | most to least democratic, most=1, least=51 |
-| count_funding | Amount spent by the state to “get out the count”, (https | //www.ncsl.org/research/- |edistricting/2020-census-resources-and-legislation.aspx, “Legislative Funding and Supporting Ce- nsus | Work” Accessed April 28, 2021 11 | 56pEST), in dollars |
+| count_funding | Amount spent by the state to “get out the count”, (https://www.ncsl.org/research/redistricting/2020-census-resources-and-legislation.aspx, “Legislative Funding and Supporting Census Work” Accessed April 28, 2021 11:56pEST), in dollars |
 | count_funding_per | count_funding/pop2020, in dollars per person |
