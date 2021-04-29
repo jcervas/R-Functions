@@ -26,7 +26,7 @@ https://www.census.gov/programs-surveys/popest/technical-documentation/research/
 | ec2020 | 2020 Electoral College seats |
 | ec_change | ec2020-ec2010 |
 | 2020pres | Statewide 2020 Presidential winner |
-| tot_covid_cases_4_1_20 | Total cases of COVID as of 4/1/2020 |
+| tot_covid_cases_4_1_20 | Total cases of COVID as of 4/1/2020 (https://data.cdc.gov/Case-Surveillance/United-States-COVID-19-Cases-and-Deaths-by-State-o/9mfq-cb36/data) |
 | tot_covid_death_4_1_20 | Total deaths of COVID as of 4/1/2020 |
 | new_covid_death_4_1_20 | I think this is deaths reported on 3/31/2020 (need to confirm) |
 | land_area_miles |  Area of the state in miles (https://www.census.gov/prod/cen2010/cph-2-1.pdf, Table 18) |
