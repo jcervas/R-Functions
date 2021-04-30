@@ -34,6 +34,11 @@ https://www.census.gov/programs-surveys/popest/technical-documentation/research/
 | density_rank | most to least dense, Most=1, Least=51 |
 | hispanic_per | Percent Hispanic of any Race (DP05_0071PE, https://data.census.gov/cedsci/table?q=hispanic&g=0100000US.04000.001&tid=ACSDP1Y2019.DP05&hidePreview=true) |
 | hispanic_rank | most to least Hispanic, Most=1, Least=51 |
+| undoc_pop | Number of Unauthorized Immigrants, source: Migration Policy Institute, National and State Estimates of the Unauthorized Immigrant Population, 2014-18, https://www.migrationpolicy.org/programs/us-immigration-policy-program-data-hub/unauthorized-immigrant-population-profiles |
+| undoc_per | State Share of the Total Unauthorized Immigrant Population |
+| black_pop | Estimate!!RACE!!Total population!!One race!!Black or African American, DP05_0038E, ACS 1-year 2019 |
+| black_error | Margin of Error!!RACE!!Total population!!One race!!Black or African American |
+| black_per | Percent!!RACE!!Total population!!One race!!Black or African American, DP05_0038PE |
 | biden |  Biden 2020 vote share (two-party)  |
 | biden_rank | most to least democratic, most=1, least=51 |
 | count_funding | Amount spent by the state to “get out the count”, (https://www.ncsl.org/research/redistricting/2020-census-resources-and-legislation.aspx, “Legislative Funding and Supporting Census Work” Accessed April 28, 2021 11:56pEST), in dollars |
