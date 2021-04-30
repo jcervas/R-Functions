@@ -7,6 +7,7 @@
 ###### To set up, go to mapshaper.org and put in the Census block polygon. In the Console, enter the command "-points inner". Export to shapefile, and use this new point-based file for "block_shp". We can use the block_poly to read in the original polygon shapefile for mapping.
 - Example - Minnesota 116th Congress, Census Blocks (Function uses package "sp" to read in shapefiles)
 ```
+source("https://raw.githubusercontent.com/jcervas/R-Functions/main/Redistricting/assignBlocks.R")
 district_shp <- rgdal::readOGR("tl_2019_us_cd116.shp")
 block_shp <- rgdal::readOGR("tl_2019_27_tabblock10.shp")
 block_poly <- rgdal::readOGR("tl_2019_27_tabblock10.shp")
