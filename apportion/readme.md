@@ -41,5 +41,6 @@ https://www.census.gov/programs-surveys/popest/technical-documentation/research/
 | black_per | Percent!!RACE!!Total population!!One race!!Black or African American, DP05_0038PE |
 | biden |  Biden 2020 vote share (two-party)  |
 | biden_rank | most to least democratic, most=1, least=51 |
+| gov_party | Party of the governor, as of April 1, 2020, source: Wikipedia |
 | count_funding | Amount spent by the state to “get out the count”, (https://www.ncsl.org/research/redistricting/2020-census-resources-and-legislation.aspx, “Legislative Funding and Supporting Census Work” Accessed April 28, 2021 11:56pEST), in dollars |
 | count_funding_per | count_funding/pop2020, in dollars per person |
