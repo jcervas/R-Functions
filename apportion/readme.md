@@ -2,12 +2,6 @@
 
 Use this function to calculate apportionment for U.S. House of Representatives (and Electoral College). Vary inputs to calculate hypotheticals.
 
-### Example
-
-https://www.census.gov/programs-surveys/popest/technical-documentation/research/evaluation-estimates.html
-
-
-
 ### pop.xlxs and pop.csv
 
 | state | State Name |
@@ -15,7 +9,7 @@ https://www.census.gov/programs-surveys/popest/technical-documentation/research/
 | abs | State 2 letter abbreviation |
 | pop2010 | 2010 apportionment population |
 | pop2020 | 2020 apportionment population |
-| pop2002PEP | July 2020 Population Estimates Program population |
+| pop2002PEP | July 2020 Population Estimates Program population (https://www.census.gov/programs-surveys/popest/technical-documentation/research/evaluation-estimates.html)|
 | popchange | pop2020-pop2010 |
 | popchange_per | (pop2020-pop2010)/pop2010 * 100 |
 | popestdiff | (pop2020PEP-pop2020)/pop2020 |
