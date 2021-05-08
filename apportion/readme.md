@@ -4,7 +4,8 @@ Use this function to calculate apportionment for U.S. House of Representatives (
 
 ``` 
 pop <- read.csv("https://raw.githubusercontent.com/jcervas/R-Functions/main/apportion/pop.csv")
-
+pop <- pop[!pop$state %in% "District of Columbia",]
+apportion(pop$pop2020, n_seats=435, autoseats=1)
 ```
 
 ### pop.xlxs and pop.csv
