@@ -7,6 +7,10 @@ pop <- read.csv("https://raw.githubusercontent.com/jcervas/R-Functions/main/appo
 pop <- pop[!pop$state %in% "District of Columbia",]
 apportion(STATES=pop$state, POP=pop$pop2020, n_seats=435, autoseats=1)
 ```
+## Quotas
+- A quota is the number of representatives each state deserves in proportion to its population. 
+- "Let N be the total number of representatives, A, B, C,... the populations of the several states, and a,b,c,... the number of representatives assigned to each." (<a href="https://www.pnas.org/content/7/4/123">Huntington 1921</a>)
+
 
 ### pop.xlsx and pop.csv data sources and variables
 
