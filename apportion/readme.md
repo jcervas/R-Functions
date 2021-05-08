@@ -2,10 +2,10 @@
 
 Use this function to calculate apportionment for U.S. House of Representatives (and Electoral College). Vary inputs to calculate hypotheticals.
 
-``` {
+``` 
 pop <- read.csv("https://raw.githubusercontent.com/jcervas/R-Functions/main/apportion/pop.csv")
 
-}```
+```
 
 ### pop.xlxs and pop.csv
 
