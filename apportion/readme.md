@@ -8,7 +8,7 @@ pop <- pop[!pop$state %in% "District of Columbia",]
 apportion(STATES=pop$state, POP=pop$pop2020, n_seats=435, autoseats=1)
 ```
 
-### pop.xlxs and pop.csv
+### pop.xlsx and pop.csv data sources and variables
 
 | state | State Name |
 | --- | ---|
