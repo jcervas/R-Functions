@@ -16,6 +16,7 @@ block_poly <- rgdal::readOGR("tl_2019_27_tabblock10.shp")
 ```
 a <- assignPolys(block_point=block_point, district_shp=district_shp, districtID="GEOID", blockID="GEOID10")
 head(a)
+write.csv(a, "block_equiv.csv", row.names=F)
 ```
 
 |Row|ID|District|
