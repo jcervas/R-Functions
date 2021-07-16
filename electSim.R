@@ -21,7 +21,7 @@
 	    coefs[i,] <- coef(fit)
 	    resid.errors[i] <- sqrt(deviance(fit)/(n-2))
 	        }
-		resid.errors[resid.errors<0.001] <- 0.06514486
+		resid.errors[resid.errors<0.01] <- 0.06514486
 	# Start looping through years
 		for (k in 1:length(years)) {
 			cat(paste0("\n",years[k], "..."))
