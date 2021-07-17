@@ -18,12 +18,12 @@
 				stopifnot(all.equal(length(VOTES),length(LAGVOTES)))
 				# stopifnot(is.null(years))
 			if (is.null(years)) years  <- unique(YEAR)
-			asv <- npv <- ppv <- ewv <- rep(NA, length(years)) #create empty vector for avg. state VOTES, 1868-2016
-			coefs <- array(NA, c(length(years), 2)) #create empty matrix to store coefficients
-			resid.errors <- rep(NA, length(years)) #empty vector to store residual errors
+			asv <- npv <- ppv <- ewv <- rep(NA, length(unique(YEAR))) #create empty vector for avg. state VOTES, 1868-2016
+			coefs <- array(NA, c(length(unique(YEAR)), 2)) #create empty matrix to store coefficients
+			resid.errors <- rep(NA, length(unique(YEAR))) #empty vector to store residual errors
 
-		for (i in 1:length(years)) {
-			y.i <- YEAR %in% years[i]
+		for (i in 1:length(unique(YEAR))) {
+			y.i <- YEAR %in% unique(YEAR)[i]
 		    asv[i] <- mean.w(VOTES[y.i]) #get asv for each year, 1868-2016
 		    npv[i] <- mean.w(VOTES[y.i], TOTAL[y.i]) #get npv for each year, 1868-2016
 		    ppv[i] <- mean.w(VOTES[y.i], POP[y.i]) #get ppv for each year, 1868-2016
