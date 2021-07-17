@@ -40,10 +40,12 @@
 				cat(paste0("\n",years[k], "..."))
 
 				y.k <- YEAR %in% years[k]
-				start.year.indicator <- k-2 #two elections prior
-					if (k == 1) start.year.indicator <- k
-					if (k == 2) start.year.indicator <- (k-1)
-				end.year.indicator <- k #current election
+				year.index <- match(years[k], unique(YEAR))
+
+				start.year.indicator <- year.index-2 #two elections prior
+					if (year.index == 1L) start.year.indicator <- k
+					if (year.index == 2L) start.year.indicator <- (k-1)
+				end.year.indicator <- year.index #current election
 
 				rho <-  mean(coefs[start.year.indicator:end.year.indicator,2]) #get rho by taking mean coef from 3 years leading up to election years: 
 				sigma <- mean(resid.errors[start.year.indicator:end.year.indicator]) #get mean residual standard error from past 3 years
