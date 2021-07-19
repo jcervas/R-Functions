@@ -66,7 +66,8 @@ if (state != "all") {
 			appt.tmp <- aggregate(appt.tmp[,1], by=list(st=appt.tmp[,1]), FUN=length)
 			appt.penultimate <- merge(data.frame(st=st), appt.tmp, all.x=T)
 			appt.penultimate[is.na(appt.penultimate)] <- 0
-			appt <- appt.penultimate[,2] + autoseats
+			appt.penultimate[,2] <- appt.penultimate[,2] + autoseats
+		    	st <- appt.penultimate[,1]
 
 	       #  while(sum(hill(pop,sdivisor))!=n_seats.tmp) {sdivisor <- sdivisor-1}
 	       # appt <- hill(pop,sdivisor) + autoseats 
