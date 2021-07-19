@@ -68,6 +68,7 @@ if (state != "all") {
 			appt.penultimate[is.na(appt.penultimate)] <- 0
 			appt.penultimate[,2] <- appt.penultimate[,2] + autoseats
 		    	st <- appt.penultimate[,1]
+		    	app <- appt.penultimate[,2]
 
 	       #  while(sum(hill(pop,sdivisor))!=n_seats.tmp) {sdivisor <- sdivisor-1}
 	       # appt <- hill(pop,sdivisor) + autoseats 
