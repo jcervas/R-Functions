@@ -23,7 +23,7 @@ if (state != "all") {
 	pop <- pop.tmp[pop.tmp > threshold]
 	st <- st[pop.tmp > threshold]
 		n_seats.tmp <- n_seats-(length(pop) * autoseats)
-		sdivisor <- sum(pop)/n_seats.tmp
+		sdivisor <- sum(pop)/n_seats
 
 		if (length(unique(st)) != length(st)) {
 	        stop("every party name must be unique")
@@ -34,7 +34,7 @@ if (state != "all") {
 
 	    if (method == "hamilton") {
 	    	fq <- firstquota(pop,sdivisor)
-	    	seats.remaining <- n_seats.tmp - sum(fq)
+	    	seats.remaining <- n_seats - sum(fq)
 	    	remainder <- pop/sdivisor - fq
 	    	remainder[min.one] <- 0
 	    	highest.remainder <- order(remainder, decreasing=T)
