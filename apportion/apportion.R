@@ -33,18 +33,59 @@ if (state != "all") {
 	    }
 
 	    if (method == "hamilton") {
-	    	fq <- firstquota(pop,sdivisor)
-	    	seats.remaining <- n_seats - sum(fq)
+	    	fq <- firstquota(pop,sdivisor, "down")
 	    	remainder <- pop/sdivisor - fq
-	    	remainder[min.one] <- 0
+	    		fq.zero <- (fq <= 0)
+	    		fq[fq.zero] <- 1
+	    		remainder[fq.zero] <- 0
+	    	seats.remaining <- n_seats - sum(fq)
 	    	highest.remainder <- order(remainder, decreasing=T)
-	    	fq[highest.remainder[1:seats.remaining]] <- fq[highest.remainder[1:seats.remaining]] + 1
-	    	appt <- fq + autoseats
+	    	st <- st[highest.remainder]
+	    	fq <- fq[highest.remainder]
+	    	pop <- pop[highest.remainder]
+	    		remainder <- remainder[highest.remainder]
+	    	fq[1:seats.remaining] <- fq[1:seats.remaining]+1
+    	appt <- fq
+
+    		# close.pop <- pop * (remainder - remainder[seats.remaining])
+
+    		# 	close.almost <- close.pop[close.pop<0]
+    		# 	close.st.almost <- st[close.pop<0]
+    		# 		close.almost.order <- order(close.almost,decreasing=T)
+    		# 		close.almost <- close.almost[close.almost.order]
+    		# 		close.st.almost <- close.st.almost[close.almost.order]
+
+
+    		# 	close.over <- close.pop[close.pop>0]
+    		# 	close.st.over <- st[close.pop>0]
+    		# 		close.over.order <- order(close.over,decreasing=F)
+    		# 		close.over <- close.over[close.over.order]
+    		# 		close.st.over <- close.st.over[close.over.order]
+
+# rbind(
+# 	data.frame(state=close.st.over[1:5],persons=close.over[1:5]),
+# 	data.frame(state=st[close.pop==0],persons=0),
+# 	data.frame(state=close.st.almost[1:5],persons=close.almost[1:5])
+# 	)
+
 	    }
+
 	    if (method == "jefferson") {
-	    	while(n_seats.tmp - sum(firstquota(pop, sdivisor,"down")) != 0) {sdivisor <- sdivisor-1}
-	    	appt <- firstquota(pop, sdivisor,"down") + autoseats
+	    	fq.sum <- 0
+	    	x <- floor(sum(pop)/n_seats)
+	    for (i in 1:100000)	{
+	    	fq <- firstquota(pop, x, "down")
+	    	fq[fq %in% 0] <- 1
+	    	fq.sum <- sum(fq)
+	    	x <- x-1
+	    	if (fq.sum == n_seats) break
+			}
+	    	appt <- fq
 	    }
+
+
+
+
 	    if (method == "adams") {
 	    	while(n_seats.tmp - sum(firstquota(pop, sdivisor,"up")) != 0) {sdivisor <- sdivisor+1}
 	    	appt <- firstquota(pop, sdivisor,"up") + autoseats
@@ -75,6 +116,7 @@ if (state != "all") {
 	    }
 
 	    apportionment <- data.frame(state=st, seats=appt)
+	    apportionment <- apportionment[order(apportionment[,"state"]),]
 	if (state == "all") {
 		return(apportionment)
 	} else {
