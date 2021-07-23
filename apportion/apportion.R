@@ -67,7 +67,7 @@ if (state != "all") {
 
 
 	    if (method == "adams") {
-fq.sum <- 0
+				fq.sum <- 0
 	    	x <- floor(sum(pop)/n_seats)
 	    for (i in 1:100000)	{
 	    	fq <- firstquota(pop, x, "up")
