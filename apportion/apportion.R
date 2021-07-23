@@ -47,26 +47,6 @@ if (state != "all") {
 	    	fq[1:seats.remaining] <- fq[1:seats.remaining]+1
     	appt <- fq
 
-    		# close.pop <- pop * (remainder - remainder[seats.remaining])
-
-    		# 	close.almost <- close.pop[close.pop<0]
-    		# 	close.st.almost <- st[close.pop<0]
-    		# 		close.almost.order <- order(close.almost,decreasing=T)
-    		# 		close.almost <- close.almost[close.almost.order]
-    		# 		close.st.almost <- close.st.almost[close.almost.order]
-
-
-    		# 	close.over <- close.pop[close.pop>0]
-    		# 	close.st.over <- st[close.pop>0]
-    		# 		close.over.order <- order(close.over,decreasing=F)
-    		# 		close.over <- close.over[close.over.order]
-    		# 		close.st.over <- close.st.over[close.over.order]
-
-# rbind(
-# 	data.frame(state=close.st.over[1:5],persons=close.over[1:5]),
-# 	data.frame(state=st[close.pop==0],persons=0),
-# 	data.frame(state=close.st.almost[1:5],persons=close.almost[1:5])
-# 	)
 
 	    }
 
@@ -87,9 +67,22 @@ if (state != "all") {
 
 
 	    if (method == "adams") {
-	    	while(n_seats.tmp - sum(firstquota(pop, sdivisor,"up")) != 0) {sdivisor <- sdivisor+1}
-	    	appt <- firstquota(pop, sdivisor,"up") + autoseats
+fq.sum <- 0
+	    	x <- floor(sum(pop)/n_seats)
+	    for (i in 1:100000)	{
+	    	fq <- firstquota(pop, x, "up")
+	    	fq[fq %in% 0] <- 1
+	    	fq.sum <- sum(fq)
+	    	x <- x-1
+	    	if (fq.sum == n_seats) break
+			}
+	    	appt <- fq
 	    }
+
+
+
+
+
 
 	    if (method == "webster") {
 	    	while(n_seats.tmp - sum(firstquota(pop, sdivisor,"nearest")) != 0) {sdivisor <- sdivisor+1}
