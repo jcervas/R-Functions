@@ -1,7 +1,7 @@
 
 #### apportion(data, column with state names, data with state POP, number of  seats to be allocated, number of minimum seats per state, minimum number of votes to be awarded any seat)
-
-apportion <- function(STATES, POP, n_seats=1, autoseats=1, threshold=0, method = "hill-huntington", state = "all") {
+library(tidyverse)
+apportion <- function(STATES, POP, n_seats=435, autoseats=1, threshold=0, method = "hill-huntington", state = "all") {
 require(tidyverse)
 	'firstquota' <- function(pop, divisor, round="down") {
 		if (round == "down") fq <- floor(pop/divisor)
@@ -18,6 +18,7 @@ if (state != "all") {
 			stop("Specify a State or choose \"all\" under option \"state\".")
 		}
 	}
+	POP <- as.numeric(POP)
 	st <- as.character(STATES[!is.na(POP)])
 	pop.tmp <- POP[!is.na(POP)]
 	pop <- pop.tmp[pop.tmp > threshold]
@@ -52,44 +53,20 @@ if (state != "all") {
 
 	    if (method == "jefferson") {
 	    	fq.sum <- 0
-	    	x <- floor(sum(pop)/n_seats)
-	    for (i in 1:100000)	{
+	    	x <- (sum(pop)/n_seats)
+	    for (i in 1:10000000)	{
 	    	fq <- firstquota(pop, x, "down")
-	    	fq[fq %in% 0] <- 1
-	    	fq.sum <- sum(fq)
-	    	x <- x-1
+	    	pop[fq %in% 0] <- 0
+	    	fq.adj <- firstquota(pop, x, "down")
+	    	fq.adj[fq.adj %in% 0] <- 1
+	    	(fq.sum <- sum(fq.adj))
+	    	x <- x-.1
 	    	if (fq.sum == n_seats) break
 			}
-	    	appt <- fq
+	    	appt <- fq.adj
 	    }
 
-
-
-
-	    if (method == "adams") {
-				fq.sum <- 0
-	    	x <- floor(sum(pop)/n_seats)
-	    for (i in 1:100000)	{
-	    	fq <- firstquota(pop, x, "up")
-	    	fq[fq %in% 0] <- 1
-	    	fq.sum <- sum(fq)
-	    	x <- x-1
-	    	if (fq.sum == n_seats) break
-			}
-	    	appt <- fq
-	    }
-
-
-
-
-
-
-	    if (method == "webster") {
-	    	while(n_seats.tmp - sum(firstquota(pop, sdivisor,"nearest")) != 0) {sdivisor <- sdivisor+1}
-	    	appt <- firstquota(pop, sdivisor,"nearst") + autoseats 
-	    }
-
-	    if (method == "hill-huntington") {
+if (method == "hill-huntington") {
 	       priority <- function(s) 1/(sqrt(s * (s - 1)))
 	       priority.num <- list()
 	       for (i in 2:60) {
@@ -108,6 +85,7 @@ if (state != "all") {
 	       # appt <- hill(pop,sdivisor) + autoseats 
 	    }
 
+	   
 	    apportionment <- data.frame(state=st, seats=appt)
 	    apportionment <- apportionment[order(apportionment[,"state"]),]
 	if (state == "all") {
@@ -119,3 +97,34 @@ if (state != "all") {
 
 
 
+appt <- function(pop, states, nseats=435, method="webster") {
+		'divisor' <- function(round="hill-huntington") {
+		if (round == "all") fq <- 1:1000
+		if (round == "webster") fq <- seq(1, by = 2, len = 1000)
+		if (round == "jefferson") fq <- seq(2, by = 2, len = 1000)
+		if (round == "adams") fq <- seq(0, by = 2, len = 1000)
+		# min.autoseats <- fq < autoseats
+  #   	fq[min.autoseats] <- autoseats
+    return(fq)
+	}
+	divisors <- rep(divisor(method), length(pop))
+		divisors <- divisors[order(divisors)]
+
+	pop.matrix <- rep(pop,1000)/divisors
+		pop.order <- order(pop.matrix, decreasing=T)
+
+	st.matrix <- rep(states, 1000)
+	appt.tmp <- st.matrix[pop.order]
+	appt.first <- as.data.frame(table(appt.tmp[1:nseats]))
+		names(appt.first) <- c("st", "appt")
+	st.list <- as.data.frame(table(states))
+		names(st.list) <- c("st", "x")
+	appt <- full_join(appt.first, st.list)
+	auto.st <- as.character(appt[,1][is.na(appt[,2])])
+	auto.replace <- length(appt[,2][is.na(appt[,2])])
+	appt <- appt.tmp[1:(nseats-auto.replace)]
+	appt <- c(appt, auto.st)
+	appt <- as.data.frame(table(appt))
+		names(appt) <- c("state", "apportionment")
+	return(appt)
+}
