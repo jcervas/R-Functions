@@ -133,7 +133,7 @@ appt.gain <- function(pop, states, method="hill-huntington") {
 			pop.j <- pop
 			appt.a <- a$apportionment[a$state %in% states[j]]
 			
-			x.test <- rev(seq(0,1000000, by=5000))
+			x.test <- rev(seq(0,1000000, by=1000))
 				for (i in 1:length(x.test)) {
 				pop.j[states %in% states[j]] <- pop[states %in% states[j]] + x.test[i]
 					b <- appt(pop.j,states,435, method=method)
@@ -144,7 +144,7 @@ appt.gain <- function(pop, states, method="hill-huntington") {
 				}
 				if (i == 1) {next}
 				cat(states[j], ":", x.test[i], "-", x.test[i-1], "\n")
-				for (k in 1:5000) {
+				for (k in 1:1000) {
 					cat(".")
 					k.seq <- seq(x.test[i], x.test[i-1])
 					pop.j[states %in% states[j]] <- pop[states %in% states[j]] + (k.seq[k])
@@ -169,7 +169,7 @@ appt.lose <- function(pop, states, method="jefferson") {
 			pop.j <- pop
 			appt.a <- a$apportionment[a$state %in% states[j]]
 			if (appt.a==1) next
-			x.test <- rev(seq(0,1500000, by=2000))
+			x.test <- rev(seq(0,1000000, by=1000))
 				for (i in 1:length(x.test)) {
 				pop.j[states %in% states[j]] <- pop[states %in% states[j]] - x.test[i]
 					b <- appt(pop.j,states,435, method=method)
@@ -180,7 +180,7 @@ appt.lose <- function(pop, states, method="jefferson") {
 				}
 				if (i == 1) {next}
 				cat(states[j], ":", x.test[i], "-", x.test[i-1], "\n")
-				for (k in 1:2000) {
+				for (k in 1:1000) {
 					cat(".")
 					k.seq <- seq(x.test[i], x.test[i-1])
 					pop.j[states %in% states[j]] <- pop[states %in% states[j]] - (k.seq[k])
