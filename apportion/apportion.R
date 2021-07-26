@@ -31,11 +31,18 @@ options(scipen=999)
 		appt.temp <- appt.tmp[1:(nseats-auto.replace)]
 		appt.temp <- c(appt.temp, auto.st)
 		appt.temp <- as.data.frame(table(appt.temp))
-			names(appt.temp) <- c("state", "apportionment")
-		return(appt.temp)
+			names(appt.temp) <- c("st", "apportionment")
+			appt.temp.2 <- full_join(appt.temp, st.list, by="st")
+			auto.st <- as.character(appt.temp.2[,1][is.na(appt.temp.2[,2])])
+			auto.replace <- length(appt.temp.2[,2][is.na(appt.temp.2[,2])]) + auto.replace
+			appt.temp.2 <- appt.tmp[1:(nseats-auto.replace)]
+			appt.temp.2 <- c(appt.temp.2, auto.st)
+			appt.temp.2 <- as.data.frame(table(appt.temp.2))
+			names(appt.temp.2) <- c("state", "apportionment")
+		return(appt.temp.2)
 	}
 
-apportion <- function(STATES, POP, n_seats=435, autoseats=1, threshold=0, method = "hill-huntington", state = "all") {
+apportion <- function(POP, STATES, n_seats=435, autoseats=1, threshold=0, method = "hill-huntington", state = "all") {
 require(tidyverse)
 	'firstquota' <- function(pop, divisor, round="down") {
 		if (round == "down") fq <- floor(pop/divisor)
@@ -126,7 +133,7 @@ appt.gain <- function(pop, states, method="hill-huntington") {
 			pop.j <- pop
 			appt.a <- a$apportionment[a$state %in% states[j]]
 			
-			x.test <- rev(seq(0,1500000, by=5000))
+			x.test <- rev(seq(0,1000000, by=5000))
 				for (i in 1:length(x.test)) {
 				pop.j[states %in% states[j]] <- pop[states %in% states[j]] + x.test[i]
 					b <- appt(pop.j,states,435, method=method)
@@ -162,7 +169,7 @@ appt.lose <- function(pop, states, method="jefferson") {
 			pop.j <- pop
 			appt.a <- a$apportionment[a$state %in% states[j]]
 			if (appt.a==1) next
-			x.test <- rev(seq(0,1500000, by=5000))
+			x.test <- rev(seq(0,1500000, by=2000))
 				for (i in 1:length(x.test)) {
 				pop.j[states %in% states[j]] <- pop[states %in% states[j]] - x.test[i]
 					b <- appt(pop.j,states,435, method=method)
@@ -173,7 +180,7 @@ appt.lose <- function(pop, states, method="jefferson") {
 				}
 				if (i == 1) {next}
 				cat(states[j], ":", x.test[i], "-", x.test[i-1], "\n")
-				for (k in 1:5000) {
+				for (k in 1:2000) {
 					cat(".")
 					k.seq <- seq(x.test[i], x.test[i-1])
 					pop.j[states %in% states[j]] <- pop[states %in% states[j]] - (k.seq[k])
