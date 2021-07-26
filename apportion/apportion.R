@@ -33,10 +33,10 @@ options(scipen=999)
 		appt.temp <- as.data.frame(table(appt.temp))
 			names(appt.temp) <- c("st", "apportionment")
 			appt.temp.2 <- full_join(appt.temp, st.list, by="st")
-			auto.st <- as.character(appt.temp.2[,1][is.na(appt.temp.2[,2])])
+			auto.st2 <- as.character(appt.temp.2[,1][is.na(appt.temp.2[,2])])
 			auto.replace <- length(appt.temp.2[,2][is.na(appt.temp.2[,2])]) + auto.replace
 			appt.temp.2 <- appt.tmp[1:(nseats-auto.replace)]
-			appt.temp.2 <- c(appt.temp.2, auto.st)
+			appt.temp.2 <- c(appt.temp.2, auto.st, auto.st2)
 			appt.temp.2 <- as.data.frame(table(appt.temp.2))
 			names(appt.temp.2) <- c("state", "apportionment")
 		return(appt.temp.2)
