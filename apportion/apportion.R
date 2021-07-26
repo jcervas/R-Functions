@@ -1,6 +1,7 @@
 
 #### apportion(data, column with state names, data with state POP, number of  seats to be allocated, number of minimum seats per state, minimum number of votes to be awarded any seat)
 library(tidyverse)
+options(scipen=999)
 apportion <- function(STATES, POP, n_seats=435, autoseats=1, threshold=0, method = "hill-huntington", state = "all") {
 require(tidyverse)
 	'firstquota' <- function(pop, divisor, round="down") {
@@ -119,7 +120,7 @@ appt <- function(pop, states, nseats=435, method="webster") {
 		names(appt.first) <- c("st", "appt")
 	st.list <- as.data.frame(table(states))
 		names(st.list) <- c("st", "x")
-	appt <- full_join(appt.first, st.list)
+	appt <- full_join(appt.first, st.list, by="st")
 	auto.st <- as.character(appt[,1][is.na(appt[,2])])
 	auto.replace <- length(appt[,2][is.na(appt[,2])])
 	appt <- appt.tmp[1:(nseats-auto.replace)]
@@ -128,3 +129,38 @@ appt <- function(pop, states, nseats=435, method="webster") {
 		names(appt) <- c("state", "apportionment")
 	return(appt)
 }
+
+
+rep.appt <- function(pop, states, method="hill-huntington") {
+	appt.change <- data.frame(st=states.t, minpop=NA)
+		for (j in 1:length(states.t)) {
+			pop.j <- pop
+			appt.a <- a$apportionment[a$state %in% states.t[j]]
+			
+			x.test <- rev(seq(0,1500000, by=5000))
+				for (i in 1:length(x.test)) {
+				pop.j[states.t %in% states.t[j]] <- pop[states.t %in% states.t[j]] + x.test[i]
+					b <- appt(pop.j,states.t,435, method=method)
+						(appt.b <- b$apportionment[b$state %in% states.t[j]])
+				if (appt.a == appt.b) {
+					break
+					}
+				}
+				if (i == 1) {next}
+				cat(states.t[j], ":", x.test[i], "-", x.test[i-1], "\n")
+				for (k in 1:5000) {
+					cat(".")
+					k.seq <- seq(x.test[i], x.test[i-1])
+					pop.j[states.t %in% states.t[j]] <- pop[states.t %in% states.t[j]] + (k.seq[k])
+					b <- appt(pop.j,states.t,435, method=method)
+						(appt.b <- b$apportionment[b$state %in% states.t[j]])
+					if (appt.a != appt.b) {
+					break
+					}
+				}
+
+			appt.change[j,2] <- k.seq[k]
+			cat("\n", states.t[j], ":", k.seq[k], "\n")
+		}
+		return(appt.change) 
+	}
