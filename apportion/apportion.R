@@ -14,11 +14,44 @@ require(tidyverse)
 	}
 	'standardizeText' <- function(m) substrLeft(deleteSpaces(tolower(substrPunct(m))),30)
 
-if (state != "all") {
-		if (! standardizeText(state) %in% standardizeText(STATES)) {
-			stop("Specify a State or choose \"all\" under option \"state\".")
-		}
+	appt <- function(pop, states, nseats=435, method="webster") {
+			'divisor' <- function(round="hill-huntington") {
+				if (round == "all") fq <- 1:1000
+				if (round == "webster") fq <- seq(1, by = 2, len = 1000)
+				if (round == "jefferson") fq <- seq(2, by = 2, len = 1000)
+				if (round == "adams") fq <- seq(0, by = 2, len = 1000)
+				# min.autoseats <- fq < autoseats
+		  #   	fq[min.autoseats] <- autoseats
+		    return(fq)
+				}
+		divisors <- rep(divisor(method), length(pop))
+			divisors <- divisors[order(divisors)]
+
+		pop.matrix <- rep(pop,1000)/divisors
+			pop.order <- order(pop.matrix, decreasing=T)
+
+		st.matrix <- rep(states, 1000)
+		appt.tmp <- st.matrix[pop.order]
+		appt.first <- as.data.frame(table(appt.tmp[1:nseats]))
+			names(appt.first) <- c("st", "appt")
+		st.list <- as.data.frame(table(states))
+			names(st.list) <- c("st", "x")
+		appt.temp <- full_join(appt.first, st.list, by="st")
+		auto.st <- as.character(appt.temp[,1][is.na(appt.temp[,2])])
+		auto.replace <- length(appt.temp[,2][is.na(appt.temp[,2])])
+		appt.temp <- appt.tmp[1:(nseats-auto.replace)]
+		appt.temp <- c(appt.temp, auto.st)
+		appt.temp <- as.data.frame(table(appt.temp))
+			names(appt.temp) <- c("state", "apportionment")
+		return(appt.temp)
 	}
+
+
+	if (state != "all") {
+			if (! standardizeText(state) %in% standardizeText(STATES)) {
+				stop("Specify a State or choose \"all\" under option \"state\".")
+			}
+		}
 	POP <- as.numeric(POP)
 	st <- as.character(STATES[!is.na(POP)])
 	pop.tmp <- POP[!is.na(POP)]
@@ -52,22 +85,7 @@ if (state != "all") {
 
 	    }
 
-	    if (method == "jefferson") {
-	    	fq.sum <- 0
-	    	x <- (sum(pop)/n_seats)
-	    for (i in 1:10000000)	{
-	    	fq <- firstquota(pop, x, "down")
-	    	pop[fq %in% 0] <- 0
-	    	fq.adj <- firstquota(pop, x, "down")
-	    	fq.adj[fq.adj %in% 0] <- 1
-	    	(fq.sum <- sum(fq.adj))
-	    	x <- x-.1
-	    	if (fq.sum == n_seats) break
-			}
-	    	appt <- fq.adj
-	    }
-
-if (method == "hill-huntington") {
+			if (method == "hill-huntington") {
 	       priority <- function(s) 1/(sqrt(s * (s - 1)))
 	       priority.num <- list()
 	       for (i in 2:60) {
@@ -80,87 +98,92 @@ if (method == "hill-huntington") {
 			appt.penultimate[is.na(appt.penultimate)] <- 0
 			appt.penultimate[,2] <- appt.penultimate[,2] + autoseats
 		    	st <- appt.penultimate[,1]
-		    	appt <- appt.penultimate[,2]
-
-	       #  while(sum(hill(pop,sdivisor))!=n_seats.tmp) {sdivisor <- sdivisor-1}
-	       # appt <- hill(pop,sdivisor) + autoseats 
+		    	appt.tmp <- appt.penultimate[,2]
 	    }
 
-	   
-	    apportionment <- data.frame(state=st, seats=appt)
+	    if (method != c("hill-huntington", "hamilton")) {
+	    	appt.tmp <- appt(pop, states, nseats, method=method)
+	    }
+
+
+	    apportionment <- data.frame(state=st, seats=appt.tmp)
 	    apportionment <- apportionment[order(apportionment[,"state"]),]
-	if (state == "all") {
+
+		if (state == "all") {
 		return(apportionment)
-	} else {
+			} else {
 		return(apportionment$seats[standardizeText(apportionment$state) %in% standardizeText(state)])
 	}
 }
 
 
-
-appt <- function(pop, states, nseats=435, method="webster") {
-		'divisor' <- function(round="hill-huntington") {
-		if (round == "all") fq <- 1:1000
-		if (round == "webster") fq <- seq(1, by = 2, len = 1000)
-		if (round == "jefferson") fq <- seq(2, by = 2, len = 1000)
-		if (round == "adams") fq <- seq(0, by = 2, len = 1000)
-		# min.autoseats <- fq < autoseats
-  #   	fq[min.autoseats] <- autoseats
-    return(fq)
-	}
-	divisors <- rep(divisor(method), length(pop))
-		divisors <- divisors[order(divisors)]
-
-	pop.matrix <- rep(pop,1000)/divisors
-		pop.order <- order(pop.matrix, decreasing=T)
-
-	st.matrix <- rep(states, 1000)
-	appt.tmp <- st.matrix[pop.order]
-	appt.first <- as.data.frame(table(appt.tmp[1:nseats]))
-		names(appt.first) <- c("st", "appt")
-	st.list <- as.data.frame(table(states))
-		names(st.list) <- c("st", "x")
-	appt <- full_join(appt.first, st.list, by="st")
-	auto.st <- as.character(appt[,1][is.na(appt[,2])])
-	auto.replace <- length(appt[,2][is.na(appt[,2])])
-	appt <- appt.tmp[1:(nseats-auto.replace)]
-	appt <- c(appt, auto.st)
-	appt <- as.data.frame(table(appt))
-		names(appt) <- c("state", "apportionment")
-	return(appt)
-}
-
-
-rep.appt <- function(pop, states, method="hill-huntington") {
-	appt.change <- data.frame(st=states.t, minpop=NA)
-		for (j in 1:length(states.t)) {
+rep.appt.gain <- function(pop, states, method="hill-huntington") {
+	appt.change <- data.frame(st=states, minpop=NA)
+		a <- appt(pop,states,435, method=method)
+		for (j in 1:length(states)) {
 			pop.j <- pop
-			appt.a <- a$apportionment[a$state %in% states.t[j]]
+			appt.a <- a$apportionment[a$state %in% states[j]]
 			
 			x.test <- rev(seq(0,1500000, by=5000))
 				for (i in 1:length(x.test)) {
-				pop.j[states.t %in% states.t[j]] <- pop[states.t %in% states.t[j]] + x.test[i]
-					b <- appt(pop.j,states.t,435, method=method)
-						(appt.b <- b$apportionment[b$state %in% states.t[j]])
+				pop.j[states %in% states[j]] <- pop[states %in% states[j]] + x.test[i]
+					b <- appt(pop.j,states,435, method=method)
+						(appt.b <- b$apportionment[b$state %in% states[j]])
 				if (appt.a == appt.b) {
 					break
 					}
 				}
 				if (i == 1) {next}
-				cat(states.t[j], ":", x.test[i], "-", x.test[i-1], "\n")
+				cat(states[j], ":", x.test[i], "-", x.test[i-1], "\n")
 				for (k in 1:5000) {
 					cat(".")
 					k.seq <- seq(x.test[i], x.test[i-1])
-					pop.j[states.t %in% states.t[j]] <- pop[states.t %in% states.t[j]] + (k.seq[k])
-					b <- appt(pop.j,states.t,435, method=method)
-						(appt.b <- b$apportionment[b$state %in% states.t[j]])
+					pop.j[states %in% states[j]] <- pop[states %in% states[j]] + (k.seq[k])
+					b <- appt(pop.j,states,435, method=method)
+						(appt.b <- b$apportionment[b$state %in% states[j]])
 					if (appt.a != appt.b) {
 					break
 					}
 				}
 
 			appt.change[j,2] <- k.seq[k]
-			cat("\n", states.t[j], ":", k.seq[k], "\n")
+			cat("\n", states[j], ":", k.seq[k], "\n")
+		}
+		return(appt.change) 
+	}
+
+
+	rep.appt.lose <- function(pop, states, method="jefferson") {
+	appt.change <- data.frame(st=states, minpop=NA)
+	a <- appt(pop,states,435, method=method)
+		for (j in 1:length(states)) {
+			pop.j <- pop
+			appt.a <- a$apportionment[a$state %in% states[j]]
+			if (appt.a==1) next
+			x.test <- rev(seq(0,1500000, by=5000))
+				for (i in 1:length(x.test)) {
+				pop.j[states %in% states[j]] <- pop[states %in% states[j]] - x.test[i]
+					b <- appt(pop.j,states,435, method=method)
+						(appt.b <- b$apportionment[b$state %in% states[j]])
+				if (appt.a == appt.b) {
+					break
+					}
+				}
+				if (i == 1) {next}
+				cat(states[j], ":", x.test[i], "-", x.test[i-1], "\n")
+				for (k in 1:5000) {
+					cat(".")
+					k.seq <- seq(x.test[i], x.test[i-1])
+					pop.j[states %in% states[j]] <- pop[states %in% states[j]] - (k.seq[k])
+					b <- appt(pop.j,states,435, method=method)
+						(appt.b <- b$apportionment[b$state %in% states[j]])
+					if (appt.a != appt.b) {
+					break
+					}
+				}
+
+			appt.change[j,2] <- k.seq[k]
+			cat("\n", states[j], ":", k.seq[k], "\n")
 		}
 		return(appt.change) 
 	}
