@@ -80,7 +80,7 @@ require(tidyverse)
 	    	pop <- pop[highest.remainder]
 	    		remainder <- remainder[highest.remainder]
 	    	fq[1:seats.remaining] <- fq[1:seats.remaining]+1
-    	appt <- fq
+    	appt.tmp <- fq
 
 
 	    }
