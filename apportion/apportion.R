@@ -4,7 +4,7 @@ library(tidyverse)
 options(scipen=999)
 
 	appt <- function(pop, states, nseats=435, method="webster") {
-			'divisor' <- function(round="hill-huntington") {
+			'divisor' <- function(round="all") {
 				if (round == "all") fq <- 1:1000
 				if (round == "webster") fq <- seq(1, by = 2, len = 1000)
 				if (round == "jefferson") fq <- seq(2, by = 2, len = 1000)
