@@ -2,17 +2,6 @@
 #### apportion(data, column with state names, data with state POP, number of  seats to be allocated, number of minimum seats per state, minimum number of votes to be awarded any seat)
 library(tidyverse)
 options(scipen=999)
-apportion <- function(STATES, POP, n_seats=435, autoseats=1, threshold=0, method = "hill-huntington", state = "all") {
-require(tidyverse)
-	'firstquota' <- function(pop, divisor, round="down") {
-		if (round == "down") fq <- floor(pop/divisor)
-		if (round == "up") fq <- ceiling(pop/divisor)
-		if (round == "nearest") fq <- round(pop/divisor)
-		# min.autoseats <- fq < autoseats
-  #   	fq[min.autoseats] <- autoseats
-    return(fq)
-	}
-	'standardizeText' <- function(m) substrLeft(deleteSpaces(tolower(substrPunct(m))),30)
 
 	appt <- function(pop, states, nseats=435, method="webster") {
 			'divisor' <- function(round="hill-huntington") {
@@ -45,6 +34,19 @@ require(tidyverse)
 			names(appt.temp) <- c("state", "apportionment")
 		return(appt.temp)
 	}
+
+apportion <- function(STATES, POP, n_seats=435, autoseats=1, threshold=0, method = "hill-huntington", state = "all") {
+require(tidyverse)
+	'firstquota' <- function(pop, divisor, round="down") {
+		if (round == "down") fq <- floor(pop/divisor)
+		if (round == "up") fq <- ceiling(pop/divisor)
+		if (round == "nearest") fq <- round(pop/divisor)
+		# min.autoseats <- fq < autoseats
+  #   	fq[min.autoseats] <- autoseats
+    return(fq)
+	}
+	'standardizeText' <- function(m) substrLeft(deleteSpaces(tolower(substrPunct(m))),30)
+
 
 
 	if (state != "all") {
