@@ -117,7 +117,7 @@ require(tidyverse)
 }
 
 
-rep.appt.gain <- function(pop, states, method="hill-huntington") {
+appt.gain <- function(pop, states, method="hill-huntington") {
 	appt.change <- data.frame(st=states, minpop=NA)
 		a <- appt(pop,states,435, method=method)
 		for (j in 1:length(states)) {
@@ -153,7 +153,7 @@ rep.appt.gain <- function(pop, states, method="hill-huntington") {
 	}
 
 
-	rep.appt.lose <- function(pop, states, method="jefferson") {
+appt.lose <- function(pop, states, method="jefferson") {
 	appt.change <- data.frame(st=states, minpop=NA)
 	a <- appt(pop,states,435, method=method)
 		for (j in 1:length(states)) {
