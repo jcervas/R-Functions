@@ -113,7 +113,7 @@ apportion <- function(POP, STATES, nseats=435, autoseats=1, threshold=0, method=
 	    }
 
 	    if (!method %in% c("hill-huntington", "hamilton")) {
-	    	appt.tmp <- appt(POP, STATES, nseats=435, method=method)
+	    	apportionment <- appt(POP, STATES, nseats=435, method=method)
 	    }
 
 		if (state == "all") {
