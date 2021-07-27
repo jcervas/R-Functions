@@ -14,7 +14,12 @@
 	seed=66
 	) {
 		set.seed(seed)
-		sv <- list(sv = list(), inversions = list(), sbar = list(), wins.total = list())
+		sv <- list(
+			# sv = list(), 
+			# inversions = list(), 
+			# sbar = list(), 
+			# wins.total = list()
+			)
 				stopifnot(all.equal(length(VOTES),length(LAGVOTES)))
 				# stopifnot(is.null(years))
 			if (is.null(years)) years  <- unique(YEAR)
@@ -98,6 +103,7 @@
 			sv$biasmeans[[k]] <- cbind.data.frame(VoteShare=vbar.range, SeatShare=sbar.50, SeatSD=sbar.50.sd, One=sbar.1, Five=sbar.5, NintyFive=sbar.95, NintyNine=sbar.99, MinShift=min.shift.j, NCA=nca.j, Inversions_Dem=inv.j.d, Inversions_Rep=inv.j.r)
 			# sv$sbar[[k]] <- sbar_full
 			sv$votebias[[k]] <- mean(unlist(s50))
+			sv$seatbias[[k]] <- sbar.50[151]
 			# sv$seats50 <- sbar_full
 			# sv$dvote[[k]] <- dvote.j
 		}
