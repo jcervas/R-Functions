@@ -15,12 +15,7 @@
 	seed=66
 	) {
 		set.seed(seed)
-		sv <- list(
-			# sv = list(), 
-			# inversions = list(), 
-			# sbar = list(), 
-			# wins.total = list()
-			)
+		sv <- list()			)
 				stopifnot(all.equal(length(VOTES),length(LAGVOTES)))
 				# stopifnot(is.null(year))
 			stopifnot(!is.null(year))
@@ -41,30 +36,29 @@
 		    resid.errors[i] <- sqrt(deviance(fit)/(n-2))
 		        }
 			resid.errors[resid.errors<0.01] <- sigma
-		# Start looping through year
-			# for (k in 1:length(year)) {
-				cat(paste0("\n",year, "..."))
 
-				y.k <- YEARS %in% year
-				year.index <- match(year, unique(YEARS))
+					cat(paste0("\n",year, "..."))
 
-				start.year.indicator <- year.index-2 #two elections prior
-					if (year.index == 1L) start.year.indicator <- k
-					if (year.index == 2L) start.year.indicator <- (k-1)
-				end.year.indicator <- year.index #current election
+					y.k <- YEARS %in% year
+					year.index <- match(year, unique(YEARS))
 
-				rho <-  mean(coefs[start.year.indicator:end.year.indicator,2]) #get rho by taking mean coef from 3 year leading up to election year: 
-				(sigma <- mean(resid.errors[start.year.indicator:end.year.indicator])) #get mean residual standard error from past 3 year
+					start.year.indicator <- year.index-2 #two elections prior
+						if (year.index == 1L) start.year.indicator <- k
+						if (year.index == 2L) start.year.indicator <- (k-1)
+					end.year.indicator <- year.index #current election
 
-				dvote <- VOTES[y.k]
-				VOTES.denominator <- TOTAL[y.k]
-				ecvotes.k <- SEATS[y.k]
-				dvote.imp <- default.unc(VOTES[y.k]) #imputed VOTES
-				dvote.lag.k <- default.unc(LAGVOTES[y.k]) #use imputed lagged VOTES for prediction
+					rho <-  mean(coefs[start.year.indicator:end.year.indicator,2]) #get rho by taking mean coef from 3 year leading up to election year: 
+					(sigma <- mean(resid.errors[start.year.indicator:end.year.indicator])) #get mean residual standard error from past 3 year
 
-				vbar.range <- vBar.range #create range from 35 to 65
-				inv.j.d <- inv.j.r <- min.shift.j <- nca.j <- sbar.50.sd <- sbar.50 <- sbar.5 <- sbar.95 <- sbar.1 <- sbar.99 <- rep(NA, length(vbar.range)) #empty vectors for storing results
-				s50 <- dvote.j <- sbar_full <- list()
+					dvote <- VOTES[y.k]
+					VOTES.denominator <- TOTAL[y.k]
+					ecvotes.k <- SEATS[y.k]
+					dvote.imp <- default.unc(VOTES[y.k]) #imputed VOTES
+					dvote.lag.k <- default.unc(LAGVOTES[y.k]) #use imputed lagged VOTES for prediction
+
+					vbar.range <- vBar.range #create range from 35 to 65
+					inv.j.d <- inv.j.r <- min.shift.j <- nca.j <- sbar.50.sd <- sbar.50 <- sbar.5 <- sbar.95 <- sbar.1 <- sbar.99 <- rep(NA, length(vbar.range)) #empty vectors for storing results
+					s50 <- dvote.j <- sbar_full <- list()
 			# Start looping over interavls of vbar_j
 				for (j in 1:length(vbar.range)){
 					cat(".")
@@ -82,7 +76,7 @@
 						nca.i[i] <- nca(predict.d, ecvotes.k, VOTES.denominator)
 						inv.tmp.d[i] <- 0 + (1 * (sbar[i] < 0.5 & vbar >= 0.5))
 						inv.tmp.r[i] <- 0 + (1 * (sbar[i] > 0.5 & vbar <= 0.5))
-					}
+						}
 					dvote.j[[j]] <- dvote.i
 					min.shift.j[j] <- mean(min.shift.i)
 					nca.j[j] <- mean(nca.i)
@@ -97,7 +91,7 @@
 					inv.j.d[j] <- sum(inv.tmp.d)
 					inv.j.r[j] <- sum(inv.tmp.r)
 					# if (vbar[j] == 0.5) {sbar_full[[j]] <- sbar}
-				}
+					}
 				if (!is.null(path)) {writeLines(jsonlite::toJSON(dvote.j, pretty=T, auto_unbox = T, na= "string"), paste0(path, "/sims_", year, ".json"))}
 				# sbar_full.u <- unlist(sbar_full)
 			sv$election_info <- data.frame(year=year, Votes=mean.w(dvote,VOTES.denominator), Seats=sum(find.winner(dvote) * ecvotes.k)/sum(ecvotes.k), total_EC=sum(ecvotes.k))
