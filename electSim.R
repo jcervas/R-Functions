@@ -5,12 +5,13 @@
 	TOTAL, 
 	SEATS, 
 	POP, 
-	YEAR, 
-	years=NULL, 
+	YEARS, 
+	year=NULL, 
 	vBar.range=c(0.35, 0.65), 
 	n.sims=1000, 
 	plot=F, 
-	path=NULL, 
+	path=NULL,
+	sigma=0.06514486, #Historic residual error
 	seed=66
 	) {
 		set.seed(seed)
@@ -21,14 +22,14 @@
 			# wins.total = list()
 			)
 				stopifnot(all.equal(length(VOTES),length(LAGVOTES)))
-				# stopifnot(is.null(years))
-			if (is.null(years)) years  <- unique(YEAR)
-			asv <- npv <- ppv <- ewv <- rep(NA, length(unique(YEAR))) #create empty vector for avg. state VOTES, 1868-2016
-			coefs <- array(NA, c(length(unique(YEAR)), 2)) #create empty matrix to store coefficients
-			resid.errors <- rep(NA, length(unique(YEAR))) #empty vector to store residual errors
+				# stopifnot(is.null(year))
+			stopifnot(!is.null(year))
+			asv <- npv <- ppv <- ewv <- rep(NA, length(unique(YEARS))) #create empty vector for avg. state VOTES, 1868-2016
+			coefs <- array(NA, c(length(unique(YEARS)), 2)) #create empty matrix to store coefficients
+			resid.errors <- rep(NA, length(unique(YEARS))) #empty vector to store residual errors
 
-		for (i in 1:length(unique(YEAR))) {
-			y.i <- YEAR %in% unique(YEAR)[i]
+		for (i in 1:length(unique(YEARS))) {
+			y.i <- YEARS %in% unique(YEARS)[i]
 		    asv[i] <- mean.w(VOTES[y.i]) #get asv for each year, 1868-2016
 		    npv[i] <- mean.w(VOTES[y.i], TOTAL[y.i]) #get npv for each year, 1868-2016
 		    ppv[i] <- mean.w(VOTES[y.i], POP[y.i]) #get ppv for each year, 1868-2016
@@ -39,21 +40,21 @@
 		    coefs[i,] <- coef(fit)
 		    resid.errors[i] <- sqrt(deviance(fit)/(n-2))
 		        }
-			resid.errors[resid.errors<0.01] <- 0.06514486
-		# Start looping through years
-			for (k in 1:length(years)) {
-				cat(paste0("\n",years[k], "..."))
+			resid.errors[resid.errors<0.01] <- sigma
+		# Start looping through year
+			# for (k in 1:length(year)) {
+				cat(paste0("\n",year, "..."))
 
-				y.k <- YEAR %in% years[k]
-				year.index <- match(years[k], unique(YEAR))
+				y.k <- YEARS %in% year
+				year.index <- match(year, unique(YEARS))
 
 				start.year.indicator <- year.index-2 #two elections prior
 					if (year.index == 1L) start.year.indicator <- k
 					if (year.index == 2L) start.year.indicator <- (k-1)
 				end.year.indicator <- year.index #current election
 
-				rho <-  mean(coefs[start.year.indicator:end.year.indicator,2]) #get rho by taking mean coef from 3 years leading up to election years: 
-				sigma <- mean(resid.errors[start.year.indicator:end.year.indicator]) #get mean residual standard error from past 3 years
+				rho <-  mean(coefs[start.year.indicator:end.year.indicator,2]) #get rho by taking mean coef from 3 year leading up to election year: 
+				(sigma <- mean(resid.errors[start.year.indicator:end.year.indicator])) #get mean residual standard error from past 3 year
 
 				dvote <- VOTES[y.k]
 				VOTES.denominator <- TOTAL[y.k]
@@ -97,15 +98,15 @@
 					inv.j.r[j] <- sum(inv.tmp.r)
 					# if (vbar[j] == 0.5) {sbar_full[[j]] <- sbar}
 				}
-				if (!is.null(path)) {writeLines(jsonlite::toJSON(dvote.j, pretty=T, auto_unbox = T, na= "string"), paste0(path, "/sims_", years[k], ".json"))}
+				if (!is.null(path)) {writeLines(jsonlite::toJSON(dvote.j, pretty=T, auto_unbox = T, na= "string"), paste0(path, "/sims_", year, ".json"))}
 				# sbar_full.u <- unlist(sbar_full)
-			sv$election_info[[k]] <- data.frame(year=years[k], Votes=mean.w(dvote,VOTES.denominator), Seats=sum(find.winner(dvote) * ecvotes.k)/sum(ecvotes.k), total_EC=sum(ecvotes.k))
-			sv$biasmeans[[k]] <- cbind.data.frame(VoteShare=vbar.range, SeatShare=sbar.50, SeatSD=sbar.50.sd, One=sbar.1, Five=sbar.5, NintyFive=sbar.95, NintyNine=sbar.99, MinShift=min.shift.j, NCA=nca.j, Inversions_Dem=inv.j.d, Inversions_Rep=inv.j.r)
-			# sv$sbar[[k]] <- sbar_full
-			sv$votebias[[k]] <- mean(unlist(s50))
-			sv$seatbias[[k]] <- sbar.50[151]
+			sv$election_info <- data.frame(year=year, Votes=mean.w(dvote,VOTES.denominator), Seats=sum(find.winner(dvote) * ecvotes.k)/sum(ecvotes.k), total_EC=sum(ecvotes.k))
+			sv$biasmeans <- cbind.data.frame(VoteShare=vbar.range, SeatShare=sbar.50, SeatSD=sbar.50.sd, One=sbar.1, Five=sbar.5, NintyFive=sbar.95, NintyNine=sbar.99, MinShift=min.shift.j, NCA=nca.j, Inversions_Dem=inv.j.d, Inversions_Rep=inv.j.r)
+			# sv$sbar <- sbar_full
+			sv$votebias <- mean(unlist(s50))
+			sv$seatbias <- sbar.50[151]
 			# sv$seats50 <- sbar_full
-			# sv$dvote[[k]] <- dvote.j
+			# sv$dvote <- dvote.j
 		}
 			# rm(dvote.j,sbar_full,dvote.i)
 		return(invisible(sv))
