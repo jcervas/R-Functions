@@ -107,7 +107,7 @@
 			sv$seatbias <- sbar.50[151]
 			# sv$seats50 <- sbar_full
 			# sv$dvote <- dvote.j
-		}
+		# }
 			# rm(dvote.j,sbar_full,dvote.i)
 		return(invisible(sv))
 	}
