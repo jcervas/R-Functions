@@ -43,8 +43,8 @@
 					year.index <- match(year, unique(YEARS))
 
 					start.year.indicator <- year.index-2 #two elections prior
-						if (year.index == 1L) start.year.indicator <- k
-						if (year.index == 2L) start.year.indicator <- (k-1)
+						if (year.index == 1L) start.year.indicator <- 1L
+						if (year.index == 2L) start.year.indicator <- 2L
 					end.year.indicator <- year.index #current election
 
 					rho <-  mean(coefs[start.year.indicator:end.year.indicator,2]) #get rho by taking mean coef from 3 year leading up to election year: 
