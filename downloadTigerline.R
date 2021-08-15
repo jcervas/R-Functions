@@ -104,6 +104,19 @@ for (i in 1:length(us.files)) {
 	unlink(temp)
 }
 
+
+cntysub <- list()
+cntysub.length <- rep(NA, length(us.files))
+for (i in 1:length(us.files)) {
+	temp <- tempfile()
+	download.file(paste0("https://www2.census.gov/geo/tiger/TIGER2020/COUSUB/tl_2020_", us.files[i], "_cousub.zip"), destfile= temp)
+	a <- unzip(temp, exdir=paste0("/Users/user/Downloads/cousub/", us.files[i]))
+	unlink(temp)
+}
+
+
+
+
 options(timeout=200)
 blocks <- list()
 # blocks.length <- rep(NA, length(us.files))
