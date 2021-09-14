@@ -30,19 +30,19 @@ write.csv(a, "block_equiv.csv", row.names=F)
 
 - Now that we have the new assignments, let's map the data to make sure it looks right
 ```
-mn_blocks <- rgdal::readOGR(block_poly)
-mn_blocks@data <- dplyr::full_join(mn_blocks@data, a, by= c("GEOID10"="ID"))
- 	mn_blocks@data$District[is.na(mn_blocks@data$District)] <- 0
+block_poly <- rgdal::readOGR(block_poly)
+block_poly@data <- dplyr::full_join(block_poly@data, a, by= c("GEOID10"="ID"))
+ 	block_poly@data$District[is.na(block_poly@data$District)] <- 0
 
 		cols <- cbind.data.frame(
-			District=unique(mn_blocks$District),
-			cols=sample(c("#A6CEE3", "#1F78B4", "#FFFF99", "#FF7F00", "#ADDD8E", "#B2DF8A", "#2b51a1", "#f9f934", "#f75167", "#80B1D3", "#FB8090", "#8dd3c7", "#ADDD8E", "#fdb462", "#FDDBC7", "#00B0F0", "#70AD47", "#305496", "#bc80bd", "#fb8072", "#e31a1c", "#3182BD", "#fdbf6f", "#ffff99", "#FF7F00", "#a6cee3"), length(unique(mn_blocks$District)))
+			District=unique(block_poly$District),
+			cols=sample(c("#A6CEE3", "#1F78B4", "#FFFF99", "#FF7F00", "#ADDD8E", "#B2DF8A", "#2b51a1", "#f9f934", "#f75167", "#80B1D3", "#FB8090", "#8dd3c7", "#ADDD8E", "#fdb462", "#FDDBC7", "#00B0F0", "#70AD47", "#305496", "#bc80bd", "#fb8072", "#e31a1c", "#3182BD", "#fdbf6f", "#ffff99", "#FF7F00", "#a6cee3"), length(unique(block_poly$District)))
 			)
-mn_blocks@data <- dplyr::left_join(mn_blocks@data, cols, by="District")
-mn_blocks@data$cols[is.na(mn_blocks@data$cols)] <- "#000000"
+block_poly@data <- dplyr::left_join(block_poly@data, cols, by="District")
+block_poly@data$cols[is.na(block_poly@data$cols)] <- "#000000"
 
 png("map.png", height = 1200*5, width = 900*5, units = "px", pointsize = 12)
-	plot(mn_blocks, border = "#FFFFFF", col = mn_blocks@data$cols, lty=1, lwd = 0.5)
+	plot(block_poly, border = "#FFFFFF", col = block_poly@data$cols, lty=1, lwd = 0.5)
 	plot(district_shp, border="gray50", lwd=3, add=T)
 dev.off()
 ```
