@@ -2,7 +2,7 @@
 library(rmapshaper)
 library(raster)
 
-assignPolys <- function(block_point=NA, district_shp=NA, districtID=NA, blockID=NA, district_label=NA) {
+assignPolys <- function(district_shp=NA, point_shp=NA, districtID=NA, blockID=NA, district_label=NA) {
 	library(rgdal)
 	if (class(district_shp) %in% "SpatialPolygonsDataFrame") {
 			district.shp <- district_shp
