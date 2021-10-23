@@ -7,6 +7,7 @@ indianred.75 <- rgb(205, 92, 92, 191, max =255)
 #TEST 
 seq(34,38,1)
 i=39
+
 	biasmeans <- gk_sv[[i]]$biasmeans
 	votes <- gk_sv[[i]]$election_info$Votes
 	seats <- gk_sv[[i]]$election_info$Seats
@@ -15,7 +16,7 @@ i=39
 	range.x=c(0.40,0.6)
 
 sv_plot(
-	biasmeans=biasmeans, 
+	biasmeans=bias.sims[[39]], 
 	year=year, 
 	range.x=c(0.45,0.65), 
 	range.y=c(0.45,0.95), 
@@ -31,7 +32,8 @@ sv_plot <- function(
 	range.x=c(0.45,0.65), 
 	range.y=c(0.45,0.95), 
 	votes, 
-	seats) {
+	seats,
+	ci=F) {
 		bias.tmp <- biasmeans
 		nom.tmp <- nom[nom$year %in% year,]
 		votes.actual <- paste0(round(ifelse(seats>0.5, votes, 1-votes), d=3)*100, "%")
@@ -52,6 +54,7 @@ sv_plot <- function(
 				ylim=c(range.y.low,range.y.high), 
 				xlim=c(range.x.low,range.x.high), 
 				main=paste0(year, " Presidential Election"))
+				if (ci==T) {
 				polygon(
 					x= c(
 						x,
@@ -70,6 +73,7 @@ sv_plot <- function(
 						1-bias.tmp$SeatShare[1:201]-bias.tmp$SeatSD[1:201]), 
 					col=indianred.30, 
 					border=NA)
+					}
 				lines(
 					seq(0.45,0.65,0.001), 
 					(bias.tmp$SeatShare[101:301]), 

@@ -171,8 +171,26 @@ function(v,s, main=NULL)
 			# rect(0,0,1.05,-.05, col = rgb(0.1,0.1,0.1,1/2), density=40, border = "transparent") #bottom
 			# rect(1,0,1.05,1.05, col = rgb(0.1,0.1,0.1,1/2), density=40, border = "transparent") #right
 			# rect(0,1,1,1.05, col = rgb(0.1,0.1,0.1,1/2), density=40, border = "transparent") #top
-	# plot(cube, from=0, to=1, add=TRUE, lwd=1.5, col="gray90", lty=4)
-	# plot(cube, from=0, to=1, add=TRUE, lwd=1, col="gray80", lty=5)
+			sv.hyp <- function(r, b, n = 1000){
+			  V  <- seq(from = 0.001,to = 0.999, length = n )
+			  LV <- log(V/(1-V))
+			  S  <- (1+exp(-b - r*LV))^-1
+			  
+			  dta <- cbind.data.frame(V,S)
+			  
+			  return(dta)
+			}
+			# 	majoritarian.sv.dta <- sv.hyp(r = 3, b = 0)
+			# 	proporional.sv.dta  <- sv.hyp(r = 1, b = 0)
+			# 	negative.dv.dta     <- sv.hyp(r = 0.50, b = 0)
+			# 	winner.sv.dta       <- sv.hyp(r = 10000, b = 0)
+			# plot(cube, from=0, to=1, add=TRUE, lwd=1.5, col="gray50", lty=4)
+			# plot(cube, from=0, to=1, add=TRUE, lwd=1, col="gray40", lty=5)
+			# lines(majoritarian.sv.dta, lwd=1.5, col="gray50", lty=4)
+			# lines(negative.dv.dta, lwd=1.5, col="gray50", lty=4)
+			# lines(winner.sv.dta, lwd=1.5, col="gray50", lty=4)
+			# lines(proporional.sv.dta, lwd=1.5, col="gray50", lty=4)
+
 	reg <- summary(lm(log(sv(s)) ~ log(sv(v))))
 	VOTES.tmp <- seq(0,1, by=.01)
 	seatvotes <- reg$coefficients[2]*log(VOTES.tmp/(1 - VOTES.tmp)) + reg$coefficients[1]
@@ -185,7 +203,7 @@ function(v,s, main=NULL)
 	points(v.tmp,s.tmp, cex=2, col="gray10", pch=19)
 	points(v.tmp,s.tmp, cex=.75, col="gray60", pch=15)
 	text(v.tmp,s.tmp, "Actual Election Results", cex=.6, pos=4)
-	# text(.23,.25, "PROPORTIONAL REPRESENTATION", srt=45, cex=.5, col="gray90")
+	text(.23,.25, "PROPORTIONAL REPRESENTATION", srt=45, cex=.5, col="gray50")
 	}
 
 
