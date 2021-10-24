@@ -48,7 +48,7 @@
 
 						mtext(side=1, line=2, "% of Two-Party Votes", cex=1)
 						mtext(side=2, line=3, "% of Two-Party Seats", cex=1)
-						if (path != NULL) {
+						if (!is.null(path)) {
 							dev.off() 
 							}
 				}
