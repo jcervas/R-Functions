@@ -13,7 +13,7 @@
 				winner.sv.dta       <- sv.hyp(r = 10000, b = 0)
 
 				'svplot' <- function (v,s, path=NULL) {
-					if (path != NULL) {
+					if (!is.null(path)) {
 						svg(path, width=10, height=6)
 					}
 					par(pty="s", mar=c(3.5,2.5,2,1))
