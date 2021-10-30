@@ -26,10 +26,10 @@
 						axis(side=2, las=2, at=seq(0,1,0.01), labels=F, lwd.ticks=0.2, tck=-0.01)
 						axis(side=2, las=2, at=seq(0,1, 0.2), labels=c("0%", "20%", "40%", "60%", "80%", "100%"))
 
-					abline(v=seq(0,1,0.2), lty=3, col="gray80")
-					abline(h=seq(0,1,0.2), lty=3, col="gray80")
-					abline(v=0.5, lty=2, col="gray40")
-					abline(h=0.5, lty=2, col="gray40")
+							abline(v=seq(0,1,0.2), lty=3, col="gray80")
+							abline(h=seq(0,1,0.2), lty=3, col="gray80")
+							abline(v=0.5, lty=2, col="gray40")
+							abline(h=0.5, lty=2, col="gray40")
 							rect(-.05,-.05,0,1.05, col = rgb(0.1,0.1,0.1,1/2), density=40, border = "transparent") #left
 							rect(0,0,1.05,-.05, col = rgb(0.1,0.1,0.1,1/2), density=40, border = "transparent") #bottom
 							rect(1,0,1.05,1.05, col = rgb(0.1,0.1,0.1,1/2), density=40, border = "transparent") #right
