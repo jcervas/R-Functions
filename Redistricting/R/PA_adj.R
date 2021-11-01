@@ -60,12 +60,14 @@ pa_adj <- function (x) {
 			421019809013016
 			)
 		names(x) <- c("block", "District")
+		x.1 <- x
+		x.1 <- x[!x[,1] %in% adj_ids,]
 		x.makeadjust <- x[x[,1] %in% adj_ids,]
 		x.A <- cbind.data.frame(block=paste0(x.makeadjust[,1],"A"), District=x.makeadjust[,2])
 		x.B <- cbind.data.frame(block=paste0(x.makeadjust[,1],"B"), District=x.makeadjust[,2])
 			x.C <- x[x[,1] %in% 420912087041000,]
 		x.C <- cbind.data.frame(block=paste0(x.C[,1],"C"), District=x.C[,2])
-x_adj <- rbind(x, x.A, x.B, x.C)
+x_adj <- rbind(x.1, x.A, x.B, x.C)
 
 
 
