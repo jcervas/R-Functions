@@ -1,7 +1,7 @@
 options(scipen=999) # Turn off Scientific Notation
 
 
-function (x) {
+pa_adj <- function (x) {
 	adj_ids <- 
 		c(
 			420912003017006,
