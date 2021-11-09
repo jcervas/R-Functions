@@ -1,8 +1,0 @@
-
-72
-"ID",I,1,4,0,4,0,,"","",,"Sum",
-"District",C,5,12,0,12,0,,"","",,"Copy",
-"Members",R,17,8,0,8,1,,"","",,"Sum",
-"Locked",C,25,1,0,1,0,,"","",,"Sum",
-"Name",C,26,43,0,43,0,,"","",,"Sum",
-"Adj_Population",I,69,4,0,11,0,,"","Total Persons|Adjusted 2020 PL94-171:P0010001|Pennsylvania 2020 Census Prisoner Adjustment",,"Sum",
