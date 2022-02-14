@@ -2,10 +2,10 @@
 
 source("https://raw.githubusercontent.com/jcervas/R-Functions/main/Redistricting/assignBlocks.R")
 
-# Download from "https://www.census.gov/cgi-bin/geo/shapefiles/index.php?year=2021&layergroup=County+Subdivisions"
+- Download from "https://www.census.gov/cgi-bin/geo/shapefiles/index.php?year=2021&layergroup=County+Subdivisions"
 district_shp <- rgdal::readOGR("/Users/user/Google Drive/GitHub/Data Files/Census/NJ/tl_2021_34_cousub/tl_2021_34_cousub.shp")
 
-# Download from "https://www.census.gov/cgi-bin/geo/shapefiles/index.php?year=2021&layergroup=Blocks+%282020%29" and transform in mapshaper.org
+- Download from "https://www.census.gov/cgi-bin/geo/shapefiles/index.php?year=2021&layergroup=Blocks+%282020%29" and transform in mapshaper.org
 block_point <- rgdal::readOGR("/Users/user/Google Drive/GitHub/Data Files/Census/NJ/NJ_blocks_centroids/NJ_blocks_centroids.shp")
 block_poly <- rgdal::readOGR("/Users/user/Google Drive/GitHub/Data Files/Census/NJ/tl_2021_34_tabblock20/tl_2021_34_tabblock20.shp")
 
