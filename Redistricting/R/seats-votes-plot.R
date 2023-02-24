@@ -17,7 +17,7 @@
 						svg(path, width=10, height=6)
 					}
 					par(pty="s", mar=c(3.5,2.5,2,1))
-					plot(v=0,s=0, ylim=c(0,1), xlim=c(0,1), type="p", pch=19, col="#FFFFFF", main="Symmetry", xlab="", ylab="", bty="n", axes=F)
+					plot(v,s, ylim=c(0,1), xlim=c(0,1), type="p", pch=19, col="#FFFFFF", main="Symmetry", xlab="", ylab="", bty="n", axes=F)
 						axis(side=1, las=2, at=seq(0,1,0.1), labels=F, lwd.ticks=0.4)
 						axis(side=1, las=2, at=seq(0,1,0.01), labels=F, lwd.ticks=0.2, tck=-0.01)
 						axis(side=1, at=seq(0, 1, 0.2), labels=c("0%", "20%", "40%", "60%", "80%", "100%"))
