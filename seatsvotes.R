@@ -195,12 +195,12 @@ sv.hyp <- function(r, b, n = 1000){
 				# text(x =  0.35, y = 0.60, "Winner-take-all", srt=0, cex=1, col="dark green")
 				# text(x =  0.61, y = 0.96, "Majoritarian", srt=0, cex=1, col="purple")
 				# text(x =  0.76, y = 0.55, "Negative Bonus", srt=0, cex=1, col="orange")
-sv_curve <- function(s,v) {
+sv_curve <- function(s,v, lwd=2, col="gray40") {
 	reg <- summary(lm(log(sv(s)) ~ log(sv(v))))
 	VOTES.tmp <- seq(0,1, by=.01)
 	seatvotes <- reg$coefficients[2]*log(VOTES.tmp/(1 - VOTES.tmp)) + reg$coefficients[1]
 	funct2 <- function (x) exp(seatvotes) / (1 + exp(seatvotes)) 
-	plot(funct2, from=0.0, to=1, add=TRUE, lwd=2, col="gray40")
+	plot(funct2, from=0.0, to=1, add=TRUE, lwd=lwd, col=col)
 
 	## redraw so actual results on top
 	#v.tmp <- round(mean.w(VOTES, POP), 3)
