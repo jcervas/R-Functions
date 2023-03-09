@@ -202,12 +202,12 @@ sv_curve <- function(s,v) {
 	funct2 <- function (x) exp(seatvotes) / (1 + exp(seatvotes)) 
 	plot(funct2, from=0.0, to=1, add=TRUE, lwd=2, col="gray40")
 
-	# lines(v,s) #redraw so actual results on top
-		v.tmp <- round(mean.w(VOTES, POP), 3)
-		s.tmp <- round(sum(find.winner(VOTES) * SEATS)/sum(SEATS), 3)
-	points(v.tmp,s.tmp, cex=2, col="gray10", pch=19)
-	points(v.tmp,s.tmp, cex=.75, col="gray60", pch=15)
-	text(v.tmp,s.tmp, "Actual Election Results", cex=.6, pos=4)
+	## redraw so actual results on top
+	#v.tmp <- round(mean.w(VOTES, POP), 3)
+	#s.tmp <- round(sum(find.winner(VOTES) * SEATS)/sum(SEATS), 3)
+	#points(v.tmp,s.tmp, cex=2, col="gray10", pch=19)
+	#points(v.tmp,s.tmp, cex=.75, col="gray60", pch=15)
+	#text(v.tmp,s.tmp, "Actual Election Results", cex=.6, pos=4)
 	text(.23,.25, "PROPORTIONAL REPRESENTATION", srt=45, cex=.5, col="gray50")
 	}
 
