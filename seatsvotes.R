@@ -161,7 +161,7 @@ summary(reg <- lm (log(sv(s)) ~ log(sv(v))))   #### Log-Odds Regression
 function(v,s, main=NULL) 
 	{
 	par(pty="s", mar=c(2.5,2.5,2,1))
-	plot(1, type = "n", ylim=c(0,1), xlim=c(0,1), type="p", pch=19, col=paste0("#000000", opacity[40]), ylab="SEATS", xlab="Votes" , main=main, bty="n", axes=F)
+	plot(1, type = "n", ylim=c(0,1), xlim=c(0,1), pch=19, col=paste0("#000000", opacity[40]), ylab="SEATS", xlab="Votes" , main=main, bty="n", axes=F)
 	axis(side=1, at=seq(0, 1, 0.2), labels=c("0%", "20%", "40%", "60%", "80%", "100%"))
 	axis(side=2, las=2, at=seq(0,1, 0.2), labels=c("0%", "20%", "40%", "60%", "80%", "100%"))
 	abline(v=.5, lty=3, col="gray40")
