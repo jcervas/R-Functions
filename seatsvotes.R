@@ -157,29 +157,30 @@ summary(reg <- lm (log(sv(s)) ~ log(sv(v))))   #### Log-Odds Regression
 
 
 
-'seatsvotes.plot' <- 
-function(v,s, main=NULL) 
+'seatsvotes.plot' <- function(main="") 
 	{
-	par(pty="s", mar=c(2.5,2.5,2,1))
-	plot(1, type = "n", ylim=c(0,1), xlim=c(0,1), pch=19, col=paste0("#000000", opacity[40]), ylab="SEATS", xlab="Votes" , main=main, bty="n", axes=F)
-	axis(side=1, at=seq(0, 1, 0.2), labels=c("0%", "20%", "40%", "60%", "80%", "100%"))
-	axis(side=2, las=2, at=seq(0,1, 0.2), labels=c("0%", "20%", "40%", "60%", "80%", "100%"))
-	abline(v=.5, lty=3, col="gray40")
-	abline(h=.5, lty=3, col="gray40")
-	abline(0,1, lty=2, col="gray90")
+		par(pty="s", mar=c(2.5,2.5,2,1))
+		plot(1, type = "n", ylim=c(0,1), xlim=c(0,1), pch=19, col=paste0("#000000", opacity[40]), ylab="SEATS", xlab="Votes" , main=main, bty="n", axes=F)
+		axis(side=1, at=seq(0, 1, 0.2), labels=c("0%", "20%", "40%", "60%", "80%", "100%"))
+		axis(side=2, las=2, at=seq(0,1, 0.2), labels=c("0%", "20%", "40%", "60%", "80%", "100%"))
+		abline(v=.5, lty=3, col="gray40")
+		abline(h=.5, lty=3, col="gray40")
+		abline(0,1, lty=2, col="gray90")
 			# rect(-.05,-.05,0,1.05, col = rgb(0.1,0.1,0.1,1/2), density=40, border = "transparent") #left
 			# rect(0,0,1.05,-.05, col = rgb(0.1,0.1,0.1,1/2), density=40, border = "transparent") #bottom
 			# rect(1,0,1.05,1.05, col = rgb(0.1,0.1,0.1,1/2), density=40, border = "transparent") #right
 			# rect(0,1,1,1.05, col = rgb(0.1,0.1,0.1,1/2), density=40, border = "transparent") #top
-			sv.hyp <- function(r, b, n = 1000){
-			  V  <- seq(from = 0.001,to = 0.999, length = n )
-			  LV <- log(V/(1-V))
-			  S  <- (1+exp(-b - r*LV))^-1
-			  
-			  dta <- cbind.data.frame(V,S)
-			  
-			  return(dta)
-			}
+	}
+
+sv.hyp <- function(r, b, n = 1000){
+  V  <- seq(from = 0.001,to = 0.999, length = n )
+  LV <- log(V/(1-V))
+  S  <- (1+exp(-b - r*LV))^-1
+
+  dta <- cbind.data.frame(V,S)
+
+  return(dta)
+}
 			# 	majoritarian.sv.dta <- sv.hyp(r = 3, b = 0)
 			# 	proporional.sv.dta  <- sv.hyp(r = 1, b = 0)
 			# 	negative.dv.dta     <- sv.hyp(r = 0.50, b = 0)
@@ -194,7 +195,7 @@ function(v,s, main=NULL)
 				# text(x =  0.35, y = 0.60, "Winner-take-all", srt=0, cex=1, col="dark green")
 				# text(x =  0.61, y = 0.96, "Majoritarian", srt=0, cex=1, col="purple")
 				# text(x =  0.76, y = 0.55, "Negative Bonus", srt=0, cex=1, col="orange")
-
+sv_curve <- function(s,v)
 	reg <- summary(lm(log(sv(s)) ~ log(sv(v))))
 	VOTES.tmp <- seq(0,1, by=.01)
 	seatvotes <- reg$coefficients[2]*log(VOTES.tmp/(1 - VOTES.tmp)) + reg$coefficients[1]
