@@ -24,6 +24,7 @@
 		abline(v=.5, lty=3, col="gray40")
 		abline(h=.5, lty=3, col="gray40")
 		abline(0,1, lty=2, col="gray90")
+		box()
 			# rect(-.05,-.05,0,1.05, col = rgb(0.1,0.1,0.1,1/2), density=40, border = "transparent") #left
 			# rect(0,0,1.05,-.05, col = rgb(0.1,0.1,0.1,1/2), density=40, border = "transparent") #bottom
 			# rect(1,0,1.05,1.05, col = rgb(0.1,0.1,0.1,1/2), density=40, border = "transparent") #right
