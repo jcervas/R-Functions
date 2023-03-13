@@ -1,4 +1,77 @@
-			sv.hyp <- function(r, b, n = 1000){
+'seatsvotes.plot' <- function(main="") 
+	{
+		par(pty="s", mar = c(2.5, 2, 2, 1), mgp = c(0.5, 0.5, 0))
+		plot(1, 
+		     type = "n", 
+		     ylim=c(0,1), 
+		     xlim=c(0,1),
+		     xaxs="i",
+		     yaxs="i",
+		     ylab="", 
+		     xlab="" , 
+		     main=main, 
+		     bty="n", 
+		     axes=F)
+			axis(side=1, las=2, at=seq(0,1,0.1), labels=F, lwd.ticks=0.4)
+			axis(side=1, las=2, at=seq(0,1,0.01), labels=F, lwd.ticks=0.2, tck=-0.01)
+			axis(side=1, at=seq(0,1,0.1), labels=paste0(seq(0,100,10), "%"), cex.axis=0.5, col.axis="gray50")
+			mtext("Votes", side=1, line = 1.5)
+	
+			axis(side=2, las=2, at=seq(0,1,0.1), labels=F, lwd.ticks=0.4)
+			axis(side=2, las=2, at=seq(0,1,0.01), labels=F, lwd.ticks=0.2, tck=-0.01)
+			axis(side=2, las=2, at=seq(0,1,0.1), labels=paste0(seq(0,100,10), "%"), cex.axis=0.5, col.axis="gray50")
+			mtext("Seats", side=2, line = 1.5)
+		abline(v=.5, lty=3, col="gray40")
+		abline(h=.5, lty=3, col="gray40")
+		abline(0,1, lty=2, col="gray90")
+			# rect(-.05,-.05,0,1.05, col = rgb(0.1,0.1,0.1,1/2), density=40, border = "transparent") #left
+			# rect(0,0,1.05,-.05, col = rgb(0.1,0.1,0.1,1/2), density=40, border = "transparent") #bottom
+			# rect(1,0,1.05,1.05, col = rgb(0.1,0.1,0.1,1/2), density=40, border = "transparent") #right
+			# rect(0,1,1,1.05, col = rgb(0.1,0.1,0.1,1/2), density=40, border = "transparent") #top
+	}
+
+sv.hyp <- function(r, b, n = 1000){
+  V  <- seq(from = 0.001,to = 0.999, length = n )
+  LV <- log(V/(1-V))
+  S  <- (1+exp(-b - r*LV))^-1
+
+  dta <- cbind.data.frame(V,S)
+
+  return(dta)
+}
+			# 	majoritarian.sv.dta <- sv.hyp(r = 3, b = 0)
+			# 	proporional.sv.dta  <- sv.hyp(r = 1, b = 0)
+			# 	negative.dv.dta     <- sv.hyp(r = 0.50, b = 0)
+			# 	winner.sv.dta       <- sv.hyp(r = 10000, b = 0)
+			# plot(cube, from=0, to=1, add=TRUE, lwd=1.5, col="gray50", lty=4)
+			# plot(cube, from=0, to=1, add=TRUE, lwd=1, col="gray40", lty=5)
+			# lines(majoritarian.sv.dta, lwd=1.5, col="gray50", lty=4)
+			# lines(negative.dv.dta, lwd=1.5, col="gray50", lty=4)
+			# lines(winner.sv.dta, lwd=1.5, col="gray50", lty=4)
+			# lines(proporional.sv.dta, lwd=1.5, col="gray50", lty=4)
+				# text(x =  0.23, y = 0.25, "PROPORTIONAL REPRESENTATION", srt=45, cex=1, col="gray50")
+				# text(x =  0.35, y = 0.60, "Winner-take-all", srt=0, cex=1, col="dark green")
+				# text(x =  0.61, y = 0.96, "Majoritarian", srt=0, cex=1, col="purple")
+				# text(x =  0.76, y = 0.55, "Negative Bonus", srt=0, cex=1, col="orange")
+sv_curve <- function(s,v, lwd=2, col="gray40") {
+	reg <- summary(lm(log(sv(s)) ~ log(sv(v))))
+	VOTES.tmp <- seq(0,1, by=.01)
+	seatvotes <- reg$coefficients[2]*log(VOTES.tmp/(1 - VOTES.tmp)) + reg$coefficients[1]
+	funct2 <- function (x) exp(seatvotes) / (1 + exp(seatvotes)) 
+	plot(funct2, from=0.0, to=1, add=TRUE, lwd=lwd, col=col)
+
+	## redraw so actual results on top
+	#v.tmp <- round(mean.w(VOTES, POP), 3)
+	#s.tmp <- round(sum(find.winner(VOTES) * SEATS)/sum(SEATS), 3)
+	#points(v.tmp,s.tmp, cex=2, col="gray10", pch=19)
+	#points(v.tmp,s.tmp, cex=.75, col="gray60", pch=15)
+	#text(v.tmp,s.tmp, "Actual Election Results", cex=.6, pos=4)
+	text(.23,.25, "PROPORTIONAL REPRESENTATION", srt=45, cex=.5, col="gray50")
+	}
+	
+
+
+sv_hyp_plot <- function(r, b, n = 1000){
 			  V  <- seq(from = 0.001,to = 0.999, length = n )
 			  LV <- log(V/(1-V))
 			  S  <- (1+exp(-b - r*LV))^-1
