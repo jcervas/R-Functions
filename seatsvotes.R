@@ -159,10 +159,25 @@ summary(reg <- lm (log(sv(s)) ~ log(sv(v))))   #### Log-Odds Regression
 
 'seatsvotes.plot' <- function(main="") 
 	{
-		par(pty="s", mar=c(2.5,2.5,2,1))
-		plot(1, type = "n", ylim=c(0,1), xlim=c(0,1), pch=19, col=paste0("#000000", opacity[40]), ylab="SEATS", xlab="Votes" , main=main, bty="n", axes=F)
-		axis(side=1, at=seq(0, 1, 0.2), labels=c("0%", "20%", "40%", "60%", "80%", "100%"))
-		axis(side=2, las=2, at=seq(0,1, 0.2), labels=c("0%", "20%", "40%", "60%", "80%", "100%"))
+		par(pty="s", mar = c(2.5, 2, 2, 1), mgp = c(0.5, 0.5, 0))
+		plot(1, 
+		     type = "n", 
+		     ylim=c(0,1), 
+		     xlim=c(0,1),
+		     ylab="", 
+		     xlab="" , 
+		     main=main, 
+		     bty="n", 
+		     axes=F)
+			axis(side=1, las=2, at=seq(0,1,0.1), labels=F, lwd.ticks=0.4)
+			axis(side=1, las=2, at=seq(0,1,0.01), labels=F, lwd.ticks=0.2, tck=-0.01)
+			axis(side=1, at=seq(0, 1, 0.2), labels=paste0(seq(0,100,20), "%"), cex.axis=0.5, col.axis="gray50")
+			mtext("Votes", side=1, line = 1.5)
+	
+			axis(side=2, las=2, at=seq(0,1,0.1), labels=F, lwd.ticks=0.4)
+			axis(side=2, las=2, at=seq(0,1,0.01), labels=F, lwd.ticks=0.2, tck=-0.01)
+			axis(side=2, las=2, at=seq(0,1, 0.2), labels=c("0%", "20%", "40%", "60%", "80%", "100%"), cex.axis=0.5, col.axis="gray50")
+			mtext("Seats", side=2, line = 1.5)
 		abline(v=.5, lty=3, col="gray40")
 		abline(h=.5, lty=3, col="gray40")
 		abline(0,1, lty=2, col="gray90")
