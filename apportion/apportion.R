@@ -36,14 +36,14 @@ options(scipen=999)
 			names(appt.first) <- c("st", "appt")
 		st.list <- as.data.frame(table(STATES))
 			names(st.list) <- c("st", "x")
-		appt.temp <- full_join(appt.first, st.list, by="st")
+		appt.temp <- merge(appt.first, st.list, by="st", all=T)
 		auto.st <- as.character(appt.temp[,1][is.na(appt.temp[,2])])
 		auto.replace <- length(appt.temp[,2][is.na(appt.temp[,2])])
 		appt.temp <- appt.tmp[1:(nseats-auto.replace)]
 		appt.temp <- c(appt.temp, auto.st)
 		appt.temp <- as.data.frame(table(appt.temp))
 			names(appt.temp) <- c("st", "seats")
-			appt.temp.2 <- full_join(appt.temp, st.list, by="st")
+			appt.temp.2 <- merge(appt.temp, st.list, by="st", all=T)
 			auto.st2 <- as.character(appt.temp.2[,1][is.na(appt.temp.2[,2])])
 			auto.replace <- length(appt.temp.2[,2][is.na(appt.temp.2[,2])]) + auto.replace
 			appt.temp.2 <- appt.tmp[1:(nseats-auto.replace)]
