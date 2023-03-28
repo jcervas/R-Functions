@@ -24,8 +24,8 @@ options(scipen=999)
 	}
 
 'appt' <- function(POP, STATES, nseats=435, method="webster") {
-		divisors <- rep(divisor(method), length(POP))
-			divisors <- divisors[order(divisors)]
+		divs <- rep(divisor(method), length(POP))
+			divisors <- divs[order(divs)]
 
 		POP.matrix <- rep(POP,1000)/divisors
 			POP.order <- order(POP.matrix, decreasing=T)
