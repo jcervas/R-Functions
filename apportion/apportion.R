@@ -23,12 +23,13 @@ options(scipen=999)
     return(fq)
 	}
 
-'appt' <- function(POP, STATES, nseats=435, method="webster") {
+'appt' <- function(POP, STATES, nseats=435, autoseats=1, method="webster") {
 		divs <- rep(divisor(method), length(POP))
-			divisors <- divs[order(divs)]
+		divisors <- divs[order(divs)]
 
 		POP.matrix <- rep(POP,1000)/divisors
-			POP.order <- order(POP.matrix, decreasing=T)
+		POP.order <- order(POP.matrix, decreasing=T)
+		
 		st.matrix <- rep(STATES, 1000)
 		appt.tmp <- st.matrix[POP.order]
 		appt.first <- as.data.frame(table(appt.tmp[1:nseats]))
