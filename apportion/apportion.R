@@ -1,30 +1,29 @@
 
 #### apportion(data, column with state names, data with state POP, number of  seats to be allocated, number of minimum seats per state, minimum number of votes to be awarded any seat)
-library(tidyverse)
+##library(tidyverse)
 options(scipen=999)
+'standardizeText' <- function(m) substrLeft(deleteSpaces(tolower(substrPunct(m))),30)
 
-		'divisor' <- function(round="all") {
-			if (round == "all") fq <- 1:1000
-			if (round == "webster") fq <- seq(1, by = 2, len = 1000)
-			if (round == "jefferson") fq <- seq(2, by = 2, len = 1000)
-			if (round == "adams") fq <- seq(0, by = 2, len = 1000)
-			# min.autoseats <- fq < autoseats
-	  #   	fq[min.autoseats] <- autoseats
+'divisor' <- function(round="all") {
+	if (round == "all") fq <- 1:1000
+	if (round == "webster") fq <- seq(1, by = 2, len = 1000)
+	if (round == "jefferson") fq <- seq(2, by = 2, len = 1000)
+	if (round == "adams") fq <- seq(0, by = 2, len = 1000)
+  ## min.autoseats <- fq < autoseats
+  ## fq[min.autoseats] <- autoseats
 	    return(fq)
 			}
 
-		'firstquota' <- function(POP, divisor, round="down") {
-		if (round == "down") fq <- floor(POP/divisor)
-		if (round == "up") fq <- ceiling(POP/divisor)
-		if (round == "nearest") fq <- round(POP/divisor)
-		# min.autoseats <- fq < autoseats
-  #   	fq[min.autoseats] <- autoseats
+'firstquota' <- function(POP, divisor, round="down") {
+	if (round == "down") fq <- floor(POP/divisor)
+	if (round == "up") fq <- ceiling(POP/divisor)
+	if (round == "nearest") fq <- round(POP/divisor)
+  ## min.autoseats <- fq < autoseats
+  ## fq[min.autoseats] <- autoseats
     return(fq)
 	}
-	
-		'standardizeText' <- function(m) substrLeft(deleteSpaces(tolower(substrPunct(m))),30)
 
-	appt <- function(POP, STATES, nseats=435, method="webster") {
+'appt' <- function(POP, STATES, nseats=435, method="webster") {
 		divisors <- rep(divisor(method), length(POP))
 			divisors <- divisors[order(divisors)]
 
@@ -53,7 +52,7 @@ options(scipen=999)
 		return(appt.temp.2)
 	}
 
-apportion <- function(POP, STATES, nseats=435, autoseats=1, threshold=0, method="hill-huntington", state="all") {
+'apportion' <- function(POP, STATES, nseats=435, autoseats=1, threshold=0, method="hill-huntington", state="all") {
 
 	if (state != "all") {
 			if (! standardizeText(state) %in% standardizeText(STATES)) {
@@ -129,7 +128,7 @@ apportion <- function(POP, STATES, nseats=435, autoseats=1, threshold=0, method=
 # █▀▀ ▀█▀ █──█ █──█ 　 ▀▀█ █─▀─█ █▄▄█ █── █── █▀▀ ▀▀█ ──█── 　 █── █▀▀█ █▄▄█ █──█ █─▀█ █▀▀ ▀▀█ 
 # ▀── ▀▀▀ ▀──▀ ▀▀▀─ 　 ▀▀▀ ▀───▀ ▀──▀ ▀▀▀ ▀▀▀ ▀▀▀ ▀▀▀ ──▀── 　 ▀▀▀ ▀──▀ ▀──▀ ▀──▀ ▀▀▀▀ ▀▀▀ ▀▀▀
 
-appt.gain <- function(POP, STATES, method="hill-huntington") {
+'appt.gain' <- function(POP, STATES, method="hill-huntington") {
 	appt.change <- data.frame(st=STATES, minPOP=NA)
 		a <- apportion(POP,STATES,435, method=method)
 		for (j in 1:length(STATES)) {
@@ -164,7 +163,7 @@ appt.gain <- function(POP, STATES, method="hill-huntington") {
 	}
 
 
-appt.lose <- function(POP, STATES, method="jefferson") {
+'appt.lose' <- function(POP, STATES, method="jefferson") {
 	appt.change <- data.frame(st=STATES, minPOP=NA)
 	a <- apportion(POP,STATES,435, method=method)
 		for (j in 1:length(STATES)) {
