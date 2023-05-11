@@ -33,7 +33,7 @@ freegeoip <- function(ip, format = ifelse(length(ip)==1,'dataframe','dataframe')
 
 ```{r}
 ## Read in IP addresses
-ip <- read.csv("/Users/cervas/My Drive/GitHub/R-Functions/ignacio/data/ip.csv")
+ip <- read.csv("https://raw.githubusercontent.com/jcervas/R-Functions/main/ignacio/data/ip.csv")
 
 ## Loop through each IP address and return geo-coordinates. If there is an error, move to next.
 for (i in 1:nrow(ip)) {
