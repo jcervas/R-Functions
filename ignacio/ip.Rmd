@@ -48,6 +48,6 @@ for (i in 1:nrow(ip)) {
 
 ```{r}
 head(geo)
-write.csv(geo, "/Users/cervas/My Drive/GitHub/R-Functions/ignacio/data/geocode-ip.cvs", row.names=F)
+write.csv(geo, "/Users/cervas/My Drive/GitHub/R-Functions/ignacio/data/geocode-ip.csv", row.names=F)
 ```
 
