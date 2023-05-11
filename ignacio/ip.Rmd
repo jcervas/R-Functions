@@ -39,11 +39,15 @@ ip <- read.csv("https://raw.githubusercontent.com/jcervas/R-Functions/main/ignac
 for (i in 1:nrow(ip)) {
        skip_to_next <- FALSE
 
-  # Note that print(b) fails since b doesn't exist
-
   tryCatch(geo[i,] <- freegeoip(ip[i,]), error = function(e) {skip_to_next <<- TRUE})
 
   if(skip_to_next) { next } 
      
 }
 ```
+
+```{r}
+head(geo)
+write.csv(geo, "/Users/cervas/My Drive/GitHub/R-Functions/ignacio/data/geocode-ip.cvs", row.name=F)
+```
+
