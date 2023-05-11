@@ -31,6 +31,8 @@ freegeoip <- function(ip, format = ifelse(length(ip)==1,'dataframe','dataframe')
 ```
 
 
+Transform IP addresses to Long/Lat
+
 ```{r}
 ## Read in IP addresses
 ip <- read.csv("https://raw.githubusercontent.com/jcervas/R-Functions/main/ignacio/data/ip.csv")
@@ -46,8 +48,27 @@ for (i in 1:nrow(ip)) {
 }
 ```
 
+Write Data to file for import to Mapshaper
+
 ```{r}
 head(geo)
 write.csv(geo, "/Users/cervas/My Drive/GitHub/R-Functions/ignacio/data/geocode-ip.csv", row.names=F)
 ```
 
+In `mapshaper.org`, 
+
+
+Locate and drag file `data/geocode-ip.csv` into browser. Then, using the console, create point shapefile using `-points` command.
+
+`-points x=longitude y=latitude`
+
+Set style so that radius of circle equal 1
+`-each r=1`
+
+Now drag file `gis/world_countries_2020.json` into mapshaper, creating a new layer. Using the arrow on the right, "select" Antarctica and delete it.
+
+Style the map in console
+
+`-style fill=#eeeeee stroke=#ffffff stroke-width=0.25`
+
+Export map (top right) as SVG.
