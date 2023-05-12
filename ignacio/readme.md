@@ -55,10 +55,10 @@ head(geo)
 write.csv(geo, "/Users/cervas/My Drive/GitHub/R-Functions/ignacio/data/geocode-ip.csv", row.names=F)
 ```
 
-In `mapshaper.org`, 
 
+Open in your browser `mapshaper.org`.
 
-Locate and drag file `data/geocode-ip.csv` into browser. Then, using the console, create point shapefile using `-points` command.
+Locate and drag file `data/geocode-ip.csv` into browser window. Then, using the console, create point shapefile using `-points` command.
 
 `-points x=longitude y=latitude`
 
@@ -72,3 +72,23 @@ Style the map in console
 `-style fill=#eeeeee stroke=#ffffff stroke-width=0.25`
 
 Export map (top right) as SVG.
+
+
+Alternative version:
+
+```{r}
+geo$city[geo$city %in% ""] <- geo$state_prov[geo$city %in% ""]
+geo_counts <- table(geo$city)
+geo_split <- split(geo, geo$city)
+geo_first_obs <- lapply(geo_split, head, n = 1)
+geo_first_obs_df <- do.call(rbind, geo_first_obs)
+geo_counts_df <- data.frame(geo_counts)
+names(geo_counts_df) <- c("city", "count")
+geo_counts_first_obs_df <- merge(geo_counts_df, geo_first_obs_df, by = "city")
+
+write.csv(geo_counts_first_obs_df, "/Users/cervas/My Drive/GitHub/R-Functions/ignacio/data/counts-city.csv")
+```
+
+In `mapshaper.org`, follow above instructions, but instead size circle by number of observations.
+
+`-each r=Math.sqrt(count)`
