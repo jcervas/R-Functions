@@ -77,14 +77,14 @@ Export map (top right) as SVG.
 Alternative version:
 
 ```{r}
-geo$city[geo$city %in% ""] <- geo$state_prov[geo$city %in% ""]
-geo_counts <- table(geo$city)
-geo_split <- split(geo, geo$city)
+geo$state_prov[geo$state_prov %in% ""] <- geo$country_capital[geo$state_prov %in% ""]
+geo_counts <- table(geo$state_prov)
+geo_split <- split(geo, geo$state_prov)
 geo_first_obs <- lapply(geo_split, head, n = 1)
 geo_first_obs_df <- do.call(rbind, geo_first_obs)
 geo_counts_df <- data.frame(geo_counts)
-names(geo_counts_df) <- c("city", "count")
-geo_counts_first_obs_df <- merge(geo_counts_df, geo_first_obs_df, by = "city")
+names(geo_counts_df) <- c("state_prov", "count")
+geo_counts_first_obs_df <- merge(geo_counts_df, geo_first_obs_df, by = "state_prov")
 
 write.csv(geo_counts_first_obs_df, "/Users/cervas/My Drive/GitHub/R-Functions/ignacio/data/counts-city.csv")
 ```
