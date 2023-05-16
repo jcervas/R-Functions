@@ -77,14 +77,28 @@ Export map (top right) as SVG.
 Alternative version:
 
 ```{r}
-geo$state_prov[geo$state_prov %in% ""] <- geo$country_capital[geo$state_prov %in% ""]
-geo_counts <- table(geo$state_prov)
-geo_split <- split(geo, geo$state_prov)
+NewEngland <- c("Maine", "Vermont", "Massachusetts", "New Hampshire", "Connecticut", "Rhode Island")
+NewYorkJerseyPennDelawareDC <- c("New York", "New Jersey", "Pennsylvania", "Delaware", "District of Columbia")
+CentralAmerica <- c("Guatemala City", "San Salvador", "Tegucigalpa", "Managua", "Cartago", "San José", "San Jose", "Panamá")
+
+
+geo$id <- geo$country_name
+geo$id[geo$id %in% "United States"] <- geo$state_prov[geo$id %in% "United States"]
+
+geo$id[geo$id %in% NewEngland] <- "_NewEngland"
+geo$id[geo$id %in% NewYorkJerseyPennDelawareDC] <- "_NewYorkJerseyPennDelawareDC"
+geo$id[geo$id %in% CentralAmerica] <- "_CentralAmerica"
+
+geo_counts <- table(geo$id)
+geo_split <- split(geo, geo$id)
 geo_first_obs <- lapply(geo_split, head, n = 1)
 geo_first_obs_df <- do.call(rbind, geo_first_obs)
 geo_counts_df <- data.frame(geo_counts)
-names(geo_counts_df) <- c("state_prov", "count")
-geo_counts_first_obs_df <- merge(geo_counts_df, geo_first_obs_df, by = "state_prov")
+
+
+names(geo_counts_df) <- c("id", "count")
+geo_counts_first_obs_df <- merge(geo_counts_df, geo_first_obs_df, by = "id")
+
 
 write.csv(geo_counts_first_obs_df, "/Users/cervas/My Drive/GitHub/R-Functions/ignacio/data/counts-city.csv")
 ```
