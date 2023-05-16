@@ -77,6 +77,9 @@ Export map (top right) as SVG.
 Alternative version:
 
 ```{r}
+geo <- read.csv("https://raw.githubusercontent.com/jcervas/R-Functions/main/ignacio/data/geocode-ip.csv")
+    head(geo)
+    
 NewEngland <- c("Maine", "Vermont", "Massachusetts", "New Hampshire", "Connecticut", "Rhode Island")
 NewYorkJerseyPennDelawareDC <- c("New York", "New Jersey", "Pennsylvania", "Delaware", "District of Columbia")
 CentralAmerica <- c("Guatemala City", "San Salvador", "Tegucigalpa", "Managua", "Cartago", "San José", "San Jose", "Panamá")
