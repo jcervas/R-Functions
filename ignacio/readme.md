@@ -69,7 +69,7 @@ Now drag file `gis/world_countries_2020.json` into mapshaper, creating a new lay
 
 Style the map in console
 
-`-style fill=#eeeeee stroke=#ffffff stroke-width=0.25`
+`-style fill=#eeeeee fill-opacity=0.25 stroke=#333333 stroke-width=1 stroke-opacity=0.5`
 
 Export map (top right) as SVG.
 
@@ -105,6 +105,7 @@ geo_counts_first_obs_df <- merge(geo_counts_df, geo_first_obs_df, by = "id")
 
 write.csv(geo_counts_first_obs_df, "/Users/cervas/My Drive/GitHub/R-Functions/ignacio/data/counts-city.csv")
 ```
+
 
 In `mapshaper.org`, follow above instructions, but instead size circle by number of observations.
 
