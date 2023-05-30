@@ -69,7 +69,12 @@ Now drag file `gis/world_countries_2020.json` into mapshaper, creating a new lay
 
 Style the map in console
 
+`-style fill=#eeeeee stroke=#ffffff stroke-width=0.25`
+
+Style the points
+
 `-style fill=#eeeeee fill-opacity=0.25 stroke=#333333 stroke-width=1 stroke-opacity=0.5`
+
 
 Export map (top right) as SVG.
 
