@@ -79,7 +79,27 @@ Style the points
 Export map (top right) as SVG.
 
 
-Alternative version:
+Alternative version (circle sized to count):
+
+```{r}
+# Function to calculate the rScale
+scaleSqrt <- function(value, maxRadius=20, maxDomain=NA) {
+if (is.na(maxDomain)) {stop("Need max Domain")}
+# Input domain values
+     domain <- c(0, maxDomain)  # Example domain values
+# Output range values
+     range <- c(0, maxRadius)  # Example range values
+
+  # Calculate the square root of the value
+  sqrt_value <- sqrt(value)
+  
+  # Map the square root value to the output range
+  scaled_value <- (sqrt_value - sqrt(domain[1])) / (sqrt(domain[2]) - sqrt(domain[1]))
+  scaled_value <- scaled_value * (range[2] - range[1]) + range[1]
+  
+  return(scaled_value)
+}
+```
 
 ```{r}
 geo <- read.csv("https://raw.githubusercontent.com/jcervas/R-Functions/main/ignacio/data/geocode-ip.csv")
@@ -106,7 +126,7 @@ geo_counts_df <- data.frame(geo_counts)
 
 names(geo_counts_df) <- c("id", "count")
 geo_counts_first_obs_df <- merge(geo_counts_df, geo_first_obs_df, by = "id")
-
+geo_counts_first_obs_df$count_scaled <- scaleSqrt(geo_counts_first_obs_df$count, maxRadius=10, maxDomain=max(geo_counts_first_obs_df$count))
 
 write.csv(geo_counts_first_obs_df, "/Users/cervas/My Drive/GitHub/R-Functions/ignacio/data/counts-city.csv")
 ```
@@ -114,4 +134,4 @@ write.csv(geo_counts_first_obs_df, "/Users/cervas/My Drive/GitHub/R-Functions/ig
 
 In `mapshaper.org`, follow above instructions, but instead size circle by number of observations.
 
-`-each r=Math.sqrt(count)`
+`-each r=count_scaled`
