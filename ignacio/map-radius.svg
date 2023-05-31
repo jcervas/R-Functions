@@ -427,29 +427,29 @@
   </g>
   <g id="Legend">
     <g>
-      <line class="cls-6" x1="21.6083" y1="293.631" x2="23.1083" y2="293.631"/>
-      <line class="cls-2" x1="23.9176" y1="293.631" x2="26.7503" y2="293.631"/>
-      <line class="cls-3" x1="27.155" y1="293.631" x2="33.225" y2="293.631"/>
-      <line class="cls-6" x1="33.6296" y1="293.631" x2="35.1296" y2="293.631"/>
+      <line class="cls-6" x1="93.5332" y1="164.5341" x2="95.0332" y2="164.5341"/>
+      <line class="cls-2" x1="95.8425" y1="164.5341" x2="98.6752" y2="164.5341"/>
+      <line class="cls-3" x1="99.0799" y1="164.5341" x2="105.1499" y2="164.5341"/>
+      <line class="cls-6" x1="105.5545" y1="164.5341" x2="107.0545" y2="164.5341"/>
     </g>
     <g>
-      <line class="cls-6" x1="21.6083" y1="298.1031" x2="23.1083" y2="298.1031"/>
-      <line class="cls-2" x1="23.9176" y1="298.1031" x2="26.7503" y2="298.1031"/>
-      <line class="cls-3" x1="27.155" y1="298.1031" x2="33.225" y2="298.1031"/>
-      <line class="cls-6" x1="33.6296" y1="298.1031" x2="35.1296" y2="298.1031"/>
+      <line class="cls-6" x1="93.5332" y1="169.0062" x2="95.0332" y2="169.0062"/>
+      <line class="cls-2" x1="95.8425" y1="169.0062" x2="98.6752" y2="169.0062"/>
+      <line class="cls-3" x1="99.0799" y1="169.0062" x2="105.1499" y2="169.0062"/>
+      <line class="cls-6" x1="105.5545" y1="169.0062" x2="107.0545" y2="169.0062"/>
     </g>
     <g>
-      <line class="cls-6" x1="21.6083" y1="285.2548" x2="23.1083" y2="285.2548"/>
-      <line class="cls-2" x1="23.9176" y1="285.2548" x2="26.7503" y2="285.2548"/>
-      <line class="cls-3" x1="27.155" y1="285.2548" x2="33.225" y2="285.2548"/>
-      <line class="cls-6" x1="33.6296" y1="285.2548" x2="35.1296" y2="285.2548"/>
+      <line class="cls-6" x1="93.5332" y1="156.1578" x2="95.0332" y2="156.1578"/>
+      <line class="cls-2" x1="95.8425" y1="156.1578" x2="98.6752" y2="156.1578"/>
+      <line class="cls-3" x1="99.0799" y1="156.1578" x2="105.1499" y2="156.1578"/>
+      <line class="cls-6" x1="105.5545" y1="156.1578" x2="107.0545" y2="156.1578"/>
     </g>
-    <circle id="_75" data-name="75" class="cls-7" cx="21.6083" cy="293.915" r="8.6603"/>
-    <circle id="_20" data-name="20" class="cls-7" cx="21.6083" cy="298.1031" r="4.4721"/>
-    <circle id="_5" data-name="5" class="cls-7" cx="21.6083" cy="300.3392" r="2.2361"/>
-    <text class="cls-9" transform="translate(35.9723 286.4933)"><tspan x="0" y="0">75</tspan></text>
-    <text class="cls-9" transform="translate(35.9721 299.6425)"><tspan x="0" y="0">5</tspan></text>
-    <text class="cls-9" transform="translate(35.9723 294.9791) scale(.891 1)"><tspan x="0" y="0">20</tspan></text>
-    <text class="cls-8" transform="translate(13.295 280.0846)"><tspan x="0" y="0">Interviews Conducted</tspan></text>
+    <circle id="_75" data-name="75" class="cls-7" cx="93.5332" cy="164.8181" r="8.6603"/>
+    <circle id="_20" data-name="20" class="cls-7" cx="93.5332" cy="169.0062" r="4.4721"/>
+    <circle id="_5" data-name="5" class="cls-7" cx="93.5332" cy="171.2423" r="2.2361"/>
+    <text class="cls-9" transform="translate(107.8972 157.3964)"><tspan x="0" y="0">75</tspan></text>
+    <text class="cls-9" transform="translate(107.897 170.5456)"><tspan x="0" y="0">5</tspan></text>
+    <text class="cls-9" transform="translate(107.8972 165.8821) scale(.891 1)"><tspan x="0" y="0">20</tspan></text>
+    <text class="cls-8" transform="translate(85.2199 150.9877)"><tspan x="0" y="0">Participants</tspan></text>
   </g>
 </svg>
