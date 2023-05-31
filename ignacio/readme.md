@@ -126,7 +126,11 @@ geo_counts_df <- data.frame(geo_counts)
 
 names(geo_counts_df) <- c("id", "count")
 geo_counts_first_obs_df <- merge(geo_counts_df, geo_first_obs_df, by = "id")
-geo_counts_first_obs_df$count_scaled <- scaleSqrt(geo_counts_first_obs_df$count, maxRadius=10, maxDomain=max(geo_counts_first_obs_df$count))
+geo_counts_first_obs_df$count_scaled <- 
+    scaleSqrt(
+        geo_counts_first_obs_df$count, 
+        maxRadius=5, 
+        maxDomain=max(geo_counts_first_obs_df$count))
 
 write.csv(geo_counts_first_obs_df, "/Users/cervas/My Drive/GitHub/R-Functions/ignacio/data/counts-city.csv")
 ```
@@ -135,3 +139,31 @@ write.csv(geo_counts_first_obs_df, "/Users/cervas/My Drive/GitHub/R-Functions/ig
 In `mapshaper.org`, follow above instructions, but instead size circle by number of observations.
 
 `-each r=count_scaled`
+
+
+Plot in R
+```{r}
+
+world <- rgdal::readOGR("https://raw.githubusercontent.com/jcervas/R-Functions/main/ignacio/gis/world_countries_2020.json")
+
+df <- geo_counts_first_obs_df
+
+svglite::svglite(paste0(dir.download, "/ignacio.svg"), width=15, height=10)
+sp::plot(world,
+    col="#eeeeee",
+    border="#ffffff",
+    lwd=0.5,
+    main = "Ignacio's Interviews")
+points(
+    df$longitude,
+    df$latitude,
+    cex=scaleSqrt(
+        df$count, 
+        maxRadius=4, 
+        maxDomain=max(df$count)),
+    col="#00000033",
+    bg="#77777733",
+    pch=16)
+
+dev.off()
+```
