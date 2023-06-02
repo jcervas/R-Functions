@@ -1,4 +1,4 @@
-'seatsvotes.plot' <- function(main="") 
+'seatsvotes.plot' <- function(main="", xlab="Votes", ylab="Seats") 
 	{
 		par(pty="s", mar = c(2.5, 2, 2, 1), mgp = c(0.5, 0.5, 0))
 		plot(1, 
@@ -15,12 +15,12 @@
 			axis(side=1, las=2, at=seq(0,1,0.1), labels=F, lwd.ticks=0.4)
 			axis(side=1, las=2, at=seq(0,1,0.01), labels=F, lwd.ticks=0.2, tck=-0.01)
 			axis(side=1, at=seq(0,1,0.1), labels=paste0(seq(0,100,10), "%"), cex.axis=0.5, col.axis="gray50")
-			mtext("Votes", side=1, line = 1.5)
+			mtext(xlab, side=1, line = 1.5)
 	
 			axis(side=2, las=2, at=seq(0,1,0.1), labels=F, lwd.ticks=0.4)
 			axis(side=2, las=2, at=seq(0,1,0.01), labels=F, lwd.ticks=0.2, tck=-0.01)
 			axis(side=2, las=2, at=seq(0,1,0.1), labels=paste0(seq(0,100,10), "%"), cex.axis=0.5, col.axis="gray50")
-			mtext("Seats", side=2, line = 1.5)
+			mtext(ylab, side=2, line = 1.5)
 		abline(v=.5, lty=3, col="gray40")
 		abline(h=.5, lty=3, col="gray40")
 		abline(0,1, lty=2, col="gray90")
