@@ -81,11 +81,10 @@ sv_hyp_plot <- function(r, b, n = 1000){
 			  
 			  return(dta)
 			}
+# Examples
+# svg("/Users/user/Downloads/asymmetry.svg", width=10, height=6)
 				majoritarian.sv.dta <- sv.hyp(r = 3, b = 0.5)
 				majoritarian.sv.dta2 <- sv.hyp(r = 3, b = -0.5)
-
-
-				svg("/Users/user/Downloads/asymmetry.svg", width=10, height=6)
 					
 					par(pty="s", mar=c(3.5,2.5,2,1))
 					plot(0,0, ylim=c(0,1), xlim=c(0,1), type="p", pch=19, col="#FFFFFF", main="Asymmetry", xlab="", ylab="", bty="n", axes=F)
@@ -115,6 +114,6 @@ sv_hyp_plot <- function(r, b, n = 1000){
 						mtext(side=1, line=2, "% of Two-Party Votes", cex=1)
 						mtext(side=2, line=3, "% of Two-Party Seats", cex=1)
 
-				dev.off() 
+# dev.off() 
 
 	
