@@ -1,10 +1,10 @@
-'seatsvotes.plot' <- function(main="", xlab="Votes", ylab="Seats") 
+'seatsvotes.plot' <- function(main="", ylim=c(0,1), xlim=c(0,1), xlab="Votes", ylab="Seats") 
 	{
 		par(pty="s", mar = c(2.5, 2, 2, 1), mgp = c(0.5, 0.5, 0))
 		plot(1, 
 		     type = "n", 
-		     ylim=c(0,1), 
-		     xlim=c(0,1),
+		     ylim=ylim, 
+		     xlim=xlim,
 		     xaxs="i",
 		     yaxs="i",
 		     ylab="", 
