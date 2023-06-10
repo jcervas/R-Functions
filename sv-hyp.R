@@ -39,7 +39,7 @@
 seatsvotes.axis <- function(xmin=0, xmax=1, ymin=0, ymax=1) {
 	axis(side=1, las=2, at=seq(xmin,xmax,0.1), labels=F, lwd.ticks=0.4)
 	axis(side=1, las=2, at=seq(xmin,xmax,0.01), labels=F, lwd.ticks=0.2, tck=-0.01)
-	axis(side=1, at=seq(xmin,xmax,0.1), labels=paste0(seq(xmi*100,xmax,10), "%"), cex.axis=0.5, col.axis="gray50")
+	axis(side=1, at=seq(xmin,xmax,0.1), labels=paste0(seq(xmin*100,xmax*100,10), "%"), cex.axis=0.5, col.axis="gray50")
 			
 	axis(side=2, las=2, at=seq(ymin,ymax,0.1), labels=F, lwd.ticks=0.4)
 	axis(side=2, las=2, at=seq(ymin,ymax,0.01), labels=F, lwd.ticks=0.2, tck=-0.01)
