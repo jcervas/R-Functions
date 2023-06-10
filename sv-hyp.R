@@ -1,4 +1,4 @@
-'seatsvotes.plot' <- function(main="", ylim=c(0,1), xlim=c(0,1), xlab="Votes", ylab="Seats") 
+'seatsvotes.plot' <- function(main="", ylim=c(0,1), xlim=c(0,1), xlab="Votes", ylab="Seats", xaxis=TRUE, yaxis=TRUE) 
 	{
 		par(pty="s", mar = c(2.5, 2, 2, 1), mgp = c(0.5, 0.5, 0))
 		plot(1, 
@@ -12,15 +12,20 @@
 		     main=main, 
 		     bty="n", 
 		     axes=F)
+			
+		if (xaxis=TRUE) {
 			axis(side=1, las=2, at=seq(0,1,0.1), labels=F, lwd.ticks=0.4)
 			axis(side=1, las=2, at=seq(0,1,0.01), labels=F, lwd.ticks=0.2, tck=-0.01)
 			axis(side=1, at=seq(0,1,0.1), labels=paste0(seq(0,100,10), "%"), cex.axis=0.5, col.axis="gray50")
-			mtext(xlab, side=1, line = 1.5)
-	
+			}
+		if (yaxis=TRUE) {
 			axis(side=2, las=2, at=seq(0,1,0.1), labels=F, lwd.ticks=0.4)
 			axis(side=2, las=2, at=seq(0,1,0.01), labels=F, lwd.ticks=0.2, tck=-0.01)
 			axis(side=2, las=2, at=seq(0,1,0.1), labels=paste0(seq(0,100,10), "%"), cex.axis=0.5, col.axis="gray50")
-			mtext(ylab, side=2, line = 1.5)
+			}
+	mtext(xlab, side=1, line = 1.5)
+	mtext(ylab, side=2, line = 1.5)
+	
 		abline(v=.5, lty=3, col="gray40")
 		abline(h=.5, lty=3, col="gray40")
 		abline(0,1, lty=2, col="gray90")
@@ -29,6 +34,17 @@
 			# rect(0,0,1.05,-.05, col = rgb(0.1,0.1,0.1,1/2), density=40, border = "transparent") #bottom
 			# rect(1,0,1.05,1.05, col = rgb(0.1,0.1,0.1,1/2), density=40, border = "transparent") #right
 			# rect(0,1,1,1.05, col = rgb(0.1,0.1,0.1,1/2), density=40, border = "transparent") #top
+	}
+
+seatsvotes.axis <- function(xmin=0, xmax=1, ymin=0, ymax=1) {
+	axis(side=1, las=2, at=seq(xmin,xmax,0.1), labels=F, lwd.ticks=0.4)
+	axis(side=1, las=2, at=seq(xmin,xmax,0.01), labels=F, lwd.ticks=0.2, tck=-0.01)
+	axis(side=1, at=seq(xmin,xmax,0.1), labels=paste0(seq(xmi*100,xmax,10), "%"), cex.axis=0.5, col.axis="gray50")
+			
+	axis(side=2, las=2, at=seq(ymin,ymax,0.1), labels=F, lwd.ticks=0.4)
+	axis(side=2, las=2, at=seq(ymin,ymax,0.01), labels=F, lwd.ticks=0.2, tck=-0.01)
+	axis(side=2, las=2, at=seq(ymin,ymax,0.1), labels=paste0(seq(ymin*100,ymax*100,10), "%"), cex.axis=0.5, col.axis="gray50")
+			
 	}
 
 sv.hyp <- function(r, b, n = 1000){
