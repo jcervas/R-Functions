@@ -13,12 +13,12 @@
 		     bty="n", 
 		     axes=F)
 			
-		if (xaxis=TRUE) {
+		if (xaxis==TRUE) {
 			axis(side=1, las=2, at=seq(0,1,0.1), labels=F, lwd.ticks=0.4)
 			axis(side=1, las=2, at=seq(0,1,0.01), labels=F, lwd.ticks=0.2, tck=-0.01)
 			axis(side=1, at=seq(0,1,0.1), labels=paste0(seq(0,100,10), "%"), cex.axis=0.5, col.axis="gray50")
 			}
-		if (yaxis=TRUE) {
+		if (yaxis==TRUE) {
 			axis(side=2, las=2, at=seq(0,1,0.1), labels=F, lwd.ticks=0.4)
 			axis(side=2, las=2, at=seq(0,1,0.01), labels=F, lwd.ticks=0.2, tck=-0.01)
 			axis(side=2, las=2, at=seq(0,1,0.1), labels=paste0(seq(0,100,10), "%"), cex.axis=0.5, col.axis="gray50")
