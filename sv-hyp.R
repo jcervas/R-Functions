@@ -1,4 +1,4 @@
-'seatsvotes.plot' <- function(main="", ylim=c(0,1), xlim=c(0,1), xlab="Votes", ylab="Seats", xaxis=TRUE, yaxis=TRUE) 
+'seatsvotes.plot' <- function(main="", ylim=c(0,1), xlim=c(0,1), xlab="Votes", ylab="Seats", xaxis=TRUE, yaxis=TRUE, prop.line=TRUE) 
 	{
 		par(pty="s", mar = c(2.5, 2, 2, 1), mgp = c(0.5, 0.5, 0))
 		plot(1, 
@@ -26,9 +26,11 @@
 	mtext(xlab, side=1, line = 1.5)
 	mtext(ylab, side=2, line = 1.5)
 	
-		abline(v=.5, lty=3, col="gray40")
-		abline(h=.5, lty=3, col="gray40")
+		abline(v=0.5, lty=3, col="gray40")
+		abline(h=0.5, lty=3, col="gray40")
+	if (prop.line==TRUE) {	
 		abline(0,1, lty=2, col="gray90")
+		}
 		box()
 			# rect(-.05,-.05,0,1.05, col = rgb(0.1,0.1,0.1,1/2), density=40, border = "transparent") #left
 			# rect(0,0,1.05,-.05, col = rgb(0.1,0.1,0.1,1/2), density=40, border = "transparent") #bottom
