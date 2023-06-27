@@ -36,7 +36,7 @@ lower_poly@data <- dplyr::full_join(lower_poly@data, a, by= c("GEOID20"="ID"))
 
 		cols <- cbind.data.frame(
 			District=unique(lower_poly$District),
-			cols=sample(rep(c("#A6CEE3", "#1F78B4", "#FFFF99", "#FF7F00", "#ADDD8E", "#B2DF8A", "#2b51a1", "#f9f934", "#f75167", "#80B1D3", "#FB8090", "#8dd3c7", "#ADDD8E", "#fdb462", "#FDDBC7", "#00B0F0", "#70AD47", "#305496", "#bc80bd", "#fb8072", "#e31a1c", "#3182BD", "#fdbf6f", "#ffff99", "#FF7F00", "#a6cee3"), length(unique(lower_poly$District))/25), length(unique(lower_poly$District)))
+			cols=sample(rep(c("#A6CEE3", "#1F78B4", "#FFFF99", "#FF7F00", "#ADDD8E", "#B2DF8A", "#2b51a1", "#f9f934", "#f75167", "#80B1D3", "#FB8090", "#8dd3c7", "#ADDD8E", "#fdb462", "#FDDBC7", "#00B0F0", "#70AD47", "#305496", "#bc80bd", "#fb8072", "#e31a1c", "#3182BD", "#fdbf6f", "#ffff99", "#FF7F00", "#a6cee3"), length(unique(lower_poly$District))/25), length(unique(lower_poly$District))+1)
 			)
 lower_poly@data <- dplyr::left_join(lower_poly@data, cols, by="District")
 lower_poly@data$cols[is.na(lower_poly@data$cols)] <- "#000000"
