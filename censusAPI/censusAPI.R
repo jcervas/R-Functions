@@ -19,6 +19,10 @@ library(jsonlite)
   
   return(fips)
 }
+
+  get_county_fips <- read.csv("https://raw.githubusercontent.com/jcervas/R-Functions/main/censusAPI/county_fips.csv")
+  fips <- data.frame(state=sprintf("%02s", get_county_fips$state), county=sprintf("%03s", get_county_fips$county))
+
   state_fips <- data.frame(
     state = c("AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "DC", "FL",
               "GA", "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME",
@@ -31,6 +35,7 @@ library(jsonlite)
              54, 55, 56)
   )
 
+
 # Define the base URL and API key
 base_url <- "https://api.census.gov/data/2020/dec/pl"
 api_key <- "7865f31139b09e17c5865a59c240bdf07f9f44fd"
@@ -39,21 +44,29 @@ api_key <- "7865f31139b09e17c5865a59c240bdf07f9f44fd"
 vars <- c("001N", "002N", "003N", "004N", "005N", "006N", "007N", "008N", "009N", "010N", "011N", "012N", "013N", "014N", "015N", "016N", "017N", "018N", "019N", "020N", "021N", "022N", "023N", "024N", "025N", "026N", "027N", "028N", "029N", "030N", "031N", "032N", "033N", "034N", "035N", "036N", "037N", "038N", "039N", "040N", "041N", "042N", "043N", "044N", "045N", "046N", "047N", "048N", "049N", "050N", "051N", "052N", "053N", "054N", "055N", "056N", "057N", "058N", "059N", "060N", "061N", "062N", "063N", "064N", "065N", "066N", "067N", "068N", "069N", "070N", "071N")
 get_vars <- paste0(table, "_", vars)
 
+# # Loop over counties (if applicable)
+# if (geo == "block") {
+#   state_county <- fips$county[fips$state %in% sprintf("%02s", lookup_fips(state))]
+# }
+
+# https://api.census.gov/data/2020/dec/pl?get=P1_051N,P1_052N,P1_053N,P1_054N,P1_055N,P1_056N,P1_057N,P1_058N,P1_059N,P1_060N,P1_061N,P1_062N,P1_063N,P1_064N,P1_065N,P1_066N,P1_067N,P1_068N,P1_069N,P1_070N,P1_071N&for=block:*&in=state:06%20county:*
+
+
 # Chunk the variables into groups of 50
 variable_chunks <- split(get_vars, ceiling(seq_along(get_vars) / 50))
 
 # Create an empty list to store the results
 data_list <- list()
 
-if (geo == "block") {
-  get_params <- paste0(base_url, "?", "get=NAME", "&for=county", ":*&in=state:", sprintf("%02s", lookup_fips(state)))
-
-}
-
 # Iterate over the variable chunks
 for (chunk in variable_chunks) {
   # Construct the parameters for the request
-  get_params <- paste0("get=", paste(chunk, collapse = ","), "&for=", geo, ":*&in=state:", sprintf("%02s", lookup_fips(state)))
+  if (geo == "block") {
+    in_param <- paste0(sprintf("%02s", lookup_fips(state)), "%20county:*")
+  } else {
+    in_param <- sprintf("%02s", lookup_fips(state))
+  }
+  get_params <- paste0("get=", paste(chunk, collapse = ","), "&for=", geo, ":*&in=state:", in_param)
 
   # Construct the full API URL
   api_url <- paste0(base_url, "?", get_params)
