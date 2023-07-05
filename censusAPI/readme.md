@@ -6,15 +6,15 @@ Use this function to get 2020 decennial census data from the Census API in R.
 
 `censusAPI(state, geo, table)`
 
-`state`, use state abbreviation such as `PA` or `HI`
+- `state`, use state abbreviation such as `PA` or `HI`
 
-`geo`, choose from 
+- `geo`, choose from 
      `"state"`, 
      `"county"`, 
      `"tract"`, 
      `"block"`
 
-`table`, choose from:
+- `table`, choose from:
      `P1` (total population), 
      `P2` (Hispanic/Non-Hispanic population), 
      `P3` (18+ total population), 
