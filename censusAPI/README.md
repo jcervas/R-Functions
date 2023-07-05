@@ -10,7 +10,7 @@ Use this function to get 2020 decennial census data from the Census API in R.
 
 `geo`, choose from `"state"`, `"county"`, `"tract"`, `"block"`
 
-`table`, choose from `P1` (total population), `P2` (Hispanic/Non-Hispanic population), `P3` (18+ total population), `P4` (18+ Hispanic/Non-Hispanic population)
+`table`, choose from `P1` (total population), `P2` (Hispanic/Non-Hispanic population), `P3` (18+ total population), `P4` (18+ Hispanic/Non-Hispanic population), `P5` (Group Quarters)
 
 
 ## Example
