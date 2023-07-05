@@ -4,7 +4,7 @@
 Use this function to get 2020 decennial census data from the Census API in R.
 
 
-`censusAPI(state, geo, table)`
+```censusAPI(state, geo, table)```
 
 - `state`, use state abbreviation such as `"PA"` or `"HI"`
 
@@ -24,7 +24,7 @@ Use this function to get 2020 decennial census data from the Census API in R.
 
 ## Example
 
-### Get Hawaii Counties from table P1
+### Get Hawaii counties from table P1
 ```
 censusAPI(state="HI", geo="county", table="P1")
 ```
