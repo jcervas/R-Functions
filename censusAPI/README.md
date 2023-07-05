@@ -1,4 +1,6 @@
-# Census Data API
+====================
+CensusAPI() function
+====================
 
 `censusAPI(state, geo=, table=`
 
