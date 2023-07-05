@@ -1,6 +1,4 @@
----
-title: "Census Data API"
----
+# Census Data API
 
 `censusAPI(state, geo=, table=`
 
@@ -10,6 +8,14 @@ title: "Census Data API"
 
 `table`, choose from `P1` (total population), `P2` (Hispanic/Non-Hispanic population), `P3` (18+ total population), `P4` (18+ Hispanic/Non-Hispanic population)
 
+
+## Example
+
+### Get Hawaii Counties from table P1
+censusAPI(state="HI", geo="county", table="P1")
+
+### Get South Carolina tracts from table P4
+censusAPI(state="SC", geo="tract", table="P4")
 
 # https://geo.fcc.gov/api/census/#!/block/get_block_find
 # https://www.latlong.net/
