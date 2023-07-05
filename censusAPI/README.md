@@ -25,5 +25,6 @@ censusAPI(state="HI", geo="county", table="P1")
 censusAPI(state="SC", geo="tract", table="P4")
 ```
 
-# https://geo.fcc.gov/api/census/#!/block/get_block_find
-# https://www.latlong.net/
+### Resources
+https://geo.fcc.gov/api/census/#!/block/get_block_find
+https://www.latlong.net/
