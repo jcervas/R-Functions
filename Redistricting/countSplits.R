@@ -1,108 +1,93 @@
-# Function to read a CSV file with character data types
-readEquiv <- function(file) {
-  read.csv(file, colClasses = c("character"))
-}
-
-# Function to calculate county splits
-calculateCountySplits <- function(districts) {
-  numSplits <- sum(lengths(districts) > 1)
-  return(numSplits)
-}
-
-# Function to calculate total splits
-calculateTotalSplits <- function(districts) {
-  numSplits <- sum(lengths(districts))
-  numUniqueSplits <- length(districts)
-  totalSplits <- numSplits - numUniqueSplits
-  return(totalSplits)
-}
-
-# Function to remove duplicated districts
-removeDuplicatedDistricts <- function(data) {
-  uniqueData <- data[!duplicated(data$District), ]
-  return(uniqueData)
-}
-
-# Function to calculate district splits below a threshold
-calculateThresholdSplits <- function(data, threshold) {
-  thresholdSplits <- data[data$x < threshold, ]
-  numSplits <- length(aggregate(thresholdSplits$x, by = list(thresholdSplits$geo), FUN = sum)[, 1])
-  return(numSplits)
-}
-
-# Function to calculate various splits and deviations
 countSplits <- function(plan = NULL, census_blocks = NULL, geo = "COUNTY", custom_geo = NULL) {
-  # Read the plan and census blocks data
-  planData <- readEquiv(plan)
-  censusData <- readEquiv(census_blocks)
-  
-  # Merge plan and census blocks data
-  mergedData <- merge(planData, censusData, by.x = colnames(planData)[1], by.y = colnames(censusData)[3])
-  
-  # Aggregate total population by district
-  distPop <- aggregate(list(TOTAL = as.numeric(mergedData$TOTAL)), by = list(District = mergedData$District), FUN = sum)
-  
-  # Calculate ideal population
-  ideal <- sum(distPop$TOTAL) / length(distPop$TOTAL)
-  ideal_minus_5 <- ideal - (ideal * 0.05)
-  ideal_plus_5 <- ideal + (ideal * 0.05)
-  
-  # Merge with custom geographical data if provided
-  if (!is.null(custom_geo)) {
-    customData <- readEquiv(custom_geo)
-    mergedData <- merge(mergedData, customData, by.x = colnames(mergedData)[1], by.y = colnames(customData)[1])
-  } else {
-    # Rename the "COUNTY" column to "GEO"
-    colnames(mergedData)[colnames(mergedData) == geo] <- "geo"
+  # Function to read a CSV file and set all columns as character
+  read.equiv <- function(x) {
+    read.csv(x, colClasses = c("character"))
   }
   
-  # Create a unique identifier for each district-geography combination
-  mergedData$uniq <- paste0(mergedData$District, "_", mergedData$geo)
+  # Read plan and census blocks files using read.equiv function
+  plan <- read.equiv(plan)
+  census_blocks <- read.equiv(census_blocks)
   
-  # Aggregate total population by unique district-geography combinations
-  uniqueDistGeo <- aggregate(as.numeric(mergedData$TOTAL), by = list(mergedData$uniq), FUN = sum)
+  # Merge plan and census_blocks based on common column names
+  plan_tmp <- merge(plan, census_blocks, by.x = colnames(plan)[1], by.y = colnames(census_blocks)[3])
   
-  # Merge with aggregated unique district-geography data
-  mergedData <- merge(mergedData, uniqueDistGeo, by.x = "uniq", by.y = "Group.1")
+  # Calculate district population by summing the 'TOTAL' column for each district
+  dist_pop <- aggregate(list(TOTAL = as.numeric(plan_tmp$TOTAL)), by = list(District = plan_tmp$District), FUN = sum)
   
-  # Split the data by the "geo" column
-  splitData <- split(mergedData, mergedData$geo)
+  # Calculate ideal population as the average population across all districts
+  ideal <- sum(dist_pop$TOTAL) / length(dist_pop$TOTAL)
+  ideal_minus_5 <- ideal - (ideal * 0.05)  # 5% below ideal population
+  ideal_plus_5 <- ideal + (ideal * 0.05)  # 5% above ideal population
   
-  # Calculate county splits
-  countySplits <- calculateCountySplits(lapply(splitData, function(x) unique(x$District)))
-  print(countySplits)
+  if (!is.null(custom_geo)) {
+    # Read custom_geo file if provided and merge with plan_tmp
+    custom_geo <- read.equiv(custom_geo)
+    plan_tmp <- merge(plan_tmp, custom_geo, by.x = colnames(plan_tmp)[1], by.y = colnames(custom_geo)[1])
+  } else {
+    # Rename the "COUNTY" column to "GEO" in plan_tmp
+    colnames(plan_tmp)[colnames(plan_tmp) == geo] <- "geo"
+  }
   
-  # Calculate total splits
-  totalSplits <- calculateTotalSplits(lapply(splitData, function(x) unique(x$District)))
-  print(totalSplits)
+  # Create a unique identifier for district and geo by combining District and geo columns
+  plan_tmp$uniq <- paste0(plan_tmp$District, "_", plan_tmp$geo)
   
-  # Calculate threshold splits
-  thresholdSplits <- calculateThresholdSplits(mergedData, ideal_minus_5)
-  print(thresholdSplits)
+  # Calculate aggregated district-geo sums by summing the 'TOTAL' column for each unique district-geo combination
+  uni_dist_geo <- aggregate(as.numeric(plan_tmp$TOTAL), by = list(plan_tmp$uniq), FUN = sum)
+  plan_tmp <- merge(plan_tmp, uni_dist_geo, by.x = "uniq", by.y = "Group.1")
   
-  # Calculate other splits and deviations
-  smallestDistrict <- min(distPop$TOTAL)
-  smallestPercentage <- round(100 * ((smallestDistrict - ideal) / ideal), 2)
-  largestDistrict <- max(distPop$TOTAL)
-  largestPercentage <- round(100 * ((largestDistrict - ideal) / ideal), 2)
-  overallDeviation <- round(100 * ((largestDistrict - ideal) / ideal + abs((smallestDistrict - ideal) / ideal)), 2)
-  averageDeviation <- round(100 * (mean(abs(distPop$TOTAL - ideal) / ideal)), 2)
+  # Split plan_tmp by geo into a list of data frames, where each data frame corresponds to a unique geo
+  a <- split(plan_tmp, plan_tmp$geo)
   
-  # Create a table to store the calculated splits and deviations
-  splitsTable <- matrix(c(
-    countySplits,
-    totalSplits,
-    thresholdSplits,
-    smallestDistrict,
-    smallestPercentage,
-    largestDistrict,
-    largestPercentage,
-    overallDeviation,
-    averageDeviation
-  ), nrow = 9, ncol = 1)
+  b <- list()
+  bpop <- list()
   
-  # Set row names for the splits table
-  row.names(splitsTable) <- c(
+  # Get unique districts for each geo and store them in a list
+  for (i in 1:length(a)) {
+    b[[i]] <- unique(a[[i]]$District)
+  }
+  
+  cntysplits <- c()
+  # Count the number of geo splits (more than one unique district)
+  for (i in 1:length(a)) {
+    if (length(b[[i]]) > 1) {
+      cntysplits <- c(cntysplits, 1)
+    }
+  }
+  
+  totalsplits <- c()
+  # Count the number of total splits (more than one unique district)
+  for (i in 1:length(a)) {
+    if (length(b[[i]]) > 1) {
+      totalsplits <- c(totalsplits, length(b[[i]]))
+    }
+  }
+  
+  tnsplits <- list()
+  data_new <- list()
+  
+  # Filter out duplicated districts within each geo and store the non-duplicated data in data_new
+  for (i in 1:length(a)) {
+    if (length(b[[i]]) > 1) {
+      data_new[[i]] <- a[[i]][!duplicated(a[[i]]$District), ]
+    }
+  }
+  tnsplits_tmp <- do.call(rbind, data_new)
+  tnsplits <- tnsplits_tmp[(tnsplits_tmp$x < ideal_minus_5), ]
+  tnsplits_results <- length(aggregate(tnsplits$x, by = list(tnsplits$COUNTY), FUN = sum)[, 1])
+  
+  # Create splits table by calculating various statistics
+  splits.table <- rbind(
+    sum(cntysplits),
+    sum(totalsplits) - length(totalsplits),
+    tnsplits_results,
+    min(dist_pop$TOTAL),
+    round(100 * ((min(dist_pop$TOTAL) - ideal) / ideal), 2),
+    max(dist_pop$TOTAL),
+    round(100 * ((max(dist_pop$TOTAL) - ideal) / ideal), 2),
+    round(100 * ((max(dist_pop$TOTAL) - ideal) / ideal + abs((min(dist_pop$TOTAL) - ideal) / ideal)), 2),
+    round(100 * (mean(abs(dist_pop$TOTAL - ideal) / ideal)), 2)
+  )
+  row.names(splits.table) <- c(
     "Geos Splits",
     "Total Splits",
     "TN Splits",
@@ -114,12 +99,13 @@ countSplits <- function(plan = NULL, census_blocks = NULL, geo = "COUNTY", custo
     "Average Deviation"
   )
   
-  # Return the splits table
-  return(splitsTable)
+  return(splits.table)  # Return the splits table
 }
 
-# Usage example:
+# Define the paths to the required files
 custom_geo <- "/Users/cervas/My Drive/Projects/Redistricting/2023/Nassau/data/villages-block-equiv.csv"
 plan <- "/Users/cervas/My Drive/Projects/Redistricting/2023/Nassau/data/Plans/nassau-county-adopted-2023.csv"
 census_blocks <- "/Users/cervas/My Drive/GitHub/Data Files/Census/NY2020.pl/clean data/blocks.csv"
+
+# Call the countSplits function with the specified arguments
 countSplits(plan = plan, census_blocks = census_blocks, custom_geo = custom_geo)
