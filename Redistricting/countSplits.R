@@ -47,20 +47,19 @@ countSplits <- function(plan = NULL, census_blocks = NULL, geo = "COUNTY", custo
   }
   
   cntysplits <- c()
-  # Count the number of geo splits (more than one unique district)
-  for (i in 1:length(a)) {
-    if (length(b[[i]]) > 1) {
-      cntysplits <- c(cntysplits, 1)
-    }
-  }
-  
   totalsplits <- c()
-  # Count the number of total splits (more than one unique district)
+  n <- 0
+
   for (i in 1:length(a)) {
     if (length(b[[i]]) > 1) {
+    # Count the number of geo splits (more than one unique district)
+      cntysplits <- n <- n+1
+    # Count the number of total splits (more than one unique district)
       totalsplits <- c(totalsplits, length(b[[i]]))
     }
   }
+  
+  # TN County Splits
   
   tnsplits <- list()
   data_new <- list()
@@ -77,7 +76,7 @@ countSplits <- function(plan = NULL, census_blocks = NULL, geo = "COUNTY", custo
   
   # Create splits table by calculating various statistics
   splits.table <- rbind(
-    sum(cntysplits),
+    cntysplits,
     sum(totalsplits) - length(totalsplits),
     tnsplits_results,
     min(dist_pop$TOTAL),
