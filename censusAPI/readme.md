@@ -39,3 +39,6 @@ censusAPI(state="SC", geo="tract", table="P4")
 ### Resources
 https://geo.fcc.gov/api/census/#!/block/get_block_find
 https://www.latlong.net/
+
+
+https://api.census.gov/data/2020/dec/pl?get=group(P1)&for=block:*&in=state:26&in=county:*&in=tract:*

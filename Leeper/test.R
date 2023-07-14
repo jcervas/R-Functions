@@ -1,10 +1,10 @@
-source("/Users/jcervas/Google Drive/School/UCI/R Functions/Leeper/slopegraph.R")
-source("/Users/jcervas/Google Drive/School/UCI/R Functions/Leeper/segmentize.R")
-source("/Users/jcervas/Google Drive/School/UCI/R Functions/Leeper/bump_overlaps.R")
+source("/Users/cervas/My Drive/GitHub/R-Functions/Leeper/slopegraph.R")
+source("/Users/cervas/My Drive/GitHub/R-Functions/Leeper/segmentize.R")
+source("/Users/cervas/My Drive/GitHub/R-Functions/Leeper/bump_overlaps.R")
 options(stringsAsFactors=F)
 
 
-d <- read.csv("/Users/jcervas/Google Drive/Data/Elections/Presidential/Presidential_Election_General_Two_Party.csv")
+d <- read.csv("/Users/cervas/My Drive/GitHub/Data/Elections/Presidential/Pres by State/president_state.csv")
 	 d$tptotal <- d$dem+d$rep
 	 d$pctREP <- d$rep/d$tptotal
 	 d$pctDEM <- d$dem/d$tptotal
