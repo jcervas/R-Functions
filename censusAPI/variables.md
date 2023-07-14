@@ -3,6 +3,9 @@
 |---------|-----------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------|
 | P1_001N | Total:                                                                                                                                  | RACE                                                                                        |
 | P1_002N | Population of one race:                                                                                                                 | RACE                                                                                        |
+
+Population of one race: 
+
 | P1_003N | White alone                                                                                                                             | RACE                                                                                        |
 | P1_004N | Black or African American alone                                                                                                         | RACE                                                                                        |
 | P1_005N | American Indian and Alaska Native alone                                                                                                 | RACE                                                                                        |
