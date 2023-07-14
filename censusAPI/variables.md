@@ -18,12 +18,12 @@
 |         |                                                                                                                                         |
 |---------|-----------------------------------------------------------------------------------------------------------------------------------------|
 | `P1_009N` | Population of two or more races:                                                                                                        |
-| `P1_010N` | Population of two races:                                                                                                                |
 
 
 ### Population of two races:
 |         |                                                                                                                                         |
 |---------|-----------------------------------------------------------------------------------------------------------------------------------------|
+| `P1_010N` | Population of two races:                                                                                                                |
 | `P1_011N` | White; Black or African American                                                                                                        |
 | `P1_012N` | White; American Indian and Alaska Native                                                                                                |
 | `P1_013N` | White; Asian                                                                                                                            |
