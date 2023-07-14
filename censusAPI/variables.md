@@ -4,7 +4,7 @@
 | P1_001N | Total:                                                                                                                                  | RACE                                                                                        |
 | P1_002N | Population of one race:                                                                                                                 | RACE                                                                                        |
 
-Population of one race: 
+## Population of one race:
 
 |---------|-----------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------|
 | P1_003N | White alone                                                                                                                             | RACE                                                                                        |
@@ -13,6 +13,9 @@ Population of one race:
 | P1_006N | Asian alone                                                                                                                             | RACE                                                                                        |
 | P1_007N | Native Hawaiian and Other Pacific Islander alone                                                                                        | RACE                                                                                        |
 | P1_008N | Some Other Race alone                                                                                                                   | RACE                                                                                        |
+
+## Population of two or more races:
+
 | P1_009N | Population of two or more races:                                                                                                        | RACE                                                                                        |
 | P1_010N | Population of two races:                                                                                                                | RACE                                                                                        |
 | P1_011N | White; Black or African American                                                                                                        | RACE                                                                                        |
