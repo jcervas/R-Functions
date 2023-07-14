@@ -21,6 +21,10 @@
 |---------|-----------------------------------------------------------------------------------------------------------------------------------------|
 | `P1_009N` | Population of two or more races:                                                                                                        |
 | `P1_010N` | Population of two races:                                                                                                                |
+
+
+|         |                                                                                                                                         |
+|---------|-----------------------------------------------------------------------------------------------------------------------------------------|
 | `P1_011N` | White; Black or African American                                                                                                        |
 | `P1_012N` | White; American Indian and Alaska Native                                                                                                |
 | `P1_013N` | White; Asian                                                                                                                            |
@@ -36,6 +40,9 @@
 | `P1_023N` | Asian; Native Hawaiian and Other Pacific Islander                                                                                       |
 | `P1_024N` | Asian; Some Other Race                                                                                                                  |
 | `P1_025N` | Native Hawaiian and Other Pacific Islander; Some Other Race                                                                             |
+
+|         |                                                                                                                                         |
+|---------|-----------------------------------------------------------------------------------------------------------------------------------------|
 | `P1_026N` | Population of three races:                                                                                                              |
 | `P1_027N` | White; Black or African American; American Indian and Alaska Native                                                                     |
 | `P1_028N` | White; Black or African American; Asian                                                                                                 |
@@ -57,6 +64,9 @@
 | `P1_044N` | American Indian and Alaska Native; Asian; Some Other Race                                                                               |
 | `P1_045N` | American Indian and Alaska Native; Native Hawaiian and Other Pacific Islander; Some Other Race                                          |
 | `P1_046N` | Asian; Native Hawaiian and Other Pacific Islander; Some Other Race                                                                      |
+
+|         |                                                                                                                                         |
+|---------|-----------------------------------------------------------------------------------------------------------------------------------------|
 | `P1_047N` | Population of four races:                                                                                                               |
 | `P1_048N` | White; Black or African American; American Indian and Alaska Native; Asian                                                              |
 | `P1_049N` | White; Black or African American; American Indian and Alaska Native; Native Hawaiian and Other Pacific Islander                         |
@@ -73,6 +83,9 @@
 | `P1_060N` | Black or African American; American Indian and Alaska Native; Native Hawaiian and Other Pacific Islander; Some Other Race               |
 | `P1_061N` | Black or African American; Asian; Native Hawaiian and Other Pacific Islander; Some Other Race                                           |
 | `P1_062N` | American Indian and Alaska Native; Asian; Native Hawaiian and Other Pacific Islander; Some Other Race                                   |
+
+|         |                                                                                                                                         |
+|---------|-----------------------------------------------------------------------------------------------------------------------------------------|
 | `P1_063N` | Population of five races:                                                                                                               |
 | `P1_064N` | White; Black or African American; American Indian and Alaska Native; Asian; Native Hawaiian and Other Pacific Islander                  |
 | `P1_065N` | White; Black or African American; American Indian and Alaska Native; Asian; Some Other Race                                             |
@@ -80,6 +93,10 @@
 | `P1_067N` | White; Black or African American; Asian; Native Hawaiian and Other Pacific Islander; Some Other Race                                    |
 | `P1_068N` | White; American Indian and Alaska Native; Asian; Native Hawaiian and Other Pacific Islander; Some Other Race                            |
 | `P1_069N` | Black or African American; American Indian and Alaska Native; Asian; Native Hawaiian and Other Pacific Islander; Some Other Race        |
+
+
+|         |                                                                                                                                         |
+|---------|-----------------------------------------------------------------------------------------------------------------------------------------|
 | `P1_070N` | Population of six races:                                                                                                                |
 | `P1_071N` | White; Black or African American; American Indian and Alaska Native; Asian; Native Hawaiian and Other Pacific Islander; Some Other Race |
 
