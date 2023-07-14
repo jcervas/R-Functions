@@ -1,11 +1,12 @@
 # P1
 |         |                                                                                                                                         |                                                                                             |
 |---------|-----------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------|
-| P1_001N | Total:                                                                                                                                  | RACE                                                                                        |
-| P1_002N | Population of one race:                                                                                                                 | RACE                                                                                        |
+| `P1_001N` | Total:                                                                                                                                  | RACE                                                                                        |
+| `P1_002N` | Population of one race:                                                                                                                 | RACE                                                                                        |
 
 ## Population of one race:
 
+|         |                                                                                                                                         |                                                                                             |
 |---------|-----------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------|
 | `P1_003N` | White alone                                                                                                                             | RACE                                                                                        |
 | `P1_004N` | Black or African American alone                                                                                                         | RACE                                                                                        |
@@ -16,6 +17,8 @@
 
 ## Population of two or more races:
 
+|         |                                                                                                                                         |                                                                                             |
+|---------|-----------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------|
 | `P1_009N` | Population of two or more races:                                                                                                        | RACE                                                                                        |
 | `P1_010N` | Population of two races:                                                                                                                | RACE                                                                                        |
 | `P1_011N` | White; Black or African American                                                                                                        | RACE                                                                                        |
@@ -81,6 +84,7 @@
 | `P1_071N` | White; Black or African American; American Indian and Alaska Native; Asian; Native Hawaiian and Other Pacific Islander; Some Other Race | RACE                                                                                        |
 
 # P2
+
 |         |                                                                                                                                         |                                                                                             |
 |---------|-----------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------|
 | `P2_001N` | !!Total:                                                                                                                                | HISPANIC OR LATINO, AND NOT HISPANIC OR LATINO BY RACE                                      |
@@ -158,6 +162,7 @@
 | `P2_073N` | White; Black or African American; American Indian and Alaska Native; Asian; Native Hawaiian and Other Pacific Islander; Some Other Race | HISPANIC OR LATINO, AND NOT HISPANIC OR LATINO BY RACE                                      |
 
 # P3
+
 |         |                                                                                                                                         |                                                                                             |
 |---------|-----------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------|
 | `P3_001N` | !!Total:                                                                                                                                | RACE FOR THE POPULATION 18 YEARS AND OVER                                                   |
@@ -233,6 +238,7 @@
 | `P3_071N` | White; Black or African American; American Indian and Alaska Native; Asian; Native Hawaiian and Other Pacific Islander; Some Other Race | RACE FOR THE POPULATION 18 YEARS AND OVER                                                   |
 
 # P4
+
 |         |                                                                                                                                         |                                                                                             |
 |---------|-----------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------|
 | `P4_001N` | !!Total:                                                                                                                                | HISPANIC OR LATINO, AND NOT HISPANIC OR LATINO BY RACE FOR THE POPULATION 18 YEARS AND OVER |
