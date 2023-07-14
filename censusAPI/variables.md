@@ -96,7 +96,7 @@
 | `P1_068N` | White; American Indian and Alaska Native; Asian; Native Hawaiian and Other Pacific Islander; Some Other Race                            |
 | `P1_069N` | Black or African American; American Indian and Alaska Native; Asian; Native Hawaiian and Other Pacific Islander; Some Other Race        |
 
-
+### Population of six races:
 |         |                                                                                                                                         |
 |---------|-----------------------------------------------------------------------------------------------------------------------------------------|
 | `P1_070N` | Population of six races:                                                                                                                |
