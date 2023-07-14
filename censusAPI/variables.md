@@ -65,6 +65,7 @@
 | `P1_045N` | American Indian and Alaska Native; Native Hawaiian and Other Pacific Islander; Some Other Race                                          |
 | `P1_046N` | Asian; Native Hawaiian and Other Pacific Islander; Some Other Race                                                                      |
 
+### Population of four races:
 |         |                                                                                                                                         |
 |---------|-----------------------------------------------------------------------------------------------------------------------------------------|
 | `P1_047N` | Population of four races:                                                                                                               |
@@ -84,6 +85,7 @@
 | `P1_061N` | Black or African American; Asian; Native Hawaiian and Other Pacific Islander; Some Other Race                                           |
 | `P1_062N` | American Indian and Alaska Native; Asian; Native Hawaiian and Other Pacific Islander; Some Other Race                                   |
 
+### Population of five races:
 |         |                                                                                                                                         |
 |---------|-----------------------------------------------------------------------------------------------------------------------------------------|
 | `P1_063N` | Population of five races:                                                                                                               |
