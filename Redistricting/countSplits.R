@@ -22,7 +22,7 @@ countSplits <- function(plan = NULL, census_blocks = NULL, geo = "COUNTY", custo
   if (!is.null(custom_geo)) {
     # Read custom_geo file if provided and merge with plan_tmp
     custom_geo <- read.equiv(custom_geo)
-    plan_tmp <- merge(plan_tmp, custom_geo, by.x = colnames(plan_tmp)[1], by.y = colnames(custom_geo)[1])
+    plan_tmp <- merge(plan_tmp, custom_geo, by.x = colnames(plan_tmp)[1], by.y = "GEOID20")
   } else {
     # Rename the "COUNTY" column to "GEO" in plan_tmp
     colnames(plan_tmp)[colnames(plan_tmp) == geo] <- "geo"
