@@ -107,4 +107,4 @@ plan <- "/Users/cervas/My Drive/Projects/Redistricting/2023/Nassau/data/Plans/na
 census_blocks <- "/Users/cervas/My Drive/GitHub/Data Files/Census/NY2020.pl/clean data/blocks.csv"
 
 # Call the countSplits function with the specified arguments
-countSplits(plan = plan, census_blocks = census_blocks, custom_geo = custom_geo)
+  # countSplits(plan = plan, census_blocks = census_blocks, custom_geo = custom_geo)
