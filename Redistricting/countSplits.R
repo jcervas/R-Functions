@@ -5,11 +5,11 @@ countSplits <- function(plan = NULL, census_blocks = NULL, geo = "COUNTY", custo
   }
   
   # Read plan and census blocks files using read.equiv function
-  plan <- read.equiv(plan)
-  census_blocks <- read.equiv(census_blocks)
+  plan.read <- read.equiv(plan)
+  census_blocks.read <- read.equiv(census_blocks)
   
   # Merge plan and census_blocks based on common column names
-  plan_tmp <- merge(plan, census_blocks, by.x = "GEOID20", by.y = "GEOID20")
+  plan_tmp <- merge(plan.read, census_blocks.read, by.x = "GEOID20", by.y = "GEOID20")
   
   # Calculate district population by summing the 'TOTAL' column for each district
   dist_pop <- aggregate(list(TOTAL = as.numeric(plan_tmp$TOTAL)), by = list(District = plan_tmp$District), FUN = sum)
