@@ -76,6 +76,7 @@ countSplits <- function(plan = NULL, census_blocks = NULL, geo = "COUNTY", custo
   
   # Create splits table by calculating various statistics
   splits.table <- rbind(
+    sum(dist_pop$TOTAL),
     cntysplits,
     sum(totalsplits) - length(totalsplits),
     tnsplits_results,
@@ -87,6 +88,7 @@ countSplits <- function(plan = NULL, census_blocks = NULL, geo = "COUNTY", custo
     round(100 * (mean(abs(dist_pop$TOTAL - ideal) / ideal)), 2)
   )
   row.names(splits.table) <- c(
+    "Total Population",
     "Geos Splits",
     "Total Splits",
     "TN Splits",
