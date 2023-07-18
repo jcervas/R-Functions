@@ -38,7 +38,7 @@ write.csv(a, "block_equiv.csv", row.names=F)
 
 - Now that we have the new assignments, let's map the data to make sure it looks right
 ```
-lower_poly <- block_poly
+lower_poly <- block_shp
 lower_poly@data <- dplyr::full_join(lower_poly@data, a, by= c("GEOID20"="ID"))
  	lower_poly@data$District[is.na(lower_poly@data$District)] <- 0
 
