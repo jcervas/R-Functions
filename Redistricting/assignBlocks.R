@@ -20,7 +20,6 @@ assignPolys <- function(district_shp=NA, block_shp=NA, districtID=NA, blockID=NA
 		}
 
 		block.shp <- sp::spTransform(block.shp, raster::crs(district.shp))
-		block.point <- ms_points(block.shp, location = "inner")
 
 				# block.shp.buffer <- raster::buffer(block.shp)
 		master <- list()
