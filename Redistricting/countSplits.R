@@ -109,4 +109,4 @@ countSplits <- function(plan = NULL, census_blocks = NULL, geo = "COUNTY", custo
 # census_blocks <- "/Users/cervas/My Drive/GitHub/Data Files/Census/NY2020.pl/clean data/blocks.csv"
 
 # Call the countSplits function with the specified arguments
-# countSplits(plan = plan, census_blocks = census_blocks, custom_geo = custom_geo)
+# countSplits(plan = plan, census_blocks = census_blocks, custom_geo = custom_geo, geo = "COUNTY", plan_id="GEOID20", block_id="GEOID20", custom_geo_id="GEOID20")
