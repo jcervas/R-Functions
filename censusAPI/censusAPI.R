@@ -1,5 +1,5 @@
 
-censusAPI <- function(state=NULL, geo="tract", table="P1") {
+censusAPI <- function(state=NULL, geo="tract", table="P1", year = "2020") {
 
 library(httr)
 library(jsonlite)
@@ -37,7 +37,7 @@ library(jsonlite)
 
 
 # Define the base URL and API key
-base_url <- "https://api.census.gov/data/2020/dec/pl"
+base_url <- paste0("https://api.census.gov/data/", year, "/dec/pl")
 api_key <- "7865f31139b09e17c5865a59c240bdf07f9f44fd"
 
 # Define the variables to request
