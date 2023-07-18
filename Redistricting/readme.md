@@ -12,6 +12,7 @@ district <- sf::st_read("/Users/cervas/Library/CloudStorage/GoogleDrive-jcervas@
 district_shp <- as(district, "Spatial")
 blocks <- sf::st_read("/Users/cervas/Library/CloudStorage/GoogleDrive-jcervas@uci.edu/My Drive/GitHub/Data Files/Census/PA2020.pl/GIS/blocks_simplified/WP_Blocks.json")
 block_shp <- as(blocks, "Spatial")
+block_point <- ms_points(block.shp, location = "inner")
 ```
 
 ```
@@ -21,7 +22,7 @@ block_point <- rgdal::readOGR("tl_2019_27_tabblock10.shp")
 
 - This is the function command
 ```
-a <- assignPolys(block_shp=block_shp, district_shp=district_shp, districtID="GEOID", blockID="GEOID20")
+a <- assignPolys(block_point=block_point, district_shp=district_shp, districtID="GEOID", blockID="GEOID20")
 head(a)
 write.csv(a, "block_equiv.csv", row.names=F)
 ```
