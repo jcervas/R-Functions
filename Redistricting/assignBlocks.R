@@ -2,7 +2,7 @@
 library(rmapshaper)
 library(raster)
 
-assignPolys <- function(district_shp=NA, point_shp=NA, districtID=NA, blockID=NA, district_label=NA) {
+assignPolys <- function(district_shp=NA, block_shp=NA, districtID=NA, blockID=NA, district_label=NA) {
 	library(rgdal)
 	if (class(district_shp) %in% "SpatialPolygonsDataFrame") {
 			district.shp <- district_shp
@@ -11,10 +11,10 @@ assignPolys <- function(district_shp=NA, point_shp=NA, districtID=NA, blockID=NA
 		} else {
 			stop("Error: District file not acceptable")
 		}
-	 if (class(block_point) %in% c("SpatialPolygonsDataFrame", "SpatialPointsDataFrame")) {
-			block.shp <- block_point
-		} else if (class(block_point) == "character") {
-			block.shp <- rgdal::readOGR(block_point)
+	 if (class(block_shp) %in% c("SpatialPolygonsDataFrame", "SpatialPointsDataFrame")) {
+			block.shp <- block_shp
+		} else if (class(block_shp) == "character") {
+			block.shp <- rgdal::readOGR(block_shp)
 		} else {
 			stop("Error: Block file not acceptable")
 		}
