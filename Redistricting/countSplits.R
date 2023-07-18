@@ -1,4 +1,4 @@
-countSplits <- function(plan = NULL, census_blocks = NULL, geo = "COUNTY", custom_geo = NULL) {
+countSplits <- function(plan = NULL, census_blocks = NULL, geo = "COUNTY", custom_geo = NULL, plan_id="GEOID20", block_id="GEOID20", custom_geo_id="GEOID20") {
   # Function to read a CSV file and set all columns as character
   read.equiv <- function(x) {
     read.csv(x, colClasses = c("character"))
@@ -9,7 +9,7 @@ countSplits <- function(plan = NULL, census_blocks = NULL, geo = "COUNTY", custo
   census_blocks.read <- read.equiv(census_blocks)
   
   # Merge plan and census_blocks based on common column names
-  plan_tmp <- merge(plan.read, census_blocks.read, by.x = "GEOID20", by.y = "GEOID20")
+  plan_tmp <- merge(plan.read, census_blocks.read, by.x = plan_id, by.y = block_id)
   
   # Calculate district population by summing the 'TOTAL' column for each district
   dist_pop <- aggregate(list(TOTAL = as.numeric(plan_tmp$TOTAL)), by = list(District = plan_tmp$District), FUN = sum)
@@ -17,7 +17,7 @@ countSplits <- function(plan = NULL, census_blocks = NULL, geo = "COUNTY", custo
   if (!is.null(custom_geo)) {
     # Read custom_geo file if provided and merge with plan_tmp
     custom_geo.read <- read.equiv(custom_geo)
-    plan_tmp <- merge(plan_tmp, custom_geo.read, by.x = colnames(plan_tmp)[1], by.y = "GEOID20")
+    plan_tmp <- merge(plan_tmp, custom_geo.read, by.x = plan_id, by.y = custom_geo_id)
   } else {
     # Rename the "COUNTY" column to "GEO" in plan_tmp
     colnames(plan_tmp)[colnames(plan_tmp) == geo] <- "geo"
