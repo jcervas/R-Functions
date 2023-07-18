@@ -67,7 +67,7 @@ countSplits <- function(plan = NULL, census_blocks = NULL, geo = "COUNTY", custo
   }
   tnsplits_tmp <- do.call(rbind, data_new)
   tnsplits <- tnsplits_tmp[(tnsplits_tmp$x < ideal_minus_5), ]
-  tnsplits_results <- length(aggregate(tnsplits$x, by = list(tnsplits$COUNTY), FUN = sum)[, 1])
+  tnsplits_results <- length(aggregate(tnsplits$x, by = list(tnsplits$geo), FUN = sum)[, 1])
 
   # Calculate ideal population as the average population across all districts
   ideal <- sum(dist_pop$TOTAL) / length(dist_pop$TOTAL)
