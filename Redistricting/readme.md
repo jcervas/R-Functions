@@ -12,7 +12,7 @@ district <- sf::st_read("/Users/cervas/Library/CloudStorage/GoogleDrive-jcervas@
 district_shp <- as(district, "Spatial")
 blocks <- sf::st_read("/Users/cervas/Library/CloudStorage/GoogleDrive-jcervas@uci.edu/My Drive/GitHub/Data Files/Census/PA2020.pl/GIS/blocks_simplified/WP_Blocks.json")
 block_shp <- as(blocks, "Spatial")
-block_point <- ms_points(block.shp, location = "inner")
+block_point <- ms_points(block_shp, location = "inner")
 ```
 
 ```
