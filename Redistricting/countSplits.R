@@ -14,11 +14,6 @@ countSplits <- function(plan = NULL, census_blocks = NULL, geo = "COUNTY", custo
   # Calculate district population by summing the 'TOTAL' column for each district
   dist_pop <- aggregate(list(TOTAL = as.numeric(plan_tmp$TOTAL)), by = list(District = plan_tmp$District), FUN = sum)
   
-  # Calculate ideal population as the average population across all districts
-  ideal <- sum(dist_pop$TOTAL) / length(dist_pop$TOTAL)
-  ideal_minus_5 <- ideal - (ideal * 0.05)  # 5% below ideal population
-  ideal_plus_5 <- ideal + (ideal * 0.05)  # 5% above ideal population
-  
   if (!is.null(custom_geo)) {
     # Read custom_geo file if provided and merge with plan_tmp
     custom_geo <- read.equiv(custom_geo)
@@ -73,6 +68,11 @@ countSplits <- function(plan = NULL, census_blocks = NULL, geo = "COUNTY", custo
   tnsplits_tmp <- do.call(rbind, data_new)
   tnsplits <- tnsplits_tmp[(tnsplits_tmp$x < ideal_minus_5), ]
   tnsplits_results <- length(aggregate(tnsplits$x, by = list(tnsplits$COUNTY), FUN = sum)[, 1])
+
+  # Calculate ideal population as the average population across all districts
+  ideal <- sum(dist_pop$TOTAL) / length(dist_pop$TOTAL)
+  ideal_minus_5 <- ideal - (ideal * 0.05)  # 5% below ideal population
+  ideal_plus_5 <- ideal + (ideal * 0.05)  # 5% above ideal population
   
   # Create splits table by calculating various statistics
   splits.table <- rbind(
