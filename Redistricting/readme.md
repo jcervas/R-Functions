@@ -8,8 +8,8 @@
 - Example - Minnesota 116th Congress, Census Blocks (Function uses package "sp" to read in shapefiles)
 ```
 source("https://raw.githubusercontent.com/jcervas/R-Functions/main/Redistricting/assignBlocks.R")
-district_shp <- rgdal::readOGR("tl_2019_us_cd116.shp")
-block_shp <- rgdal::readOGR("tl_2019_27_tabblock10.shp")
+district_shp <- sf::st_read("/Users/cervas/Library/CloudStorage/GoogleDrive-jcervas@uci.edu/My Drive/Projects/Redistricting/2022/PA/data/Plans/2022 LRC Senate Final.geojson")
+block_shp <- sf::st_read("/Users/cervas/Library/CloudStorage/GoogleDrive-jcervas@uci.edu/My Drive/GitHub/Data Files/Census/PA2020.pl/GIS/blocks_simplified/WP_Blocks.json")
 ```
 
 ```
