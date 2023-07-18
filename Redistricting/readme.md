@@ -9,9 +9,14 @@
 ```
 source("https://raw.githubusercontent.com/jcervas/R-Functions/main/Redistricting/assignBlocks.R")
 district_shp <- rgdal::readOGR("tl_2019_us_cd116.shp")
-block_point <- rgdal::readOGR("tl_2019_27_tabblock10.shp")
-block_poly <- rgdal::readOGR("tl_2019_27_tabblock10.shp")
+block_shp <- rgdal::readOGR("tl_2019_27_tabblock10.shp")
 ```
+
+```
+# Maybe delete
+block_point <- rgdal::readOGR("tl_2019_27_tabblock10.shp")
+```
+
 - This is the function command
 ```
 a <- assignPolys(point_shp=block_point, district_shp=district_shp, districtID="GEOID", blockID="GEOID20")
