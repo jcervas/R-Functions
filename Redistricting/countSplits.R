@@ -11,10 +11,7 @@ countSplits <- function(plan = NULL, census_blocks = NULL, geo = "COUNTY", custo
   # Merge plan and census_blocks based on common column names
   plan_tmp <- merge(plan.read, census_blocks.read, by.x = plan_id, by.y = block_id)
   
-  # Calculate district population by summing the 'TOTAL' column for each district
-  dist_pop <- aggregate(list(TOTAL = as.numeric(plan_tmp$TOTAL)), by = list(District = plan_tmp$District), FUN = sum)
-  
-  if (!is.null(custom_geo)) {
+  if (exists("custom_geo")) {
     # Read custom_geo file if provided and merge with plan_tmp
     custom_geo.read <- read.equiv(custom_geo)
     plan_tmp <- merge(plan_tmp, custom_geo.read, by.x = plan_id, by.y = custom_geo_id)
@@ -27,14 +24,21 @@ countSplits <- function(plan = NULL, census_blocks = NULL, geo = "COUNTY", custo
   # Create a unique identifier for district and geo by combining District and geo columns
   plan_tmp$uniq <- paste0(plan_tmp$District, "_", plan_tmp$geo)
   
-  # Calculate aggregated district-geo sums by summing the 'TOTAL' column for each unique district-geo combination
+
+  if (!is.null(plan_tmp$TOTAL)) {
+    # Calculate aggregated district-geo sums by summing the 'TOTAL' column for each unique district-geo combination
   uni_dist_geo <- aggregate(as.numeric(plan_tmp$TOTAL), by = list(plan_tmp$uniq), FUN = sum)
   plan_tmp <- merge(plan_tmp, uni_dist_geo, by.x = "uniq", by.y = "Group.1")
-
-  # Calculate ideal population as the average population across all districts
+    # Calculate district population by summing the 'TOTAL' column for each district
+  dist_pop <- aggregate(list(TOTAL = as.numeric(plan_tmp$TOTAL)), by = list(District = plan_tmp[plan_id,), FUN = sum)
+    # Calculate ideal population as the average population across all districts
   ideal <- sum(dist_pop$TOTAL) / length(dist_pop$TOTAL)
   ideal_minus_5 <- ideal - (ideal * 0.05)  # 5% below ideal population
   ideal_plus_5 <- ideal + (ideal * 0.05)  # 5% above ideal population
+    } else {
+    dist_pop <- ideal <- ideal_minus_5 <- ideal_plus_5 <- "No Population Data included"
+    }
+
   
   # Split plan_tmp by geo into a list of data frames, where each data frame corresponds to a unique geo
   a <- split(plan_tmp, plan_tmp$geo)
@@ -61,7 +65,6 @@ countSplits <- function(plan = NULL, census_blocks = NULL, geo = "COUNTY", custo
   }
   
   # TN County Splits
-  
   tnsplits <- list()
   data_new <- list()
   
@@ -72,7 +75,12 @@ countSplits <- function(plan = NULL, census_blocks = NULL, geo = "COUNTY", custo
     }
   }
   tnsplits_tmp <- do.call(rbind, data_new)
+
+  if (!exists("tnsplits_tmp$x")) {
   tnsplits <- tnsplits_tmp[(tnsplits_tmp$x < ideal_minus_5), ]
+    } else {
+    tnsplits <- tnsplits_tmp
+    }
   tnsplits_results <- length(aggregate(tnsplits$x, by = list(tnsplits$geo), FUN = sum)[, 1])
 
 
