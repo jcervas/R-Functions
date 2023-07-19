@@ -10,8 +10,8 @@
 source("https://raw.githubusercontent.com/jcervas/R-Functions/main/Redistricting/assignBlocks.R")
 district <- "/Users/cervas/Library/CloudStorage/GoogleDrive-jcervas@uci.edu/My Drive/Projects/Redistricting/2022/PA/data/Plans/2022 LRC Senate Final.geojson"
 district_shp <- as(sf::st_read(district), "Spatial")
-blocks <- sf::st_read("/Users/cervas/Library/CloudStorage/GoogleDrive-jcervas@uci.edu/My Drive/GitHub/Data Files/Census/PA2020.pl/GIS/blocks_simplified/WP_Blocks.json")
-block_shp <- as(blocks, "Spatial")
+blocks <- "/Users/cervas/Library/CloudStorage/GoogleDrive-jcervas@uci.edu/My Drive/GitHub/Data Files/Census/PA2020.pl/GIS/blocks_simplified/WP_Blocks.json"
+block_shp <- as(sf::st_read(blocks), "Spatial")
 block_point <- ms_points(block_shp, location = "inner")
 ```
 
