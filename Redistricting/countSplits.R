@@ -36,7 +36,7 @@ countSplits <- function(plan = NULL, census_blocks = NULL, geo = "COUNTY", custo
   ideal_minus_5 <- ideal - (ideal * 0.05)  # 5% below ideal population
   ideal_plus_5 <- ideal + (ideal * 0.05)  # 5% above ideal population
     } else {
-    dist_pop <- ideal <- ideal_minus_5 <- ideal_plus_5 <- "No Population Data included"
+    dist_pop <- ideal <- ideal_minus_5 <- ideal_plus_5 <- "No population data included"
     }
   
   # Split plan_tmp by geo into a list of data frames, where each data frame corresponds to a unique geo
@@ -58,6 +58,7 @@ countSplits <- function(plan = NULL, census_blocks = NULL, geo = "COUNTY", custo
     if (length(b[[i]]) > 1) {
     # Count the number of geo splits (more than one unique district)
       cntysplits <- n <- n+1
+      print(a[[i]]$geo[1])
     # Count the number of total splits (more than one unique district)
       totalsplits <- c(totalsplits, length(b[[i]]))
     }
