@@ -11,13 +11,14 @@ source("https://raw.githubusercontent.com/jcervas/R-Functions/main/Redistricting
 district <- "/Users/cervas/Library/CloudStorage/GoogleDrive-jcervas@uci.edu/My Drive/Projects/Redistricting/2022/PA/data/Plans/2022 LRC Senate Final.geojson"
 district_shp <- as(sf::st_read(district), "Spatial")
 blocks <- "/Users/cervas/Library/CloudStorage/GoogleDrive-jcervas@uci.edu/My Drive/GitHub/Data Files/Census/PA2020.pl/GIS/blocks_simplified/WP_Blocks.json"
-block_shp <- as(sf::st_read(blocks), "Spatial")
-block_point <- ms_points(block_shp, location = "inner")
+block_point <- as(sf::st_read(blocks), "Spatial")
+
 ```
 
 ```
 # Maybe delete
 block_point <- rgdal::readOGR("tl_2019_27_tabblock10.shp")
+block_point <- ms_points(block_shp, location = "inner")
 ```
 
 - This is the function command
