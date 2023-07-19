@@ -11,7 +11,7 @@ countSplits <- function(plan = NULL, census_blocks = NULL, geo = "COUNTY", custo
   # Merge plan and census_blocks based on common column names
   plan_tmp <- merge(plan.read, census_blocks.read, by.x = plan_id, by.y = block_id)
   
-  if (exists("custom_geo")) {
+  if (!is.null(custom_geo)) {
     # Read custom_geo file if provided and merge with plan_tmp
     custom_geo.read <- read.equiv(custom_geo)
     plan_tmp <- merge(plan_tmp, custom_geo.read, by.x = plan_id, by.y = custom_geo_id)
