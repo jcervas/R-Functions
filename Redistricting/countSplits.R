@@ -58,7 +58,7 @@ countSplits <- function(plan = NULL, census_blocks = NULL, geo = "COUNTY", custo
     if (length(b[[i]]) > 1) {
     # Count the number of geo splits (more than one unique district)
       cntysplits <- n <- n+1
-      print(a[[i]]$geo[1])
+      # print(a[[i]]$geo[1])
     # Count the number of total splits (more than one unique district)
       totalsplits <- c(totalsplits, length(b[[i]]))
     }
