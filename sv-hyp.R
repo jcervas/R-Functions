@@ -1,4 +1,4 @@
-'seatsvotes.plot' <- function(main="", ylim=c(0,1), xlim=c(0,1), xlab="Votes", ylab="Seats", xaxis=TRUE, yaxis=TRUE, prop.line=TRUE) 
+'seatsvotes.plot' <- function(main="", ylim=c(0,1), xlim=c(0,1), xlab="Votes", ylab="Seats", xaxis=TRUE, yaxis=TRUE, prop.line=TRUE, box=TRUE) 
 	{
 		par(pty="s", mar = c(2.5, 2, 2, 1), mgp = c(0.5, 0.5, 0))
 		plot(1, 
@@ -31,7 +31,9 @@
 	if (prop.line==TRUE) {	
 		abline(0,1, lty=2, col="gray90")
 		}
+	if (box==TRUE) {
 		box()
+		}
 			# rect(-.05,-.05,0,1.05, col = rgb(0.1,0.1,0.1,1/2), density=40, border = "transparent") #left
 			# rect(0,0,1.05,-.05, col = rgb(0.1,0.1,0.1,1/2), density=40, border = "transparent") #bottom
 			# rect(1,0,1.05,1.05, col = rgb(0.1,0.1,0.1,1/2), density=40, border = "transparent") #right
@@ -58,20 +60,23 @@ sv.hyp <- function(r, b, n = 1000){
 
   return(dta)
 }
-			# 	majoritarian.sv.dta <- sv.hyp(r = 3, b = 0)
-			# 	proporional.sv.dta  <- sv.hyp(r = 1, b = 0)
-			# 	negative.dv.dta     <- sv.hyp(r = 0.50, b = 0)
-			# 	winner.sv.dta       <- sv.hyp(r = 10000, b = 0)
-			# plot(cube, from=0, to=1, add=TRUE, lwd=1.5, col="gray50", lty=4)
-			# plot(cube, from=0, to=1, add=TRUE, lwd=1, col="gray40", lty=5)
-			# lines(majoritarian.sv.dta, lwd=1.5, col="gray50", lty=4)
-			# lines(negative.dv.dta, lwd=1.5, col="gray50", lty=4)
-			# lines(winner.sv.dta, lwd=1.5, col="gray50", lty=4)
-			# lines(proporional.sv.dta, lwd=1.5, col="gray50", lty=4)
-				# text(x =  0.23, y = 0.25, "PROPORTIONAL REPRESENTATION", srt=45, cex=1, col="gray50")
-				# text(x =  0.35, y = 0.60, "Winner-take-all", srt=0, cex=1, col="dark green")
-				# text(x =  0.61, y = 0.96, "Majoritarian", srt=0, cex=1, col="purple")
-				# text(x =  0.76, y = 0.55, "Negative Bonus", srt=0, cex=1, col="orange")
+
+seatsvotes.plot()
+majoritarian.sv.dta <- sv.hyp(r = 3, b = 0)
+proporional.sv.dta  <- sv.hyp(r = 1, b = 0)
+negative.dv.dta     <- sv.hyp(r = 0.50, b = 0)
+winner.sv.dta       <- sv.hyp(r = 10000, b = 0)
+
+          lines(majoritarian.sv.dta, lwd=1.5, col="purple", lty=4)
+          lines(negative.dv.dta, lwd=1.5, col="orange", lty=4)
+          lines(winner.sv.dta, lwd=1.5, col="dark green", lty=4)
+          lines(proporional.sv.dta, lwd=1.5, col="gray50", lty=4)
+               text(x =  0.23, y = 0.25, "PROPORTIONAL REPRESENTATION", srt=45, cex=1, col="gray50")
+               text(x =  0.35, y = 0.60, "Winner-take-all", srt=0, cex=1, col="dark green")
+               text(x =  0.61, y = 0.96, "Majoritarian", srt=0, cex=1, col="purple")
+               text(x =  0.76, y = 0.55, "Negative Bonus", srt=0, cex=1, col="orange")
+
+
 sv_curve <- function(s,v, lwd=2, col="gray40") {
 	reg <- summary(lm(log(sv(s)) ~ log(sv(v))))
 	VOTES.tmp <- seq(0,1, by=.01)
