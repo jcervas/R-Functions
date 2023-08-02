@@ -300,6 +300,18 @@ function (vs, uncL = 0.25, uncU = 0.75, uncLR = 0.25, uncUR = 0.75) {
   vs <- replace.unc(vs, uncL, uncU, uncLR, uncUR)
   return(vs)}
 
+'appl' <- function(vs) {
+  if (is.vector(vs)) {
+    vs[vs == 0] <- 0.25
+    vs[vs == 1] <- 0.75
+    return(vs)
+  } else {
+    stop("Input must be a vector.")
+  }
+}
+
+
+
 # `mean.unc` <- # uncL and uncU to replace outside bounds, otherwise just NAs
 # function(vs, uncL = 0.0001, uncU = 0.99999) {
 #   vs <- delete.unc(vs, uncL=uncL, uncU=uncU)
