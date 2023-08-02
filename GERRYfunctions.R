@@ -282,16 +282,19 @@ function(vs, uncL=0.25, uncU=0.75) {
   return(sapply (vs,f1,uncL,uncU)) }
 
 `replace.unc` <-
-function (vs,l,u,lr,ur, na.rm=T) { # na.rm replaces NAs with 0
-  na <- numeric()
-    if(na.rm==T) 
-    {
-      na <- 0
-    } else NA
-  f1 <- function (a,b,c,d,e) if (!is.na(a)) {
-    if (a<b) a <- d else if (a>c) a <- e else a
-  } else NA
-  return(sapply (vs,f1,l,u,lr,ur))}
+function(vs, l, u, lr, ur, na.rm = TRUE) {
+  f1 <- function(a) {
+    if (is.na(a)) return(NA)
+    if (a < l) a <- lr
+    else if (a > u) a <- ur
+    a
+  }
+
+  result <- sapply(vs, f1)
+  if (na.rm) result[is.na(result)] <- 0
+  result
+}
+
 
 
 `default.unc` <-
