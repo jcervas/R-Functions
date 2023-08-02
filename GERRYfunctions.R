@@ -274,12 +274,12 @@ std <- function(x) {
    x[is.na(x)] <- value 
    return(x)}
    
-`delete.unc` <-
-function(vs, uncL=0.25, uncU=0.75) {
-  #replaces uncontested vote values with "missing".
- f1 <- function (a,b,c) ifelse (is.na(a),NA,
-                                 ifelse(a<b,NA, ifelse(a>c,NA,a)))
-  return(sapply (vs,f1,uncL,uncU)) }
+# `delete.unc` <-
+# function(vs, uncL=0.25, uncU=0.75) {
+#   #replaces uncontested vote values with "missing".
+#  f1 <- function (a,b,c) ifelse (is.na(a),NA,
+#                                  ifelse(a<b,NA, ifelse(a>c,NA,a)))
+#   return(sapply (vs,f1,uncL,uncU)) }
 
 `replace.unc` <-
 function(vs, l, u, lr, ur, na.rm = TRUE) {
@@ -295,23 +295,44 @@ function(vs, l, u, lr, ur, na.rm = TRUE) {
   result
 }
 
-
-
 `default.unc` <-
 function (vs, uncL = 0.25, uncU = 0.75, uncLR = 0.25, uncUR = 0.75) {
   vs <- replace.unc(vs, uncL, uncU, uncLR, uncUR)
   return(vs)}
 
-`mean.unc` <- # uncL and uncU to replace outside bounds, otherwise just NAs
-function(vs, uncL = 0.0001, uncU = 0.99999) {
-  vs <- delete.unc(vs, uncL=uncL, uncU=uncU)
-tmp <- vs[!is.na(vs)]
-reg <- summary(lm(tmp ~ 1))$coef[1] # mean
-reg_sig <- summary(lm(tmp ~ 1))$coef[2] # sigma
-  new.mean <- truncate(rnorm(length(vs[is.na(vs)]), reg, reg_sig))
-  vs[is.na(vs)] <- new.mean
-  return(vs)}
+# `mean.unc` <- # uncL and uncU to replace outside bounds, otherwise just NAs
+# function(vs, uncL = 0.0001, uncU = 0.99999) {
+#   vs <- delete.unc(vs, uncL=uncL, uncU=uncU)
+# tmp <- vs[!is.na(vs)]
+# reg <- summary(lm(tmp ~ 1))$coef[1] # mean
+# reg_sig <- summary(lm(tmp ~ 1))$coef[2] # sigma
+#   new.mean <- truncate(rnorm(length(vs[is.na(vs)]), reg, reg_sig))
+#   vs[is.na(vs)] <- new.mean
+#   return(vs)}
 
+# Helper function to delete uncontested vote values
+delete.unc <- function(a, b=0.25, c=0.75) {
+  ifelse(is.na(a), NA,
+         ifelse(a < b | a > c, NA, a))
+}
+
+mean.unc <- function(vs, uncL = 0.0001, uncU = 0.99999) {
+
+  # Delete uncontested vote values
+  tmp <- delete.unc(vs, uncL, uncU)
+
+  # Compute mean and sigma from non-NA values
+  reg <- mean(tmp, na.rm = TRUE)
+  reg_sig <- sd(tmp, na.rm = TRUE)
+
+  # Generate new values from a normal distribution with mean and sigma
+  new.mean <- rnorm(sum(is.na(vs)), mean = reg, sd = reg_sig)
+
+  # Replace NA values in the original vector with new.mean
+  vs[is.na(vs)] <- new.mean
+
+  return(vs)
+}
 
 `impute.weights` <- # for use when turnout in districts is abnormally high or low (w = # of standard deviations from median)
 function(t1, t2, w = 2) {
