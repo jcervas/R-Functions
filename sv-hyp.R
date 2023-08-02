@@ -29,6 +29,7 @@
 
 	if (prop.line==TRUE) {	
 		abline(0,1, lty=2, col="gray90")
+		text(.23,.25, "PROPORTIONAL REPRESENTATION", srt=45, cex=.5, col="gray50")
 		}
 	if (box==TRUE) {
 		box()
@@ -91,7 +92,7 @@ sv_curve <- function(s,v, lwd=2, col="gray40") {
 	#points(v.tmp,s.tmp, cex=2, col="gray10", pch=19)
 	#points(v.tmp,s.tmp, cex=.75, col="gray60", pch=15)
 	#text(v.tmp,s.tmp, "Actual Election Results", cex=.6, pos=4)
-	text(.23,.25, "PROPORTIONAL REPRESENTATION", srt=45, cex=.5, col="gray50")
+	
 	}
 	
 
