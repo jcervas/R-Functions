@@ -92,6 +92,7 @@ sv_bias <- function(s,v) {
 	VOTES.tmp <- seq(0,1, by=.01)
 	bias <- reg$coefficients[2]*log(0.5/(1 - 0.5)) + reg$coefficients[1]
 	funct2 <- function (x) exp(bias) / (1 + exp(bias)) 
+	return(funct2())
 }
 
 
