@@ -95,6 +95,15 @@ sv_bias <- function(s,v) {
 	return(funct2())
 }
 
+sv_responsiveness <- function(s,v) {
+	reg <- summary(lm(log(sv(s)) ~ log(sv(v))))
+	VOTES.tmp <- seq(0,1, by=.01)
+	bias45 <- reg$coefficients[2]*log(0.45/(1 - 0.45)) + reg$coefficients[1]
+	bias55 <- reg$coefficients[2]*log(0.55/(1 - 0.55)) + reg$coefficients[1]
+	funct2 <- function (x) ((exp(bias55) / (1 + exp(bias55))) - (exp(bias45) / (1 + exp(bias45)))) / 0.1
+	return(funct2())
+}
+
 
 sv_hyp_plot <- function(r, b, n = 1000){
 			  V  <- seq(from = 0.001,to = 0.999, length = n )
