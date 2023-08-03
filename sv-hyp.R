@@ -84,17 +84,15 @@ sv_curve <- function(s,v, lwd=2, col="gray40") {
 	VOTES.tmp <- seq(0,1, by=.01)
 	seatvotes <- reg$coefficients[2]*log(VOTES.tmp/(1 - VOTES.tmp)) + reg$coefficients[1]
 	funct2 <- function (x) exp(seatvotes) / (1 + exp(seatvotes)) 
-	plot(funct2, from=0.0, to=1, add=TRUE, lwd=lwd, col=col)
+	plot(funct2, from=0.0, to=1, add=TRUE, lwd=lwd, col=col)	
+}
 
-	## redraw so actual results on top
-	#v.tmp <- round(mean.w(VOTES, POP), 3)
-	#s.tmp <- round(sum(find.winner(VOTES) * SEATS)/sum(SEATS), 3)
-	#points(v.tmp,s.tmp, cex=2, col="gray10", pch=19)
-	#points(v.tmp,s.tmp, cex=.75, col="gray60", pch=15)
-	#text(v.tmp,s.tmp, "Actual Election Results", cex=.6, pos=4)
-	
-	}
-	
+sv_bias <- function(s,v) {
+	reg <- summary(lm(log(sv(s)) ~ log(sv(v))))
+	VOTES.tmp <- seq(0,1, by=.01)
+	bias <- reg$coefficients[2]*log(0.5/(1 - 0.5)) + reg$coefficients[1]
+	funct2 <- function (x) exp(bias) / (1 + exp(bias)) 
+}
 
 
 sv_hyp_plot <- function(r, b, n = 1000){
