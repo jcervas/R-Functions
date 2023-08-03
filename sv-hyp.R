@@ -1,3 +1,4 @@
+options(scipen = 999)
 'seatsvotes.plot' <- function(main="", ylim=c(0,1), xlim=c(0,1), xlab="Votes", ylab="Seats", xaxis=TRUE, yaxis=TRUE, prop.line=TRUE, box=TRUE) 
 	{
 		par(pty="s", mar = c(2.5, 2, 2, 1), mgp = c(0.5, 0.5, 0))
