@@ -1,5 +1,5 @@
 
-censusAPI <- function(state=NULL, geo="tract", table="P1", year = "2020") {
+decennialAPI <- function(state=NULL, geo="tract", table="P1", year = "2020") {
 
 library(httr)
 library(jsonlite)
@@ -117,3 +117,5 @@ for (chunk in variable_chunks) {
 
 return(data)
 }
+
+censusAPI <- decennialAPI
