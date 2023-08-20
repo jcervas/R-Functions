@@ -70,7 +70,8 @@ for (chunk in variable_chunks) {
 
   # Construct the full API URL
   api_url <- paste0(base_url, "?", get_params)
-
+  print(api_url)
+        
   # Make the GET request
   response <- httr::GET(api_url, httr::add_headers(Authorization = paste0("Bearer ", api_key)))
 
