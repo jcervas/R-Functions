@@ -1,5 +1,5 @@
 
-decennialAPI <- function(state=NULL, geo="tract", table="P1", year = "2020") {
+decennialAPI <- function(state=NULL, geo="tract", table="P1", year = "2020", variables=NULL) {
 
 library(httr)
 library(jsonlite)
@@ -43,12 +43,11 @@ api_key <- "7865f31139b09e17c5865a59c240bdf07f9f44fd"
 # Define the variables to request
 # vars <- c("001N", "002N", "003N", "004N", "005N", "006N", "007N", "008N", "009N", "010N", "011N", "012N", "013N", "014N", "015N", "016N", "017N", "018N", "019N", "020N", "021N", "022N", "023N", "024N", "025N", "026N", "027N", "028N", "029N", "030N", "031N", "032N", "033N", "034N", "035N", "036N", "037N", "038N", "039N", "040N", "041N", "042N", "043N", "044N", "045N", "046N", "047N", "048N", "049N", "050N", "051N", "052N", "053N", "054N", "055N", "056N", "057N", "058N", "059N", "060N", "061N", "062N", "063N", "064N", "065N", "066N", "067N", "068N", "069N", "070N", "071N")
 # get_vars <- paste0(table, "_", vars)
+  if (is.null(variables) {
   get_vars <- paste0("group(", table, ")")
-
-# # Loop over counties (if applicable)
-# if (geo == "block") {
-#   state_county <- fips$county[fips$state %in% sprintf("%02s", lookup_fips(state))]
-# }
+    } else {
+    get_vars <- variable
+    }
 
 # https://api.census.gov/data/2020/dec/pl?get=P1_051N,P1_052N,P1_053N,P1_054N,P1_055N,P1_056N,P1_057N,P1_058N,P1_059N,P1_060N,P1_061N,P1_062N,P1_063N,P1_064N,P1_065N,P1_066N,P1_067N,P1_068N,P1_069N,P1_070N,P1_071N&for=block:*&in=state:06%20county:*
 
