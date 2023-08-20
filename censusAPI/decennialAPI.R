@@ -46,7 +46,7 @@ api_key <- "7865f31139b09e17c5865a59c240bdf07f9f44fd"
   if (is.null(variables)) {
   get_vars <- paste0("group(", table, ")")
     } else {
-    get_vars <- variable
+    get_vars <- variables
     }
 
 # https://api.census.gov/data/2020/dec/pl?get=P1_051N,P1_052N,P1_053N,P1_054N,P1_055N,P1_056N,P1_057N,P1_058N,P1_059N,P1_060N,P1_061N,P1_062N,P1_063N,P1_064N,P1_065N,P1_066N,P1_067N,P1_068N,P1_069N,P1_070N,P1_071N&for=block:*&in=state:06%20county:*
