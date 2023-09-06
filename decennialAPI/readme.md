@@ -1,5 +1,5 @@
 
-# CensusAPI() function
+# decennialAPI() function
 
 Use this function to get 2020 decennial census data from the Census API in R.
 
