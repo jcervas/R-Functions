@@ -132,6 +132,10 @@ geo_counts_first_obs_df$count_scaled <-
         maxRadius=5, 
         maxDomain=max(geo_counts_first_obs_df$count))
 
+geo_counts_first_obs_df$r <- scaleSqrt(
+        geo_counts_first_obs_df$count, 
+        maxRadius=4, 
+        maxDomain=max(geo_counts_first_obs_df$count))
 write.csv(geo_counts_first_obs_df, "/Users/cervas/My Drive/GitHub/R-Functions/ignacio/data/counts-city.csv")
 ```
 
@@ -166,4 +170,18 @@ points(
     pch=16)
 
 dev.off()
+```
+
+### In Mapshaper.org
+```
+mapshaper -i '/Users/cervas/My Drive/GitHub/R-Functions/ignacio/gis/world_countries_2020.json' name=gis \
+-innerlines + name=lines \
+-dissolve target=gis \
+-i '/Users/cervas/My Drive/GitHub/R-Functions/ignacio/data/counts-city.csv' name=data \
+-points target=data x=longitude y=latitude + name=points \
+-proj target=gis,points webmercator \
+-style target=gis fill=#eeeeee \
+-style target=lines stroke=#ffffff stroke-width=0.5 \
+-style target=points fill=#000000 stroke=#777777 opacity=0.33 \
+-o target=gis,lines,points '/Users/cervas/My Drive/GitHub/R-Functions/ignacio/map-mapshaper.svg'
 ```
