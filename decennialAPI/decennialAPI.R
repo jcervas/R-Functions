@@ -87,27 +87,11 @@ for (chunk in variable_chunks) {
   # Convert to data frame
   chunk_data <- as.data.frame(chunk_data)
 
-  # Convert columns to numeric
-  numeric_columns <- colnames(chunk_data)[colnames(chunk_data) %in% get_vars]
-  numeric_data <- chunk_data[, numeric_columns]
+  # Delete "NA columns
+  data <- chunk_data[, !grepl("NA$", names(chunk_data))]
 
-
-  descriptive_columns <- colnames(chunk_data)[!colnames(chunk_data) %in% get_vars]
-  descriptive_data <- chunk_data[, descriptive_columns]
-
-  # Add the chunk data to the list
-  data_list <- append(data_list, numeric_data)
-}
-
-  data_list <- append(descriptive_data, data_list)
-
-  # Combine the data from all chunks into a single data frame
-  data <- do.call(cbind, data_list)
-
-  # Convert to data frame
-  data <- as.data.frame(data)
-  
-  for (col in colnames(data)[colnames(data) %in% get_vars]) {
+  # Make data numeric
+  for (col in colnames(data)[colnames(data) %in% grep("^P", colnames(data), value = TRUE)]) {
     data[, col] <- as.numeric(data[, col])
   }
 
@@ -115,8 +99,6 @@ for (chunk in variable_chunks) {
 # head(data)
 # str(data)
 
-# Delete "NA columns
-  data <- data[, !grepl("NA$", names(data))]
 
 return(data)
 }
