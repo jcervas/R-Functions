@@ -115,7 +115,11 @@ for (chunk in variable_chunks) {
 # head(data)
 # str(data)
 
+# Delete "NA columns
+  data <- data[, !grepl("NA$", names(data))]
+
 return(data)
 }
 
+# Allow for either "decennialAPI" or "censusAPI" to call function
 censusAPI <- decennialAPI
