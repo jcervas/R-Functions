@@ -1,5 +1,5 @@
 
-decennialAPI <- function(state=NULL, geo="tract", table="P1", year = "2020", variables=NULL) {
+decennialAPI <- function(state=NULL, geo="tract", county="*", table="P1", year = "2020", variables=NULL) {
 
 library(httr)
 library(jsonlite)
@@ -62,7 +62,7 @@ data_list <- list()
 for (chunk in variable_chunks) {
   # Construct the parameters for the request
   if (geo == "block") {
-    in_param <- paste0(sprintf("%02s", lookup_fips(state)), "%20county:*")
+    in_param <- paste0(sprintf("%02s", lookup_fips(state)), "%20county:",county)
   } else {
     in_param <- sprintf("%02s", lookup_fips(state))
   }
