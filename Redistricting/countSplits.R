@@ -1,4 +1,4 @@
-countSplits <- function(plan = NULL, census_blocks = NULL, geo = "COUNTY", custom_geo = NULL, plan_id="GEOID20", block_id="GEOID20", custom_geo_id="GEOID20", total=NULL) {
+countSplits <- function(plan = NULL, census_blocks = NULL, geo = "COUNTY", custom_geo = NULL, plan_id="GEOID20", block_id="GEOID20", custom_geo_id="GEOID20") {
   # Function to read a CSV file and set all columns as character
   read.equiv <- function(x) {
     read.csv(x, colClasses = c("character"))
@@ -23,20 +23,6 @@ countSplits <- function(plan = NULL, census_blocks = NULL, geo = "COUNTY", custo
   
   # Create a unique identifier for district and geo by combining District and geo columns
   plan_tmp$uniq <- paste0(plan_tmp$District, "_", plan_tmp$geo)
-  
-  if (!is.null(plan_tmp[,total])) {
-    # Calculate aggregated district-geo sums by summing the 'TOTAL' column for each unique district-geo combination
-  uni_dist_geo <- aggregate(as.numeric(plan_tmp[,total]), by = list(plan_tmp$uniq), FUN = sum)
-  plan_tmp <- merge(plan_tmp, uni_dist_geo, by.x = "uniq", by.y = "Group.1")
-    # Calculate district population by summing the 'TOTAL' column for each district
-  dist_pop <- aggregate(list(TOTAL = as.numeric(plan_tmp[,total])), by = list(District = plan_tmp$District), FUN = sum)
-    # Calculate ideal population as the average population across all districts
-  ideal <- sum(dist_pop$TOTAL) / length(dist_pop$TOTAL)
-  ideal_minus_5 <- ideal - (ideal * 0.05)  # 5% below ideal population
-  ideal_plus_5 <- ideal + (ideal * 0.05)  # 5% above ideal population
-    } else {
-    dist_pop <- ideal <- ideal_minus_5 <- ideal_plus_5 <- "No population data included"
-    }
   
   # Split plan_tmp by geo into a list of data frames, where each data frame corresponds to a unique geo
   a <- split(plan_tmp, plan_tmp$geo)
