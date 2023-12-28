@@ -58,6 +58,7 @@ countSplits <- function(plan = NULL, census_blocks = NULL, geo = "COUNTY", custo
     # Count the number of geo splits (more than one unique district)
       cntysplits <- n <- n+1
       # print(a[[i]]$geo[1])
+      print(a[[i]]$geo[1])
     # Count the number of total splits (more than one unique district)
       totalsplits <- c(totalsplits, length(b[[i]]))
     }
@@ -86,28 +87,14 @@ countSplits <- function(plan = NULL, census_blocks = NULL, geo = "COUNTY", custo
   
   # Create splits table by calculating various statistics
   splits.table <- rbind(
-    sum(dist_pop$TOTAL),
     cntysplits,
     sum(totalsplits) - length(totalsplits),
-    tnsplits_results,
-    min(dist_pop$TOTAL),
-    round(100 * ((min(dist_pop$TOTAL) - ideal) / ideal), 2),
-    max(dist_pop$TOTAL),
-    round(100 * ((max(dist_pop$TOTAL) - ideal) / ideal), 2),
-    round(100 * ((max(dist_pop$TOTAL) - ideal) / ideal + abs((min(dist_pop$TOTAL) - ideal) / ideal)), 2),
-    round(100 * (mean(abs(dist_pop$TOTAL - ideal) / ideal)), 2)
+    tnsplits_results
   )
   row.names(splits.table) <- c(
-    "Total Population",
     "Geos Splits",
     "Total Splits",
-    "TN Splits",
-    "Smallest District",
-    "Smallest Percentage",
-    "Largest District",
-    "Largest Percentage",
-    "Overall Deviation",
-    "Average Deviation"
+    "TN Splits"
   )
   
   return(splits.table)  # Return the splits table
