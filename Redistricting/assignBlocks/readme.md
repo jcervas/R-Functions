@@ -4,7 +4,9 @@
 ### Assign Blocks
 - This is a generic function written in R that takes a shapefile and creates an equivalency file to assign all the polygons from some lower geography to the higher geography. For instance, in redistricting, we might want to know which blocks are in which districts. From that, we can calculate county splits, demographic information, or partisanship.
 
-###### To set up, go to mapshaper.org and put in the Census block polygon. In the Console, enter the command "-points inner". Export to shapefile, and use this new point-based file for "block_point". We can use the block_poly to read in the original polygon shapefile for mapping.
+###### To set up, go to mapshaper.org and put in the Census block polygon. In the Console, enter the command 
+`-points inner` 
+###### Export to shapefile, and use this new point-based file for "block_point". We can use the block_poly to read in the original polygon shapefile for mapping.
 - Example - Minnesota 116th Congress, Census Blocks (Function uses package "sp" to read in shapefiles)
 ```
 source("https://raw.githubusercontent.com/jcervas/R-Functions/main/Redistricting/assignBlocks.R")
