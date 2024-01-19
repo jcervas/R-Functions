@@ -62,7 +62,6 @@ countSplits <- function(plan = NULL, census_blocks = NULL, geo = "COUNTY", custo
   # }
   # tnsplits_tmp <- do.call(rbind, data_new)
 
-  tnsplits_results <- c(0)
   # if (exists("tnsplits_tmp$x")) {
   # tnsplits <- tnsplits_tmp[(tnsplits_tmp$x < ideal_minus_5), ]
   #     tnsplits_results <- length(aggregate(tnsplits$x, by = list(tnsplits$geo), FUN = sum)[, 1])
@@ -74,13 +73,11 @@ countSplits <- function(plan = NULL, census_blocks = NULL, geo = "COUNTY", custo
   # Create splits table by calculating various statistics
   splits.table <- rbind(
     cntysplits,
-    sum(totalsplits) - length(totalsplits),
-    tnsplits_results
+    sum(totalsplits) - length(totalsplits)
   )
   row.names(splits.table) <- c(
     "Geos Splits",
-    "Total Splits",
-    "TN Splits"
+    "Total Splits"
   )
   
   return(splits.table)  # Return the splits table
