@@ -3,11 +3,21 @@ countSplits <- function(plan = NULL, census_blocks = NULL, geo = "COUNTY", custo
   read.equiv <- function(x) {
     read.csv(x, colClasses = c("character"))
   }
-  
-  # Read plan and census blocks files using read.equiv function
+
+  # Check if 'plan' is a data frame
+if (!inherits(plan, "data.frame")) {
   plan.read <- read.equiv(plan)
+} else {
+  plan.read <- plan
+}
+
+# Check if 'census_blocks' is a data frame
+if (!inherits(census_blocks, "data.frame")) {
   census_blocks.read <- read.equiv(census_blocks)
-  
+} else {
+  census_blocks.read <- census_blocks
+}
+
   # Merge plan and census_blocks based on common column names
   plan_tmp <- merge(plan.read, census_blocks.read, by.x = plan_id, by.y = block_id)
   
