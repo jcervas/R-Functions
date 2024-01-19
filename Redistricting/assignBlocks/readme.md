@@ -18,6 +18,9 @@ blocks <- "/Users/cervas/Library/CloudStorage/GoogleDrive-jcervas@uci.edu/My Dri
 ```
 district_shp <- as(sf::st_read(district), "Spatial")
 block_point <- as(sf::st_read(blocks), "Spatial")
+
+head(district_shp)
+head(block_point)
 ```
 
 - This is the function command
