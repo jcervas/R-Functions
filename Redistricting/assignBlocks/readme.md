@@ -20,12 +20,6 @@ district_shp <- as(sf::st_read(district), "Spatial")
 block_point <- as(sf::st_read(blocks), "Spatial")
 ```
 
-```
-# Maybe delete
-block_point <- rgdal::readOGR("tl_2019_27_tabblock10.shp")
-block_point <- ms_points(block_shp, location = "inner")
-```
-
 - This is the function command
 ```
 a <- assignPolys(block_point=block_point, district_shp=district_shp, districtID="GEOID", blockID="GEOID20")
@@ -67,3 +61,11 @@ dev.off()
 ```
 ###### Map of Minneapolis, with Census blocks assigned. A small number of blocks were not correctly assigned, because the district shapefile has a different boundary than the block shapefile. For most purposes, this is irrelevent, but we need to make note of this and may need to manually add them to the block equivalancy file.
 ![alt text](https://github.com/jcervas/R-Functions/blob/main/Redistricting/images/map.png)
+
+
+
+```
+# depreciated
+block_point <- rgdal::readOGR("tl_2019_27_tabblock10.shp")
+block_point <- ms_points(block_shp, location = "inner")
+```
