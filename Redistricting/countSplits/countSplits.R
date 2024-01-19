@@ -50,25 +50,25 @@ countSplits <- function(plan = NULL, census_blocks = NULL, geo = "COUNTY", custo
     }
   }
   
-  # TN County Splits
-  tnsplits <- list()
-  data_new <- list()
+  # # TN County Splits
+  # tnsplits <- list()
+  # data_new <- list()
   
-  # Filter out duplicated districts within each geo and store the non-duplicated data in data_new
-  for (i in 1:length(a)) {
-    if (length(b[[i]]) > 1) {
-      data_new[[i]] <- a[[i]][!duplicated(a[[i]]$District), ]
-    }
-  }
-  tnsplits_tmp <- do.call(rbind, data_new)
+  # # Filter out duplicated districts within each geo and store the non-duplicated data in data_new
+  # for (i in 1:length(a)) {
+  #   if (length(b[[i]]) > 1) {
+  #     data_new[[i]] <- a[[i]][!duplicated(a[[i]]$District), ]
+  #   }
+  # }
+  # tnsplits_tmp <- do.call(rbind, data_new)
 
-  if (exists("tnsplits_tmp$x")) {
-  tnsplits <- tnsplits_tmp[(tnsplits_tmp$x < ideal_minus_5), ]
-      tnsplits_results <- length(aggregate(tnsplits$x, by = list(tnsplits$geo), FUN = sum)[, 1])
-    } else {
-    tnsplits <- tnsplits_tmp
-    dim(tnsplits)[1]
-    }
+  # if (exists("tnsplits_tmp$x")) {
+  # tnsplits <- tnsplits_tmp[(tnsplits_tmp$x < ideal_minus_5), ]
+  #     tnsplits_results <- length(aggregate(tnsplits$x, by = list(tnsplits$geo), FUN = sum)[, 1])
+  #   } else {
+  #   tnsplits <- tnsplits_tmp
+  #   dim(tnsplits)[1]
+  #   }
   
   # Create splits table by calculating various statistics
   splits.table <- rbind(
