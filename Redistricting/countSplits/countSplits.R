@@ -1,4 +1,4 @@
-countSplits <- function(plan = NULL, census_blocks = NULL, geo = "COUNTY", custom_geo = NULL, plan_id="GEOID20", block_id="GEOID20", custom_geo_id="GEOID20") {
+countSplits <- function(plan = NULL, census_blocks = NULL, geo = "COUNTY", custom_geo = NULL, plan_id="GEOID20", block_id="GEOID20", custom_geo_id="GEOID20", save=NULL) {
   # Function to read a CSV file and set all columns as character
   read.equiv <- function(x) {
     read.csv(x, colClasses = c("character"))
@@ -54,7 +54,11 @@ if (!inherits(census_blocks, "data.frame")) {
     # Count the number of geo splits (more than one unique district)
       cntysplits <- n <- n+1
       # print(a[[i]]$geo[1])
+      if (is.null(save){
       print(a[[i]]$geo[1])
+        } else {
+        write.csv(save, a[[i]]$geo[1], row.names=FALSE)
+        }
     # Count the number of total splits (more than one unique district)
       totalsplits <- c(totalsplits, length(b[[i]]))
     }
