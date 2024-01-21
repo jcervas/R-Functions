@@ -54,11 +54,11 @@ if (!inherits(census_blocks, "data.frame")) {
     # Count the number of geo splits (more than one unique district)
       cntysplits <- n <- n+1
       # print(a[[i]]$geo[1])
-      if (is.null(save){
-      print(a[[i]]$geo[1])
-        } else {
-        write.csv(save, a[[i]]$geo[1], row.names=FALSE)
-        }
+    if (is.null(save)) {
+        print(a[[i]]$geo[1])
+    } else {
+        write.csv(a[[i]]$geo[1], save, row.names=FALSE)
+    }
     # Count the number of total splits (more than one unique district)
       totalsplits <- c(totalsplits, length(b[[i]]))
     }
