@@ -62,26 +62,14 @@ if (!inherits(census_blocks, "data.frame")) {
     }
   }
 
-if (!is.null(save) && is.character(save)) {
-    if(is.data.frame(list_splits)) {
+if (!is.null(save)) {
         if(nrow(list_splits) == 0) {
-            print("list_splits has 0 rows.")
+          print("There are no splits of this type in the plan.")
+          list.splits <- data.frame(Split=NA)
+          write.csv(list.splits, save, row.names = FALSE)
         } else { 
-            write.csv(list_splits, save, row.names = FALSE)
+          write.csv(list_splits, save, row.names = FALSE)
         }
-    } else {
-        print("list_splits is not a dataframe.")
-    }
-} else {
-    if(is.data.frame(list_splits)) {
-        if(nrow(list_splits) == 0) {
-            print("There are no splits of this type in the plan.")
-        } else { 
-            print(list_splits)
-        }
-    } else {
-        print("list_splits is not a dataframe.")
-    }
 }
 
 
