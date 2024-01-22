@@ -88,16 +88,16 @@ if (!inherits(census_blocks, "data.frame")) {
         cntysplits <- 0
         totalsplits <- 0
           }
-      if (!is.null(save)) {
   # Create splits table by calculating various statistics
-  splits.table <- rbind(
-    cntysplits,
-    sum(totalsplits) - length(totalsplits)
-  )
-  row.names(splits.table) <- c(
-    "Geos Splits",
-    "Total Splits"
-  )
+    splits.table <- rbind(
+      cntysplits,
+      sum(totalsplits) - length(totalsplits)
+    )
+    row.names(splits.table) <- c(
+      "Geos Splits",
+      "Total Splits"
+    )
+      if (!is.null(save)) {
           write.csv(list_splits, save, row.names = FALSE)
           return(splits.table)  # Return the splits table
         }
