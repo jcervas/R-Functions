@@ -99,9 +99,8 @@ if (!inherits(census_blocks, "data.frame")) {
     )
       if (!is.null(save)) {
           write.csv(list_splits, save, row.names = FALSE)
-          return(splits.table)  # Return the splits table
         }
-  
+return(splits.table)  # Return the splits table
   
 }
 
