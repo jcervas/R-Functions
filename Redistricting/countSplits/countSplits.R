@@ -62,11 +62,29 @@ if (!inherits(census_blocks, "data.frame")) {
     }
   }
 
-    if (is.null(save)) {
-        print(list_splits)
+if (!is.null(save) && is.character(save)) {
+    if(is.data.frame(list_splits)) {
+        if(nrow(list_splits) == 0) {
+            print("list_splits has 0 rows.")
+        } else { 
+            write.csv(list_splits, save, row.names = FALSE)
+        }
     } else {
-        write.csv(list_splits, save, row.names=FALSE)
+        print("list_splits is not a dataframe.")
     }
+} else {
+    if(is.data.frame(list_splits)) {
+        if(nrow(list_splits) == 0) {
+            print("There are no splits of this type in the plan.")
+        } else { 
+            print(list_splits)
+        }
+    } else {
+        print("list_splits is not a dataframe.")
+    }
+}
+
+
   # # TN County Splits
   # tnsplits <- list()
   # data_new <- list()
