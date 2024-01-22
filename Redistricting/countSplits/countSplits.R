@@ -83,9 +83,10 @@ if (!inherits(census_blocks, "data.frame")) {
   #   }
   
       if(nrow(list_splits) == 0) {
-        print("There are no splits of this type in the plan.")
         list_splits <- data.frame(Split=NA)
-        stop()
+        print("There are no splits of this type in the plan.")
+        cntysplits <- 0
+        totalsplits <- 0
           }
       if (!is.null(save)) {
   # Create splits table by calculating various statistics
