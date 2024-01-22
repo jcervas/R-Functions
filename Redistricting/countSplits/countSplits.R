@@ -62,17 +62,6 @@ if (!inherits(census_blocks, "data.frame")) {
     }
   }
 
-if (!is.null(save)) {
-        if(nrow(list_splits) == 0) {
-          print("There are no splits of this type in the plan.")
-          list.splits <- data.frame(Split=NA)
-          write.csv(list.splits, save, row.names = FALSE)
-        } else { 
-          write.csv(list_splits, save, row.names = FALSE)
-        }
-}
-
-
   # # TN County Splits
   # tnsplits <- list()
   # data_new <- list()
@@ -93,6 +82,12 @@ if (!is.null(save)) {
   #   dim(tnsplits)[1]
   #   }
   
+      if(nrow(list_splits) == 0) {
+        print("There are no splits of this type in the plan.")
+        list_splits <- data.frame(Split=NA)
+        stop()
+          }
+      if (!is.null(save)) {
   # Create splits table by calculating various statistics
   splits.table <- rbind(
     cntysplits,
@@ -102,8 +97,11 @@ if (!is.null(save)) {
     "Geos Splits",
     "Total Splits"
   )
+          write.csv(list_splits, save, row.names = FALSE)
+          return(splits.table)  # Return the splits table
+        }
   
-  return(splits.table)  # Return the splits table
+  
 }
 
 # Define the paths to the required files
