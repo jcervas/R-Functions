@@ -48,14 +48,18 @@ if (!inherits(census_blocks, "data.frame")) {
   cntysplits <- c()
   totalsplits <- c()
   n <- 0
-  list_splits <- data.frame(Split=character())
+  list_splits <- data.frame(Split=character(), Districts=character(), Total_Splits = numeric())
 
   for (i in 1:length(a)) {
     if (length(b[[i]]) > 1) {
     # Count the number of geo splits (more than one unique district)
       cntysplits <- n <- n+1
       # print(a[[i]]$geo[1])
-      list_splits <- rbind(list_splits, data.frame(Split=a[[i]]$geo[1]))
+      unique_districts <- unique(a[[i]]$District)
+      # Convert the unique elements to a single string with brackets
+      districts_string <- paste0("[", paste(unique_districts, collapse = ", "), "]")
+
+      list_splits <- rbind(list_splits, data.frame(Split = a[[i]]$geo[1], Districts = districts_string, Total_Splits = (length(unique_districts)-1)))
 
     # Count the number of total splits (more than one unique district)
       totalsplits <- c(totalsplits, length(b[[i]]))
