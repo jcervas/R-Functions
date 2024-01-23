@@ -89,10 +89,11 @@ if (!inherits(census_blocks, "data.frame")) {
         totalsplits <- 0
           }
   # Create splits table by calculating various statistics
-    splits.table <- rbind(
+  splits.table <- rbind(
       cntysplits,
       sum(totalsplits) - length(totalsplits)
     )
+    if (splits.table[2,] == -1) {splits.table[2,] <- 0}  
     row.names(splits.table) <- c(
       "Geos Splits",
       "Total Splits"
