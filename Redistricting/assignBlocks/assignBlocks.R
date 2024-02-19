@@ -1,9 +1,10 @@
 # Takes a district plan file and assigns lower level geography to create a relationship file. 
 library(rmapshaper)
 library(raster)
+# library(rgdal)
 
 assignPolys <- function(district_shp=NA, block_point=NA, districtID=NA, blockID=NA) {
-	library(rgdal)
+	
 	if (class(district_shp) %in% "SpatialPolygonsDataFrame") {
 			district.shp <- district_shp
 		}  else if (class(district_shp) == "character") {
