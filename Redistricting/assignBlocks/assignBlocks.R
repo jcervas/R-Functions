@@ -33,7 +33,11 @@ assignPolys <- function(district_shp=NA, block_point=NA, districtID=NA, blockID=
 			# x <- raster::intersect(block.shp, poly.tmp) # subset using raster
 			# blocks.subset <- rgeos::gIntersection(block.shp, poly.tmp) # subset using rgeos
 			cat(ID[j], "\n")
+			if (length(blocks.subset) == 0) {
+				master[[j]] <- data.frame(ID=NA, District=ID[j])
+				} else {
 				master[[j]] <- data.frame(ID=blocks.subset@data[,blockID], District=ID[j])
+				}
 
 		}
 
