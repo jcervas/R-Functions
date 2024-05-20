@@ -18,6 +18,10 @@ if (!inherits(census_blocks, "data.frame")) {
   census_blocks.read <- census_blocks
 }
 
+if (!("District" %in% colnames(plan.read))) {
+  colnames(plan.read)[2] <- "District"
+}
+
   # Merge plan and census_blocks based on common column names
   plan_tmp <- merge(plan.read, census_blocks.read, by.x = plan_id, by.y = block_id)
   
