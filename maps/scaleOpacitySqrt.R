@@ -1,21 +1,20 @@
-scaleOpacitySqrt <- function(value, minOpacity = 0, maxOpacity = 1, maxDomain = NA, return = "value") {
+scaleOpacitySqrt <- function(value, minOpacity = 0.25, maxOpacity = 0.75, maxDomain = NA, return = "value") {
   # Ensure maxDomain is provided
   if (is.na(maxDomain)) {
     stop("Need maxDomain")
   }
 
-  # Define the domain and range for scaling
-  domain <- c(0, maxDomain)
-  range <- c(minOpacity, maxOpacity)
+  # Calculate the absolute value and square root of the input value
+  abs_sqrt_value <- sqrt(abs(value))
 
-  # Calculate the square root of the input value
-  sqrt_value <- sqrt(value)
-
-  # Scale the square root value to the range [0, 1]
-  scaled_value <- (sqrt_value - sqrt(domain[1])) / (sqrt(domain[2]) - sqrt(domain[1]))
+  # Scale the absolute square root value to the range [0, 1]
+  scaled_value <- abs_sqrt_value / sqrt(maxDomain)
 
   # Scale the value to the desired opacity range [minOpacity, maxOpacity]
-  scaled_opacity <- scaled_value * (range[2] - range[1]) + range[1]
+  scaled_opacity <- scaled_value * (maxOpacity - minOpacity) + minOpacity
+
+  # Ensure the scaled opacity is within the specified range
+  scaled_opacity <- pmax(minOpacity, pmin(maxOpacity, scaled_opacity))
 
   # Convert the opacity to a hexadecimal string if requested
   alpha_hex <- sprintf("%02X", round(scaled_opacity * 255))
@@ -28,8 +27,10 @@ scaleOpacitySqrt <- function(value, minOpacity = 0, maxOpacity = 1, maxDomain = 
   }
 }
 
+# # Example usage with the provided data frame
+# data <- data.frame(per_point_diff = c(-0.1, -0.05, -0.01, 0, 0.1, 0.1))
 
-## Applying the scale function to percentage point difference for opacity scaling
-# data <- data.frame(per_point_diff = c(-.1,-.05,-0.01,0,.1,.1))
-# pop.opacity <- scaleOpacitySqrt(value= abs(data$per_point_diff), minOpacity=0.25, maxOpacity=0.75, maxDomain=max(abs(data$per_point_diff)), return="value")
-#   print(pop.opacity)
+# # Apply the function to the data frame
+# data$opacity_value <- sapply(data$per_point_diff, scaleOpacitySqrt, minOpacity = 0.25, maxOpacity = 0.75, maxDomain = 0.1)
+# data$opacity_hex <- sapply(data$per_point_diff, scaleOpacitySqrt, minOpacity = 0.25, maxOpacity = 0.75, maxDomain = 0.1, return = "hex")
+
