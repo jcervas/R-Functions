@@ -1,5 +1,5 @@
 # Function to calculate the square root scale for opacity (oScale)
-scaleOpacitySqrt <- function(value, minOpacity = 0, maxOpacity = 1, maxDomain = NA) {
+scaleOpacitySqrt <- function(value, minOpacity = 0, maxOpacity = 1, maxDomain = NA, return = "value") {
   if (is.na(maxDomain)) {
     stop("Need max Domain")
   }
@@ -9,7 +9,11 @@ scaleOpacitySqrt <- function(value, minOpacity = 0, maxOpacity = 1, maxDomain = 
   sqrt_value <- sqrt(value)
   scaled_value <- (sqrt_value - sqrt(domain[1])) / (sqrt(domain[2]) - sqrt(domain[1]))
   alpha_hex <- sprintf("%02X", round(scaled_value * 255))
-  return(alpha_hex)
+
+  if (return == "hex") {
+    return(alpha_hex)
+    } else {
+    return(scaled_value) }
 }
 
 # Applying the scale function to percentage point difference for opacity scaling
