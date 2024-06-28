@@ -1,4 +1,4 @@
-scaleOpacitySqrt <- function(value, minOpacity = 0.25, maxOpacity = 0.75, minDomain = NA, maxDomain = NA, return = "value") {
+scaleOpacitySqrt <- function(value, minOpacity = 0.25, maxOpacity = 0.75, return = "value") {
   # Ensure minDomain and maxDomain are provided
   if (is.na(minDomain) || is.na(maxDomain)) {
     stop("Need minDomain and maxDomain")
@@ -30,10 +30,6 @@ scaleOpacitySqrt <- function(value, minOpacity = 0.25, maxOpacity = 0.75, minDom
 
 # # Example usage with the provided data frame
 # data <- data.frame(per_point_diff = c(-0.1, -0.05, -0.01, 0, 0.1, 0.1))
-
-# # Find the min and max of the data to set the domain
-# minDomain <- min(data$per_point_diff)
-# maxDomain <- max(data$per_point_diff)
 
 # # Apply the function to the data frame
 # data$opacity_value <- sapply(data$per_point_diff, scaleOpacitySqrt, minOpacity = 0.25, maxOpacity = 0.75, minDomain = minDomain, maxDomain = maxDomain)
