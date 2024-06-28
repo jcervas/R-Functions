@@ -16,8 +16,7 @@ scaleOpacitySqrt <- function(value, minOpacity = 0, maxOpacity = 1, maxDomain = 
     return(scaled_value) }
 }
 
-# Applying the scale function to percentage point difference for opacity scaling
-
-data <- data.frame(per_point_diff = c(-.1,-.05,-0.01,0,.1,.1))
-pop.opacity <- scaleOpacitySqrt(value= abs(data$per_point_diff), minOpacity=0.25, maxOpacity=0.75, maxDomain=max(abs(data$per_point_diff)), return="value")
-  print(pop.opacity)
+## Applying the scale function to percentage point difference for opacity scaling
+# data <- data.frame(per_point_diff = c(-.1,-.05,-0.01,0,.1,.1))
+# pop.opacity <- scaleOpacitySqrt(value= abs(data$per_point_diff), minOpacity=0.25, maxOpacity=0.75, maxDomain=max(abs(data$per_point_diff)), return="value")
+#   print(pop.opacity)
