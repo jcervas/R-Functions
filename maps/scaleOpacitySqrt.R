@@ -4,11 +4,15 @@ scaleOpacitySqrt <- function(value, minOpacity = 0.25, maxOpacity = 0.75, minDom
     stop("Need minDomain and maxDomain")
   }
 
-  # Calculate the square root of the input value, ensuring values stay in range
-  sqrt_value <- sqrt(pmax(minDomain, pmin(maxDomain, value)))
+  # Normalize values to be non-negative for square root transformation
+  normalized_value <- value - minDomain
+  normalized_maxDomain <- maxDomain - minDomain
+
+  # Calculate the square root of the normalized value
+  sqrt_value <- sqrt(normalized_value)
 
   # Scale the square root value to the range [0, 1]
-  scaled_value <- (sqrt_value - sqrt(minDomain)) / (sqrt(maxDomain) - sqrt(minDomain))
+  scaled_value <- sqrt_value / sqrt(normalized_maxDomain)
 
   # Scale the value to the desired opacity range [minOpacity, maxOpacity]
   scaled_opacity <- scaled_value * (maxOpacity - minOpacity) + minOpacity
