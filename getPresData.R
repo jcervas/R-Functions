@@ -26,7 +26,7 @@ pres.data <- pres.data.lag <- pres.data.lag2 <- cbind.data.frame(
 	ecvotes=as.numeric(election.dta$ecvotes))
 
 # Sort the data by State and Year
-data <- data[order(data$State, data$Year), ]
+data <- pres.data[order(data$state, pres.data$year), ]
 
 # Create the lagged variable within each state
 data$dlag <- ave(data$dem, data$state, FUN = function(x) c(NA, x[-length(x)]))
