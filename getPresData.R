@@ -25,13 +25,13 @@ pres.data <- pres.data.lag <- pres.data.lag2 <- cbind.data.frame(
 	total=as.numeric(election.dta$dem)+as.numeric(election.dta$rep),
 	ecvotes=as.numeric(election.dta$ecvotes))
 
-pres.data.lag$year <- pres.data.lag$year + 4
-pres.data.lag2$year <- pres.data.lag$year + 8
-pres.data.lag <- data.frame(year=pres.data.lag$year , state=pres.data.lag$state, dlag=pres.data.lag$dem)
-pres.data.lag2 <- data.frame(year=pres.data.lag2$year , state=pres.data.lag2$state, dlag2=pres.data.lag2$dem)
+# Sort the data by State and Year
+data <- data[order(data$State, data$Year), ]
 
-	pres.data <- merge(pres.data, pres.data.lag, by=c("year", "state"), all=T)
-	pres.data <- merge(pres.data, pres.data.lag2, by=c("year", "state"), all=T)
+# Create the lagged variable within each state
+data$dlag <- ave(data$dem, data$state, FUN = function(x) c(NA, x[-length(x)]))
+data$dlag2 <- ave(data$dlag, data$state, FUN = function(x) c(NA, x[-length(x)]))
+
 
 pop <- jsonlite::fromJSON("https://raw.githubusercontent.com/jcervas/Data/master/Elections/hist_pop.json")
 	a <- numeric()
