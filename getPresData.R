@@ -28,6 +28,7 @@ getPres <- function() {
   # Create lagged variables within each state
   pres_data$dlag <- ave(pres_data$dem, pres_data$state, FUN = function(x) c(NA, x[-length(x)]))
   pres_data$dlag2 <- ave(pres_data$dlag, pres_data$state, FUN = function(x) c(NA, x[-length(x)]))
+  pres_data$swing <- pres_data$dem - pres_data$dlag
 
   # Load population data
   pop <- jsonlite::fromJSON("https://raw.githubusercontent.com/jcervas/Data/master/Elections/hist_pop.json")
@@ -35,7 +36,7 @@ getPres <- function() {
   rownames(pop_matrix) <- apportionment_years
 
   # Create population data frame
-  pop_data <- lapply(1:39, function(i) {
+  pop_data <- lapply(1:length(election_years), function(i) {
     year <- election_years[i]
     if (substrRight(year, 1) %in% c("2", "4")) {
       pop_year <- round(year, -1)
