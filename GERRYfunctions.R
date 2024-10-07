@@ -446,7 +446,7 @@ efficiency_gap  <- function(party1, party2) {
 
 wasted_votes <- function(party1, party2) {
     total_votes = party1+party2
-    party1_waste <- party2_waste <- rep(NA,dim(total_votes)[1])
+    party1_waste <- party2_waste <- rep(NA,length(total_votes))
         party1_waste[party1 > party2] <- party1[party1 > party2] - total_votes[party1 > party2] / 2
         party2_waste[party1 > party2] <- party2[party1 > party2]
         party2_waste[party1 < party2] <- party2[party1 < party2] - total_votes[party1 < party2] / 2
