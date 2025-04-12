@@ -1,0 +1,15 @@
+# Function to calculate the square root scale for size (rScale)
+scaleSqrt <- function(value, maxRadius = 20, maxDomain = NA) {
+  if (is.na(maxDomain)) {
+    stop("Need max Domain")
+  }
+  domain <- c(0, maxDomain)
+  range <- c(0, maxRadius)
+  
+  sqrt_value <- sqrt(value)
+  scaled_value <- (sqrt_value - sqrt(domain[1])) / (sqrt(domain[2]) - sqrt(domain[1]))
+  scaled_value * (range[2] - range[1]) + range[1]
+}
+
+# Applying the scale function to total votes for size scaling
+pop.sizes <- scaleSqrt(county.2020$total_votes, maxRadius=5, maxDomain=max(county.2020$total_votes))

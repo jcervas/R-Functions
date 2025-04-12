@@ -1,0 +1,57 @@
+import(utils)
+export(judgeit,
+	JudgeIt,
+	v2s,
+	vshar,
+
+	seats,
+	voting.power,
+	prob, seats.with.prob,
+	results.prob, winprob,
+	distreport, district.report,
+	conditional.seats,
+	votes.for.result, winvote,
+	bias.resp, svsum,
+	chopcollege)
+
+S3method(summary,judgeit)   
+S3method(print,judgeit)   
+S3method(plot,judgeit)
+
+S3method(plot,judgeit.seats)
+S3method(plot,judgeit.voting.power)
+S3method(plot,judgeit.prob)
+S3method(plot,judgeit.winprob)
+S3method(plot,judgeit.district.report)
+S3method(plot,judgeit.conditional.seats)
+S3method(plot,judgeit.winvote)
+S3method(plot,judgeit.svsum)
+S3method(plot,judgeit.chopcollege)
+
+
+S3method(print,judgeit.seats)
+S3method(print,judgeit.voting.power)
+S3method(print,judgeit.prob)
+S3method(print,judgeit.winprob)
+S3method(print,judgeit.district.report)
+S3method(print,judgeit.conditional.seats)
+S3method(print,judgeit.winvote)
+S3method(print,judgeit.svsum)
+
+S3method(head,judgeit.seats)
+S3method(head,judgeit.voting.power)
+S3method(head,judgeit.prob)
+S3method(head,judgeit.winprob)
+S3method(head,judgeit.district.report)
+S3method(head,judgeit.conditional.seats)
+S3method(head,judgeit.winvote)
+S3method(head,judgeit.svsum)
+
+S3method(tail,judgeit.seats)
+S3method(tail,judgeit.voting.power)
+S3method(tail,judgeit.prob)
+S3method(tail,judgeit.winprob)
+S3method(tail,judgeit.district.report)
+S3method(tail,judgeit.conditional.seats)
+S3method(tail,judgeit.winvote)
+S3method(tail,judgeit.svsum)
