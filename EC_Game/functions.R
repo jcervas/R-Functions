@@ -16,9 +16,7 @@ if (internet == TRUE) {
      source(paste0(url_directory, 'is_minimum.R'))
      source(paste0(url_directory, 'progress_update.R'))
      source(paste0(url_directory, 'validate_distribution.R'))
-} 
-else 
-{
+} else {
      source(paste0(directory, 'blotto_compare.R'))
      source(paste0(directory, 'banzhaf.R'))
      source(paste0(directory, 'generate_random_allocations.R'))
