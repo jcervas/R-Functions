@@ -11,7 +11,7 @@ get_raw_allocation_values <- function(weights, target_sum, method, sd_factor = 0
     sd_vals <- sd_factor * mu_vals
     raw_values <- rnorm(n, mean = mu_vals, sd = sd_vals)
   } else if (method == "uniform") {
-    raw_values <- runif(n, min = 0, max = target_sum)
+    raw_values <- runif(n, min = 0, max = target_sum * 2)
   } else if (method == "skewed") {
     skewed_weights <- weights^skew_power
     raw_values <- rnorm(n, mean = skewed_weights, sd = sd_factor * skewed_weights)
