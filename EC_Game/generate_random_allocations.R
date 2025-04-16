@@ -94,6 +94,59 @@ assign_small_and_zero_positions <- function(vec_length, max_small_digits, max_ze
   )
 }
 
+# Main: Generate new combinations
+new_combinations <- function(n = 1,
+                             weights = c(3, 5, 8, 13, 21, 34, 55), 
+                             vec_length = 7, 
+                             max_small_digits = 6, 
+                             max_zeros = 5, 
+                             target_sum = 100,
+                             method = c("normal", "nbinom", "uniform", "skewed", "exponential", "poisson", "gamma", "beta", "custom"),
+                             small_mean = 1, 
+                             small_sd = 2, 
+                             min_small = 1, 
+                             max_small = 5,
+                             custom_generator = NULL,
+                             check_threshold = 70,
+                             return_matrix = TRUE) {
+
+  method <- match.arg(method)
+  seen <- new.env(hash = TRUE, parent = emptyenv())
+  results <- list()
+
+  while (length(results) < n) {
+    combo <- numeric(vec_length)
+
+    positions <- assign_small_and_zero_positions(vec_length, max_small_digits, max_zeros, 
+                                                 small_mean, small_sd, min_small, max_small)
+    combo[positions$small_positions] <- positions$small_allocation
+
+    non_small_positions <- setdiff(1:vec_length, c(positions$zero_positions, positions$small_positions))
+    reduced_weights <- weights[non_small_positions]
+    reduced_weights <- reduced_weights / sum(reduced_weights)
+
+    remaining_sum <- target_sum - sum(combo)
+    if (length(reduced_weights) == 1) {
+      nonzero_allocation <- remaining_sum
+    } else {
+      raw_values <- get_raw_allocation_values(reduced_weights, remaining_sum, method, custom_generator = custom_generator)
+      nonzero_allocation <- adjust_allocation(raw_values, reduced_weights, remaining_sum)
+    }
+    combo[non_small_positions] <- nonzero_allocation
+
+    key <- paste(combo, collapse = "_")
+    if (exists(key, envir = seen)) next
+    if (combo[6] + combo[7] == 0) next
+    if (sum(weights[combo > 0]) <= check_threshold) next
+
+    assign(key, TRUE, envir = seen)
+    results[[length(results) + 1]] <- combo
+  }
+
+  if (return_matrix) return(do.call(rbind, results))
+  results
+}
+
 # Main: Generate random allocations
 generate_random_allocations <- function(weights, 
                                         target_sum = 100, 
@@ -108,40 +161,4 @@ generate_random_allocations <- function(weights,
 
   if (return_raw) return(list(alloc = alloc, raw = raw_values))
   alloc
-}
-
-# Main: Generate new combinations
-new_combinations <- function(weights = c(3, 5, 8, 13, 21, 34, 55), 
-                             vec_length = 7, 
-                             max_small_digits = 6, 
-                             max_zeros = 5, 
-                             target_sum = 100,
-                             method = c("normal", "nbinom", "uniform", "skewed", "exponential", "poisson", "gamma", "beta", "custom"),
-                             small_mean = 1, 
-                             small_sd = 2, 
-                             min_small = 1, 
-                             max_small = 5,
-                             custom_generator = NULL) {
-
-  method <- match.arg(method)
-  combo <- numeric(vec_length)
-
-  positions <- assign_small_and_zero_positions(vec_length, max_small_digits, max_zeros, 
-                                               small_mean, small_sd, min_small, max_small)
-  combo[positions$small_positions] <- positions$small_allocation
-
-  non_small_positions <- setdiff(1:vec_length, c(positions$zero_positions, positions$small_positions))
-  reduced_weights <- weights[non_small_positions]
-  reduced_weights <- reduced_weights / sum(reduced_weights)
-
-  remaining_sum <- target_sum - sum(combo)
-  if (length(reduced_weights) == 1) {
-    nonzero_allocation <- remaining_sum
-  } else {
-    raw_values <- get_raw_allocation_values(reduced_weights, remaining_sum, method, custom_generator = custom_generator)
-    nonzero_allocation <- adjust_allocation(raw_values, reduced_weights, remaining_sum)
-  }
-  combo[non_small_positions] <- nonzero_allocation
-
-  combo
 }
