@@ -145,3 +145,65 @@ new_combinations <- function(weights = c(3, 5, 8, 13, 21, 34, 55),
 
   combo
 }
+
+
+# # Generate Random MWC allocations
+
+# Example MWC list (from earlier)
+mwcs <- list(
+  c(5, 7), c(6, 7), c(1, 4, 7), c(2, 4, 7), c(3, 4, 7),
+  c(1, 2, 3, 7), c(1, 4, 5, 6), c(2, 4, 5, 6),
+  c(3, 4, 5, 6), c(1, 2, 3, 5, 6)
+)
+
+sample_distributions_fast <- function(
+  mwcs, 
+  target_sum = 100, 
+  samples_per_mwc = 10000, 
+  seed = NULL
+) {
+  if (!is.null(seed)) set.seed(seed)
+  
+  result_list <- list()
+  
+  for (indices in mwcs) {
+    k <- length(indices)
+    probs <- matrix(runif(samples_per_mwc * k), nrow = k)
+    probs <- probs / colSums(probs)
+    values <- apply(probs, 2, function(p) rmultinom(1, size = target_sum, prob = p))
+    values <- t(values)
+    full <- matrix(0, nrow = samples_per_mwc, ncol = 7)
+    full[, indices] <- values
+    result_list[[length(result_list) + 1]] <- full
+  }
+  
+  do.call(rbind, result_list)
+}
+
+# How many target_sum samples you want
+total_samples_goal <- 1e6
+samples_per_loop <- 100000
+
+all_samples <- matrix(numeric(0), nrow = 0, ncol = 7)
+loops_needed <- ceiling(total_samples_goal / samples_per_loop)
+
+for (i in 1:loops_needed) {
+  new_data <- sample_distributions_fast(mwcs, target_sum = 100, samples_per_mwc = samples_per_loop)
+  all_samples <- rbind(all_samples, new_data)
+  cat("Generated so far:", nrow(all_samples), "rows\n")
+}
+
+# Now deduplicate at the end (much faster)
+unique_samples <- unique(all_samples)
+cat("Unique samples:", nrow(unique_samples), "\n")
+
+while (nrow(unique_samples) <= total_samples_goal) {
+  new_data <- sample_distributions_fast(mwcs, target_sum = 100, samples_per_mwc = nrow(all_samples)-total_samples_goal)
+  unique_samples <- rbind(all_samples, new_data)
+}
+
+
+
+
+
+
