@@ -5,13 +5,13 @@
 library(jsonlite)
 library(GameTheory)
 
-url_test <- try(url("https://raw.githubusercontent.com/jcervas/R-Functions"), silent = TRUE)
-internet <- !inherits(url_test, "try-error")
+
+internet <- try(check_internet(), silent = TRUE)
 
 url_directory <- 'https://raw.githubusercontent.com/jcervas/R-Functions/refs/heads/main/EC_Game/'
 directory <- '/Users/cervas/Library/CloudStorage/GoogleDrive-jcervas@andrew.cmu.edu/My Drive/GitHub/R-Functions/EC_Game/'
 
-if (internet == TRUE) {
+if (internet) {
      source(paste0(url_directory, 'blotto_compare.R'))
      source(paste0(url_directory, 'banzhaf.R'))
      source(paste0(url_directory, 'generate_random_allocations.R'))
