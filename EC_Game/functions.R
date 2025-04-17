@@ -16,6 +16,7 @@ if (internet == TRUE) {
      source(paste0(url_directory, 'is_minimum.R'))
      source(paste0(url_directory, 'progress_update.R'))
      source(paste0(url_directory, 'validate_distribution.R'))
+     source(paste0(url_directory, 'all_combinations.R'))
 } else {
      source(paste0(directory, 'blotto_compare.R'))
      source(paste0(directory, 'banzhaf.R'))
@@ -23,6 +24,7 @@ if (internet == TRUE) {
      source(paste0(directory, 'is_minimum.R'))
      source(paste0(directory, 'progress_update.R'))
      source(paste0(directory, 'validate_distribution.R'))
+     source(paste0(directory, 'all_combinations.R'))
 }
 
 
@@ -32,3 +34,4 @@ if (internet == TRUE) {
   #   member <- member
   #   return(data.frame(name=member, score=swingsPerIndex / sum(swingsPerIndex)))
   # }
+https://raw.githubusercontent.com/jcervas/R-Functions/refs/heads/main/EC_Game/all_combinations.R
