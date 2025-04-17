@@ -195,10 +195,10 @@ sample_mwc_distributions <- function(
 
 # # Sample Code to Run
 
-final_samples <- sample_mwc_distributions(
-  mwcs,
-  target_sum = 100,
-  total_samples_goal = 1e6,
-  batch_multiplier = 2,
-  initial_seed = NULL
-)
+# final_samples <- sample_mwc_distributions(
+#   mwcs,
+#   target_sum = 100,
+#   total_samples_goal = 1e6,
+#   batch_multiplier = 2,
+#   initial_seed = NULL
+# )
