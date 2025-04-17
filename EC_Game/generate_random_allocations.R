@@ -181,37 +181,33 @@ sample_distributions_fast <- function(
 }
 
 # Parameters
-target_sum <- 100
+# target_sum <- 100
+# total_samples_goal <- 1e6
+# samples_per_mwc <- 10000  # moderate per MWC to control size
+# adaptive_factor <- 1.2    # initial guess (increased per loop)
+
 total_samples_goal <- 1e6
-samples_per_loop <- 1e5
-samples_per_mwc <- samples_per_loop / length(mwcs)
+samples_per_mwc <- ceiling((2 * total_samples_goal) / length(mwcs))  # 2x to start
 
-# Step 1: Generate initial samples in large chunks
-all_samples <- matrix(numeric(0), nrow = 0, ncol = 7)
-loops_needed <- ceiling(total_samples_goal / samples_per_loop)
+cat("Starting first big batch...\n")
+unique_samples <- unique(sample_distributions_fast(mwcs, target_sum = 100, samples_per_mwc))
 
-for (i in 1:loops_needed) {
-  new_data <- sample_distributions_fast(mwcs, target_sum = target_sum, samples_per_mwc = samples_per_mwc)
-  all_samples <- rbind(all_samples, new_data)
-  cat("Generated so far:", nrow(all_samples), "rows\n")
-}
+cat(sprintf("Initial unique rows: %d\n", nrow(unique_samples)))
 
-# Step 2: Deduplicate once after big chunk
-unique_samples <- unique(all_samples)
-cat("Unique samples after first pass:", nrow(unique_samples), "\n")
-
-# Step 3: Keep sampling until we reach desired number of unique rows
 while (nrow(unique_samples) < total_samples_goal) {
-  remaining <- total_samples_goal - nrow(unique_samples)
-  needed_per_mwc <- ceiling(remaining / length(mwcs))
-  
-  new_data <- sample_distributions_fast(mwcs, target_sum = target_sum, samples_per_mwc = needed_per_mwc)
-  combined <- rbind(unique_samples, new_data)
-  unique_samples <- unique(combined)
-  
-  cat("Unique samples after refill:", nrow(unique_samples), "\n")
+  cat("Not enough unique samples. Getting another 2x batch...\n")
+
+  new_batch <- sample_distributions_fast(mwcs, target_sum = 100, samples_per_mwc)
+  new_batch <- unique(new_batch)
+
+  # Combine and deduplicate
+  unique_samples <- unique(rbind(unique_samples, new_batch))
+
+  cat(sprintf("→ Total unique so far: %d / %d\n", nrow(unique_samples), total_samples_goal))
 }
 
-
-
-
+# Final clip
+if (nrow(unique_samples) > total_samples_goal) {
+  unique_samples <- unique_samples[sample(nrow(unique_samples), total_samples_goal), , drop = FALSE]
+  cat(sprintf("Clipped to exactly %d rows.\n", nrow(unique_samples)))
+}
