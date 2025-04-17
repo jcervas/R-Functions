@@ -180,29 +180,37 @@ sample_distributions_fast <- function(
   do.call(rbind, result_list)
 }
 
-# How many target_sum samples you want
+# Parameters
+target_sum <- 100
 total_samples_goal <- 1e6
-samples_per_loop <- 100000
+samples_per_loop <- 1e5
+samples_per_mwc <- samples_per_loop / length(mwcs)
 
+# Step 1: Generate initial samples in large chunks
 all_samples <- matrix(numeric(0), nrow = 0, ncol = 7)
 loops_needed <- ceiling(total_samples_goal / samples_per_loop)
 
 for (i in 1:loops_needed) {
-  new_data <- sample_distributions_fast(mwcs, target_sum = 100, samples_per_mwc = samples_per_loop)
+  new_data <- sample_distributions_fast(mwcs, target_sum = target_sum, samples_per_mwc = samples_per_mwc)
   all_samples <- rbind(all_samples, new_data)
   cat("Generated so far:", nrow(all_samples), "rows\n")
 }
 
-# Now deduplicate at the end (much faster)
+# Step 2: Deduplicate once after big chunk
 unique_samples <- unique(all_samples)
-cat("Unique samples:", nrow(unique_samples), "\n")
+cat("Unique samples after first pass:", nrow(unique_samples), "\n")
 
-while (nrow(unique_samples) <= total_samples_goal) {
-  new_data <- sample_distributions_fast(mwcs, target_sum = 100, samples_per_mwc = nrow(all_samples)-total_samples_goal)
-  unique_samples <- rbind(all_samples, new_data)
+# Step 3: Keep sampling until we reach desired number of unique rows
+while (nrow(unique_samples) < total_samples_goal) {
+  remaining <- total_samples_goal - nrow(unique_samples)
+  needed_per_mwc <- ceiling(remaining / length(mwcs))
+  
+  new_data <- sample_distributions_fast(mwcs, target_sum = target_sum, samples_per_mwc = needed_per_mwc)
+  combined <- rbind(unique_samples, new_data)
+  unique_samples <- unique(combined)
+  
+  cat("Unique samples after refill:", nrow(unique_samples), "\n")
 }
-
-
 
 
 
