@@ -79,8 +79,8 @@ save_progress <- function(result_vector, current_index) {
 
 # # Example
 blotto_compare(
-  a, 
-  ec_weights, 
-  sample = F,
+  matrix_data = t(replicate(10,new_combinations())), 
+  weights = c(3, 5, 8, 13, 21, 34, 55), 
+  sample = FALSE,
   n_opponents = 100,
   tie_method = "coinflip")
