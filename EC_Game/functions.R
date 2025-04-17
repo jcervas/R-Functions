@@ -34,4 +34,3 @@ if (internet == TRUE) {
   #   member <- member
   #   return(data.frame(name=member, score=swingsPerIndex / sum(swingsPerIndex)))
   # }
-https://raw.githubusercontent.com/jcervas/R-Functions/refs/heads/main/EC_Game/all_combinations.R
