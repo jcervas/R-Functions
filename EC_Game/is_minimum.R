@@ -8,44 +8,39 @@
   return(TRUE)
 }
 
-find_minimal_winning_coalitions <- function(weights, quota, print_results = TRUE) {
-  n <- length(weights)
-  coalitions <- list()
-  index <- 1
+find_mwcs <- function(weights, quota) {
+  all_sets <- all_combinations(weights)  # list of index vectors
+  mwcs <- list()
+  idx <- 1
 
-  for (k in 1:n) {
-    combs <- combn(n, k, simplify = FALSE)
-    for (combo in combs) {
-      w_sum <- sum(weights[combo])
-      if (w_sum >= quota) {
-        # Check for minimality
-        is_minimal <- TRUE
-        for (i in combo) {
-          if (sum(weights[setdiff(combo, i)]) >= quota) {
-            is_minimal <- FALSE
-            break
-          }
+  for (coal in all_sets) {
+    weight_sum <- sum(weights[coal])
+    if (weight_sum >= quota) {
+      # Check minimality
+      is_minimal <- TRUE
+      for (j in coal) {
+        if (sum(weights[setdiff(coal, j)]) >= quota) {
+          is_minimal <- FALSE
+          break
         }
-        if (is_minimal) {
-          coalitions[[index]] <- combo
-          index <- index + 1
-        }
+      }
+      if (is_minimal) {
+        mwcs[[idx]] <- coal
+        idx <- idx + 1
       }
     }
   }
 
-  if (print_results) {
-    cat("Minimum winning coalitions (indices and weights):\n")
-    for (coal in coalitions) {
-      cat("{", paste(coal, collapse = ", "), "} -> weights: {", paste(weights[coal], collapse = ", "), "}\n")
-    }
-  }
-
-  return(coalitions)
+  return(mwcs)
 }
 
-## Example:
-# weights <- c(3, 5, 8, 13, 21, 34, 55)
+# # Example usage
+# ec_weights <- c(3, 5, 8, 13, 21, 34, 55)
 # quota <- 70
+# mwcs <- find_mwcs(ec_weights, quota)
 
-# mwcs <- find_minimal_winning_coalitions(weights, quota)
+# # Optional: print results
+# cat("Minimum Winning Coalitions:\n")
+# for (coal in mwcs) {
+#   cat("{", paste(coal, collapse = ", "), "} → weight:", sum(ec_weights[coal]), "\n")
+# }
