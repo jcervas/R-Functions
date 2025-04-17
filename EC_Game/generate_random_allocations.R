@@ -149,7 +149,7 @@ new_combinations <- function(weights = c(3, 5, 8, 13, 21, 34, 55),
 
 # # Generate Random MWC allocations
 
-# Example MWC list (from earlier)
+# Example MWC list
 mwcs <- list(
   c(5, 7), c(6, 7), c(1, 4, 7), c(2, 4, 7), c(3, 4, 7),
   c(1, 2, 3, 7), c(1, 4, 5, 6), c(2, 4, 5, 6),
