@@ -1,3 +1,38 @@
+# Helper: Drop Random Allocations that fail to meet quota
+drop_irrational_allocations <- function(random_vectors, weights) {
+  # Check if it's a vector or matrix
+  is_vector <- is.null(dim(random_vectors))
+  
+  if (is_vector) {
+    # Handle single vector case
+    result <- ifelse(random_vectors > 0, weights, 0)
+    row_sum <- sum(result)
+    
+    # Return NULL if it doesn't meet the criteria
+    if (row_sum <= 70) {
+      return(NULL)
+    } else {
+      return(random_vectors)
+    }
+  } else {
+    # Matrix case (original functionality)
+    result_matrix <- random_vectors
+    
+    for (col in 1:ncol(random_vectors)) {
+      result_matrix[, col] <- ifelse(random_vectors[, col] > 0, weights[col], 0)
+    }
+    
+    row_sums <- rowSums(result_matrix)
+    valid_rows <- row_sums > 70
+    
+    if (any(valid_rows)) {
+      return(random_vectors[valid_rows, , drop = FALSE])
+    } else {
+      return(NULL)
+    }
+  }
+}
+
 # Helper: Generate raw values based on method
 get_raw_allocation_values <- function(weights, target_sum, method, sd_factor = 0.3, skew_power = 1, custom_generator = NULL) {
   n <- length(weights)
@@ -110,7 +145,6 @@ generate_random_allocations <- function(weights,
   alloc
 }
 
-# Main: Generate new combinations
 new_combinations <- function(weights = c(3, 5, 8, 13, 21, 34, 55), 
                              max_small_digits = 6, 
                              max_zeros = 5, 
@@ -121,29 +155,41 @@ new_combinations <- function(weights = c(3, 5, 8, 13, 21, 34, 55),
                              min_small = 0, 
                              max_small = 100,
                              custom_generator = NULL) {
-
   method <- match.arg(method)
   vec_length <- length(weights)
   combo <- numeric(vec_length)
-
-  positions <- assign_small_and_zero_positions(vec_length, max_small_digits, max_zeros, 
+  valid_combo <- NULL
+  
+  # Loop until we find a valid combination
+  while (is.null(valid_combo)) {
+    combo <- numeric(vec_length)  # Reset combo for each iteration
+    
+    positions <- assign_small_and_zero_positions(vec_length, max_small_digits, max_zeros, 
                                                small_mean, small_sd, min_small, max_small)
-  combo[positions$small_positions] <- positions$small_allocation
-
-  non_small_positions <- setdiff(1:vec_length, c(positions$zero_positions, positions$small_positions))
-  reduced_weights <- weights[non_small_positions]
-  reduced_weights <- reduced_weights / sum(reduced_weights)
-
-  remaining_sum <- target_sum - sum(combo)
-  if (length(reduced_weights) == 1) {
-    nonzero_allocation <- remaining_sum
-  } else {
-    raw_values <- get_raw_allocation_values(reduced_weights, remaining_sum, method, custom_generator = custom_generator)
-    nonzero_allocation <- adjust_allocation(raw_values, reduced_weights, remaining_sum)
+    combo[positions$small_positions] <- positions$small_allocation
+    non_small_positions <- setdiff(1:vec_length, c(positions$zero_positions, positions$small_positions))
+    
+    # Only proceed if there are non-small positions
+    if (length(non_small_positions) > 0) {
+      reduced_weights <- weights[non_small_positions]
+      reduced_weights <- reduced_weights / sum(reduced_weights)
+      remaining_sum <- target_sum - sum(combo)
+      
+      if (length(reduced_weights) == 1) {
+        nonzero_allocation <- remaining_sum
+      } else {
+        raw_values <- get_raw_allocation_values(reduced_weights, remaining_sum, method, custom_generator = custom_generator)
+        nonzero_allocation <- adjust_allocation(raw_values, reduced_weights, remaining_sum)
+      }
+      
+      combo[non_small_positions] <- nonzero_allocation
+    }
+    
+    # Check if this combo is valid
+    valid_combo <- drop_irrational_allocations(combo, weights)
   }
-  combo[non_small_positions] <- nonzero_allocation
-
-  combo
+  
+  return(valid_combo)
 }
 
 
@@ -177,10 +223,8 @@ sample_mwc_distributions <- function(
   target_sum = 100,
   total_samples_goal = 1e6,
   batch_multiplier = 2,
-  initial_seed = NULL,
   verbose = TRUE
 ) {
-  if (!is.null(initial_seed)) set.seed(initial_seed)
   
   n_mwcs <- length(mwcs)
   samples_per_mwc <- ceiling((batch_multiplier * total_samples_goal) / n_mwcs)
