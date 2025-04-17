@@ -3,6 +3,7 @@ blotto_compare <- function(matrix_data, weights, sample = FALSE, n_opponents = 1
   total_weight <- sum(weights)
   threshold <- total_weight / 2
   win_counts <- numeric(n_players)
+  opp_counts <- numeric(n_players)  # To track actual number of opponents per player
 
   cat("Starting Blotto comparison...\n")
 
@@ -10,13 +11,18 @@ blotto_compare <- function(matrix_data, weights, sample = FALSE, n_opponents = 1
     p1 <- matrix_data[i, ]
 
     if (sample) {
-      opponents_idx <- sample(setdiff(1:n_players, i), n_opponents)
+      available_opps <- setdiff(1:n_players, i)
+      if (length(available_opps) < n_opponents) {
+        stop("Not enough players to sample the requested number of opponents. Reduce `n_opponents`.")
+      }
+      opponents_idx <- sample(available_opps, n_opponents)
     } else {
       opponents_idx <- setdiff(1:n_players, i)
     }
 
     opponents <- matrix_data[opponents_idx, , drop = FALSE]
     n_opps <- length(opponents_idx)
+    opp_counts[i] <- n_opps  # Store for summary
 
     p1_mat <- matrix(rep(p1, each = n_opps), nrow = n_opps)
 
@@ -39,16 +45,15 @@ blotto_compare <- function(matrix_data, weights, sample = FALSE, n_opponents = 1
     win_counts[i] <- sum(wins)
 
     if (i %% 500 == 0 || i == n_players) {
-      cat("→ Processed", i, "of", n_players, "players...\n")
+      cat(sprintf("→ Processed %d of %d players...\n", i, n_players))
     }
   }
 
   # Build results
   combinations_df <- as.data.frame(matrix_data)
   combinations_df$Win_Count <- win_counts
-
-  total_possible_wins <- if (sample) n_opponents else (n_players - 1)
-  combinations_df$Win_Percentage <- (win_counts / total_possible_wins) * 100
+  combinations_df$Opponents_Faced <- opp_counts
+  combinations_df$Win_Percentage <- (win_counts / opp_counts) * 100
   combinations_df$Rank <- rank(-combinations_df$Win_Count, ties.method = "first")
 
   ranked_combinations <- combinations_df[order(combinations_df$Rank), ]
@@ -66,21 +71,5 @@ blotto_compare <- function(matrix_data, weights, sample = FALSE, n_opponents = 1
   cat("→ Minimum Wins:", min(win_counts), "\n")
   cat("→ Maximum Wins:", max(win_counts), "\n")
 
-  return(invisible(ranked_combinations))  # Return silently unless assigned
+  return(invisible(ranked_combinations))
 }
-
-
-
-# Helper: Save progress as we go
-save_progress <- function(result_vector, current_index) {
-  write.csv(result_vector, file = sprintf("/Users/cervas/Library/Mobile Documents/com~apple~CloudDocs/Downloads/win_counts_checkpoint_%04d.csv", current_index))
-}
-
-
-# # Example
-blotto_compare(
-  matrix_data = t(replicate(10,new_combinations())), 
-  weights = c(3, 5, 8, 13, 21, 34, 55), 
-  sample = FALSE,
-  n_opponents = 100,
-  tie_method = "coinflip")
