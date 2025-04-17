@@ -156,58 +156,49 @@ mwcs <- list(
   c(3, 4, 5, 6), c(1, 2, 3, 5, 6)
 )
 
-sample_distributions_fast <- function(
-  mwcs, 
-  target_sum = 100, 
-  samples_per_mwc = 10000, 
-  seed = NULL
+sample_mwc_distributions <- function(
+  mwcs,
+  target_sum = 100,
+  total_samples_goal = 1e6,
+  batch_multiplier = 2,
+  initial_seed = NULL,
+  verbose = TRUE
 ) {
-  if (!is.null(seed)) set.seed(seed)
+  if (!is.null(initial_seed)) set.seed(initial_seed)
   
-  result_list <- list()
-  
-  for (indices in mwcs) {
-    k <- length(indices)
-    probs <- matrix(runif(samples_per_mwc * k), nrow = k)
-    probs <- probs / colSums(probs)
-    values <- apply(probs, 2, function(p) rmultinom(1, size = target_sum, prob = p))
-    values <- t(values)
-    full <- matrix(0, nrow = samples_per_mwc, ncol = 7)
-    full[, indices] <- values
-    result_list[[length(result_list) + 1]] <- full
+  n_mwcs <- length(mwcs)
+  samples_per_mwc <- ceiling((batch_multiplier * total_samples_goal) / n_mwcs)
+
+  if (verbose) cat("Starting first big batch...\n")
+  unique_samples <- unique(sample_distributions_fast(mwcs, target_sum, samples_per_mwc))
+  if (verbose) cat(sprintf("Initial unique rows: %d\n", nrow(unique_samples)))
+
+  while (nrow(unique_samples) < total_samples_goal) {
+    remaining <- total_samples_goal - nrow(unique_samples)
+    if (verbose) cat(sprintf("Need %d more samples. Generating next %dx batch...\n", remaining, batch_multiplier))
+
+    new_batch <- unique(sample_distributions_fast(mwcs, target_sum, samples_per_mwc))
+    before <- nrow(unique_samples)
+    unique_samples <- unique(rbind(unique_samples, new_batch))
+    added <- nrow(unique_samples) - before
+
+    if (verbose) cat(sprintf("→ Added %d new samples. Total unique so far: %d / %d\n", added, nrow(unique_samples), total_samples_goal))
   }
-  
-  do.call(rbind, result_list)
+
+  if (nrow(unique_samples) > total_samples_goal) {
+    if (verbose) cat(sprintf("Clipping from %d to %d rows...\n", nrow(unique_samples), total_samples_goal))
+    unique_samples <- unique_samples[sample(nrow(unique_samples), total_samples_goal), , drop = FALSE]
+  }
+
+  return(unique_samples)
 }
 
-# Parameters
-# target_sum <- 100
-# total_samples_goal <- 1e6
-# samples_per_mwc <- 10000  # moderate per MWC to control size
-# adaptive_factor <- 1.2    # initial guess (increased per loop)
+# # Sample Code to Run
 
-total_samples_goal <- 1e6
-samples_per_mwc <- ceiling((2 * total_samples_goal) / length(mwcs))  # 2x to start
-
-cat("Starting first big batch...\n")
-unique_samples <- unique(sample_distributions_fast(mwcs, target_sum = 100, samples_per_mwc))
-
-cat(sprintf("Initial unique rows: %d\n", nrow(unique_samples)))
-
-while (nrow(unique_samples) < total_samples_goal) {
-  cat("Not enough unique samples. Getting another 2x batch...\n")
-
-  new_batch <- sample_distributions_fast(mwcs, target_sum = 100, samples_per_mwc)
-  new_batch <- unique(new_batch)
-
-  # Combine and deduplicate
-  unique_samples <- unique(rbind(unique_samples, new_batch))
-
-  cat(sprintf("→ Total unique so far: %d / %d\n", nrow(unique_samples), total_samples_goal))
-}
-
-# Final clip
-if (nrow(unique_samples) > total_samples_goal) {
-  unique_samples <- unique_samples[sample(nrow(unique_samples), total_samples_goal), , drop = FALSE]
-  cat(sprintf("Clipped to exactly %d rows.\n", nrow(unique_samples)))
-}
+final_samples <- sample_mwc_distributions(
+  mwcs,
+  target_sum = 100,
+  total_samples_goal = 1e6,
+  batch_multiplier = 2,
+  initial_seed = NULL
+)
