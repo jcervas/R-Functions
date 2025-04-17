@@ -29,7 +29,7 @@ validate_distribution <- function(combinations) {
   ))
 }
 
-stacked_hist_plot <- function(random_vectors, state_names=rev(c("A", "B", "C", "D", "E", "F", "G"))) {
+stacked_hist_plot <- function(random_vectors, state_names=rev(c("A", "B", "C", "D", "E", "F", "G")), main = "Distribution") {
   # Convert the matrix to a data frame
   df <- as.data.frame(random_vectors)
   
@@ -46,7 +46,7 @@ stacked_hist_plot <- function(random_vectors, state_names=rev(c("A", "B", "C", "
   plot(NULL, xlim = c(0, 100), 
        ylim = c(0, num_states * 1.2), 
        xlab = "Value", ylab = "", yaxt = "n",
-       main = "Distribution by Variable")
+       main = main)
   
   # Add y-axis labels
   axis(2, at = seq(0.6, num_states * 1.2 - 0.6, by = 1.2),
