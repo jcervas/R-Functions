@@ -1,99 +1,81 @@
-blotto_compare <- function(matrix_data, weights, sample = FALSE, n_opponents = 1000, tie_method = "coinflip") {
-  n_players <- nrow(matrix_data)             # Total number of players (rows in the matrix)
-  total_weight <- sum(weights)               # Sum of all weights, used to calculate majority threshold
-  threshold <- total_weight / 2              # Threshold for a win (majority)
-  win_counts <- numeric(n_players)           # Initialize win count for each player
+blotto_compare <- function(matrix_data, weights, sample = FALSE, n_sample = 1000,
+                           tie_method = "coinflip", batch_size = 100, save_fn = NULL) {
   
-  # Loop over each player
-  for (i in 1:n_players) {
-    p1 <- matrix_data[i, ]                   # Extract the ith player's data (vector)
+  n_players <- nrow(matrix_data)
+  total_weight <- sum(weights)
+  threshold <- total_weight / 2
+  win_counts <- numeric(n_players)
+  
+  batches <- ceiling(n_players / batch_size)
+  start_time <- Sys.time()
+  
+  for (b in 1:batches) {
+    idx_start <- (b - 1) * batch_size + 1
+    idx_end <- min(b * batch_size, n_players)
+    batch_idx <- idx_start:idx_end
     
-    if (sample == TRUE) {
-      # Randomly sample opponents (excluding the player themselves)
-      opponents_idx <- sample(setdiff(1:n_players, i), n_opponents)
-    } else {
-      # Use all other players as opponents
-      opponents_idx <- 1:nrow(matrix_data)
-      n_opponents <- nrow(matrix_data)
+    for (i in batch_idx) {
+      p1 <- matrix_data[i, ]
+      
+      if (sample) {
+        opponents_idx <- sample(setdiff(1:n_players, i), n_sample)
+      } else {
+        opponents_idx <- setdiff(1:n_players, i)  # Exclude self
+      }
+      
+      n_opps <- length(opponents_idx)
+      opponents <- matrix_data[opponents_idx, ]
+      
+      # Vectorized comparison
+      win_matrix <- t(t(opponents) < p1)
+      tie_matrix <- t(t(opponents) == p1)
+      
+      win_points <- win_matrix %*% weights
+      
+      tie_points <- switch(tie_method,
+                           "coinflip" = {
+                             tie_flips <- matrix(rbinom(n_opps * ncol(matrix_data), 1, 0.5),
+                                                 nrow = n_opps)
+                             (tie_matrix * tie_flips) %*% weights
+                           },
+                           "p2wins" = matrix(0, nrow = n_opps, ncol = 1),
+                           stop("Invalid tie_method")
+      )
+      
+      total_points <- win_points + tie_points
+      win_counts[i] <- sum(total_points > threshold)
     }
     
-    opponents <- matrix_data[opponents_idx, ]  # Extract opponent rows
-    
-    # Replicate player i's data into a matrix with n_opponents rows for comparison
-    p1_mat <- matrix(rep(p1, each = n_opponents), nrow = n_opponents)
-    
-    # Create boolean matrices for win and tie comparisons (element-wise)
-    win_matrix <- (opponents < p1_mat)         # TRUE where p1 beats opponent
-    tie_matrix <- (opponents == p1_mat)        # TRUE where p1 ties opponent
-    
-    # Multiply each TRUE in win_matrix by corresponding weight to get weighted wins
-    win_points <- win_matrix %*% weights       # Each row gives total weight of positions where p1 wins
-    
-    # Handle ties based on specified method
-    if (tie_method == "coinflip") {
-      # Simulate coin flips (0 or 1) for each element in tie_matrix
-      tie_flips <- matrix(rbinom(length(tie_matrix), 1, 0.5), nrow = n_opponents)
-      tie_points <- (tie_matrix * tie_flips) %*% weights  # Only count tie-points where coin flip was "1"
-    } else if (tie_method == "p2wins") {
-      # Give no points to player 1 in case of a tie
-      tie_points <- matrix(0, nrow = n_opponents, ncol = 1)
-    } else {
-      stop("Invalid tie_method")              # Error for unrecognized method
+    # Progress
+    if (b %% 1 == 0) {
+      pct <- round(100 * idx_end / n_players, 1)
+      elapsed <- round(difftime(Sys.time(), start_time, units = "secs"), 1)
+      cat(sprintf("Batch %d/%d — %d of %d players (%.1f%%) done | Time: %ss\n",
+                  b, batches, idx_end, n_players, pct, elapsed))
     }
     
-    # Sum win points and tie points to get total score against each opponent
-    total_points <- win_points + tie_points
-    
-    # Count number of wins where total points exceed the threshold (majority)
-    wins <- total_points > threshold
-    win_counts[i] <- sum(wins)
+    # Optional intermediate save
+    if (!is.null(save_fn)) {
+      save_fn(win_counts, idx_end)
+    }
   }
   
-  return(win_counts)  # Return vector of win counts for each player
+  return(win_counts)
+}
+
+# Helper: Save progress as we go
+save_progress <- function(result_vector, current_index) {
+  write.csv(result_vector, file = sprintf("/Users/cervas/Library/Mobile Documents/com~apple~CloudDocs/Downloads/win_counts_checkpoint_%04d.csv", current_index))
 }
 
 
-## Depreciated (slow)
-# ec_game <- function(p1, p2, weights, tie_method = "coinflip") {
-#   # Determine outcomes
-#   p1_wins <- p1 > p2
-#   tie_indices <- p1 == p2
-#   n_states <- length(weights)
-#   quota <- sum(weights)/2
-  
-#   # Initialize points vector
-#   p1_points_vec <- numeric(n_states)
-  
-#   # Assign wins
-#   p1_points_vec[p1_wins] <- weights[p1_wins]
+# # Example
+blotto_compare(
+  a, 
+  ec_weights, 
+  sample = FALSE,
+  n_sample = 1000,
+  tie_method = "coinflip", 
+  batch_size = 1000,
+  save_fn = save_progress)
 
-#    # Handle tie results
-#      if (any(tie_indices == TRUE)) {
-#         if (tie_method == "coinflip") {
-#         # Method 1: Random coin flip (50% chance for p1)
-#         p1_points_vec[tie_indices] <- rbinom(sum(tie_indices * 1), 1, 0.5) * weights[tie_indices]
-#       } else if (tie_method == "p2wins") {
-#         # Method 2: p2 always wins ties
-#         p1_points_vec[tie_indices] <- rep(0, length(tie_indices[tie_indices == TRUE]))  # p1 gets 0 points
-#       } else {
-#         stop("Invalid tie_method. Use 'coinflip' or 'p2wins'")
-#       }
-#     }
-
-#   # Scores
-#   p1_score <- sum(p1_points_vec)
-#   total_points <- sum(weights)
-#   p1_percent <- p1_score / total_points
-  
-#   # Result: 1 if p1 wins, 0 if p2 wins, 0.5 if tie
-#   result <- 0L
-# if (p1_score > quota) result <- 1 
-
-#   # Return all stats
-#   return(list(
-#     p1_result = result,
-#     n_states = n_states,
-#     p1_points = p1_score,
-#     p1_percent = p1_percent
-#   ))
-# }
