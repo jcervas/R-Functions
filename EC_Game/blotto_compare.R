@@ -81,9 +81,6 @@ save_progress <- function(result_vector, current_index) {
 blotto_compare(
   a, 
   ec_weights, 
-  sample = FALSE,
-  n_sample = 1000,
-  tie_method = "coinflip", 
-  batch_size = 1000,
-  save_fn = save_progress)
-
+  sample = F,
+  n_opponents = 100,
+  tie_method = "coinflip")
