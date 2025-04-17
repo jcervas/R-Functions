@@ -149,13 +149,6 @@ new_combinations <- function(weights = c(3, 5, 8, 13, 21, 34, 55),
 
 # # Generate Random MWC allocations
 
-# Example MWC list
-mwcs <- list(
-  c(5, 7), c(6, 7), c(1, 4, 7), c(2, 4, 7), c(3, 4, 7),
-  c(1, 2, 3, 7), c(1, 4, 5, 6), c(2, 4, 5, 6),
-  c(3, 4, 5, 6), c(1, 2, 3, 5, 6)
-)
-
 sample_distributions_fast <- function(
   mwcs, 
   target_sum = 100, 
@@ -168,7 +161,7 @@ sample_distributions_fast <- function(
     k <- length(indices)
     probs <- matrix(runif(samples_per_mwc * k), nrow = k)
     probs <- probs / colSums(probs)
-    values <- apply(probs, 2, function(p) rmultinom(1, size = total, prob = p))
+    values <- apply(probs, 2, function(p) rmultinom(1, size = target_sum, prob = p))
     values <- t(values)
     full <- matrix(0, nrow = samples_per_mwc, ncol = 7)
     full[, indices] <- values
@@ -218,10 +211,10 @@ sample_mwc_distributions <- function(
 
 # # Sample Code to Run
 
-final_samples <- sample_mwc_distributions(
-  mwcs,
-  target_sum = 100,
-  total_samples_goal = 1e6,
-  batch_multiplier = 2,
-  initial_seed = NULL
-)
+# final_samples <- sample_mwc_distributions(
+#   mwcs,
+#   target_sum = 100,
+#   total_samples_goal = 1e6,
+#   batch_multiplier = 2,
+#   initial_seed = NULL
+# )
