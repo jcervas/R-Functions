@@ -28,7 +28,10 @@ deduplicate_combinations <- function(mat) {
 
 # ========== Allocation Utilities ==========
 
-adjust_allocation <- function(raw_values, target_sum, bias_weights) {
+adjust_allocation <- function(raw_values, target_sum, bias_weights = NULL) {
+  if (is.null(bias_weights)) bias_weights <- rep(1, length(raw_values))
+  bias_weights <- bias_weights / sum(bias_weights)
+
   if (sum(raw_values) == 0) {
     alloc <- rep(0, length(raw_values))
     alloc[sample(length(raw_values), 1)] <- target_sum
@@ -96,6 +99,12 @@ new_combinations <- function(
   method <- match.arg(method)
   vec_length <- length(weights)
 
+  # Auto-disable rationality if weights are normalized
+  if (quota > 0 && sum(weights) <= 1.1) {
+    warning("Detected normalized weights; skipping rationality check by setting quota = 0")
+    quota <- 0
+  }
+
   repeat {
     if (method == "uniform_skewed") {
       combo <- generate_random_allocations(weights, target_sum, method = "uniform")
@@ -123,75 +132,12 @@ new_combinations <- function(
       filled_values <- generate_random_allocations(weights[remaining_positions], remaining_sum, method, small_sd / target_sum, 1, custom_generator)
       combo[remaining_positions] <- filled_values
     }
+
+    if (quota == 0) return(combo)
+
     total_weight_allocated <- sum(weights[combo > 0])
     if (total_weight_allocated <= quota) next
     valid <- drop_irrational_allocations(combo, weights, quota)
     if (!is.null(valid)) return(combo)
   }
-}
-
-# ========== Blotto Comparison ==========
-
-blotto_compare <- function(matrix_data, weights, sample = FALSE, n_opponents = 1000, tie_method = "coinflip", single_strategy = NULL) {
-  total_weight <- sum(weights)
-  threshold <- total_weight / 2
-  if (!is.null(single_strategy)) {
-    opponents <- matrix_data
-    n_opps <- nrow(opponents)
-    p1_mat <- matrix(rep(single_strategy, each = n_opps), nrow = n_opps)
-    win_matrix <- opponents < p1_mat
-    tie_matrix <- opponents == p1_mat
-    win_points <- win_matrix %*% weights
-    tie_points <- switch(tie_method,
-      "coinflip" = (tie_matrix * matrix(rbinom(length(tie_matrix), 1, 0.5), nrow = n_opps)) %*% weights,
-      "p2wins" = matrix(0, nrow = n_opps, ncol = 1),
-      stop("Invalid tie_method")
-    )
-    total_points <- win_points + tie_points
-    wins <- sum(total_points > threshold)
-    return(list(Win_Count = wins, Opponents_Faced = n_opps, Win_Percentage = round((wins / n_opps) * 100, 2)))
-  }
-  n_players <- nrow(matrix_data)
-  win_counts <- numeric(n_players)
-  opp_counts <- numeric(n_players)
-  for (i in 1:n_players) {
-    p1 <- matrix_data[i, ]
-    opponents_idx <- setdiff(1:n_players, i)
-    if (sample) {
-      if (length(opponents_idx) < n_opponents) stop("Not enough players to sample the requested number of opponents.")
-      opponents_idx <- sample(opponents_idx, n_opponents)
-    }
-    opponents <- matrix_data[opponents_idx, , drop = FALSE]
-    n_opps <- length(opponents_idx)
-    opp_counts[i] <- n_opps
-    p1_matrix <- matrix(rep(p1, each = n_opps), nrow = n_opps)
-    win_matrix <- opponents < p1_matrix
-    tie_matrix <- opponents == p1_matrix
-    win_points <- win_matrix %*% weights
-    tie_points <- switch(tie_method,
-      "coinflip" = (tie_matrix * matrix(rbinom(length(tie_matrix), 1, 0.5), nrow = n_opps)) %*% weights,
-      "p2wins" = matrix(0, nrow = n_opps, ncol = 1),
-      stop("Invalid tie_method")
-    )
-    total_points <- win_points + tie_points
-    win_counts[i] <- sum(total_points > threshold)
-  }
-  combinations_df <- as.data.frame(matrix_data)
-  combinations_df$Win_Count <- win_counts
-  combinations_df$Opponents_Faced <- opp_counts
-  combinations_df$Win_Percentage <- round((win_counts / opp_counts) * 100, 2)
-  combinations_df$Rank <- rank(-combinations_df$Win_Count, ties.method = "first")
-  combinations_df[order(combinations_df$Rank), ]
-}
-
-# ========== Batch Strategy Comparison ==========
-
-batch_score_strategies <- function(test_matrix, opponent_matrix, weights, ...) {
-  results <- vector("list", nrow(test_matrix))
-  for (i in seq_len(nrow(test_matrix))) {
-    strategy <- as.numeric(test_matrix[i, ])
-    score <- blotto_compare(opponent_matrix, weights, single_strategy = strategy, ...)
-    results[[i]] <- c(score, label = rownames(test_matrix)[i])
-  }
-  do.call(rbind, lapply(results, as.data.frame))
 }
