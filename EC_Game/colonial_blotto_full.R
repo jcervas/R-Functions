@@ -107,7 +107,7 @@ new_combinations <- function(
 
   repeat {
     if (method == "uniform") {
-      combo <- generate_random_allocations(weights, target_sum, method = "uniform")
+      combo <- generate_random_allocations(rep(1/length(weights), length(weights)), target_sum, method = "uniform")
     } else {
       combo <- numeric(vec_length)
       num_small_digits <- sample(0:max_small_digits, 1)
