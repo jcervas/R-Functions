@@ -106,7 +106,7 @@ new_combinations <- function(
   }
 
   repeat {
-    if (method == "uniform_skewed") {
+    if (method == "uniform") {
       combo <- generate_random_allocations(weights, target_sum, method = "uniform")
     } else {
       combo <- numeric(vec_length)
