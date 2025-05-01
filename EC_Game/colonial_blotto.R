@@ -267,7 +267,18 @@ new_combinations <- function(
 #' @param quota Numeric threshold to form a winning coalition.
 #' @return A named numeric vector of Banzhaf power scores.
 #' @export
-banzhaf <- function(member, vector_weights, quota) {
+#' Compute Banzhaf power index for a set of members.
+#'
+#' Calculates the number of swing votes (raw or normalized) for each member
+#' in all possible coalitions.
+#'
+#' @param member A character vector of member names.
+#' @param vector_weights Numeric vector of weights.
+#' @param quota Numeric threshold to form a winning coalition.
+#' @param normalized Logical. If TRUE, return normalized Banzhaf scores.
+#' @return A named numeric vector of Banzhaf power scores.
+#' @export
+banzhaf <- function(member, vector_weights, quota, normalized = TRUE) {
   n <- length(vector_weights)
   swing_counts <- numeric(n)
   for (k in 1:n) {
@@ -285,14 +296,18 @@ banzhaf <- function(member, vector_weights, quota) {
     }
   }
   total_swings <- sum(swing_counts)
-  if (total_swings == 0) {
-    warning("No swings found. Quota may be too high or too low.")
-    normalized <- rep(0, n)
+  if (normalized) {
+    if (total_swings == 0) {
+      warning("No swings found. Quota may be too high or too low.")
+      result <- rep(0, n)
+    } else {
+      result <- swing_counts / total_swings
+    }
   } else {
-    normalized <- swing_counts / total_swings
+    result <- swing_counts
   }
-  names(normalized) <- member
-  return(normalized)
+  names(result) <- member
+  return(result)
 }
 
 # ========== Verify MWC Support ==========
@@ -324,7 +339,7 @@ progress_reporter <- function(i, total, start_time, last_update, min_interval = 
 
 # ========== Blotto Compare ==========
 
-blotto_compare <- function(matrix_data, game_weights, sample = FALSE, n_opponents = 1000, tie_method = "coinflip", single_strategy = NULL) {
+blotto_compare <- function(matrix_data, game_weights, sample = FALSE, n_opponents = 1000, tie_method = "cointoss", single_strategy = NULL) {
   total_weight <- sum(game_weights)
   threshold <- total_weight / 2
 
@@ -336,7 +351,7 @@ blotto_compare <- function(matrix_data, game_weights, sample = FALSE, n_opponent
     tie_matrix <- opponents == p1_mat
     win_points <- win_matrix %*% game_weights
     tie_points <- switch(tie_method,
-                         "coinflip" = (tie_matrix * matrix(rbinom(length(tie_matrix), 1, 0.5), nrow = n_opps)) %*% vector_weights,
+                         "cointoss" = (tie_matrix * matrix(rbinom(length(tie_matrix), 1, 0.5), nrow = n_opps)) %*% game_weights,
                          "p2wins" = matrix(0, nrow = n_opps, ncol = 1),
                          stop("Invalid tie_method"))
     total_points <- win_points + tie_points
@@ -373,7 +388,7 @@ blotto_compare <- function(matrix_data, game_weights, sample = FALSE, n_opponent
     tie_matrix <- opponents == p1_matrix
     win_points <- win_matrix %*% game_weights
     tie_points <- switch(tie_method,
-                         "coinflip" = (tie_matrix * matrix(rbinom(length(tie_matrix), 1, 0.5), nrow = n_opps)) %*% vector_weights,
+                         "cointoss" = (tie_matrix * matrix(rbinom(length(tie_matrix), 1, 0.5), nrow = n_opps)) %*% game_weights,
                          "p2wins" = matrix(0, nrow = n_opps, ncol = 1),
                          stop("Invalid tie_method"))
     total_points <- win_points + tie_points
@@ -386,7 +401,7 @@ blotto_compare <- function(matrix_data, game_weights, sample = FALSE, n_opponent
   combinations_df$Opponents_Faced <- opp_counts
   combinations_df$Win_Percentage <- round((win_counts / opp_counts) * 100, 2)
   combinations_df$Rank <- rank(-combinations_df$Win_Count, ties.method = "first")
-  combinations_df[order(combinations_df$Rank), ]
+  combinations_df <- combinations_df[order(combinations_df$Rank), ]
   # Show top 10 strategies
     cat("\n🏆 Top 10 Strategies:\n")
     print(head(combinations_df, 10))
