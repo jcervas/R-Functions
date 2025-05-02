@@ -50,6 +50,31 @@ deduplicate_combinations <- function(mat) {
   return(unique_mat)
 }
 
+normalize <- function(vector) {
+  norm_vector <- vector/sum(vector)
+  return(norm_vector)
+}
+
+assign_to_mwc <- function(strategies, mwcs) {
+  apply(strategies, 1, function(strategy) {
+    which_mwcs <- sapply(mwcs, function(mwc) all(strategy[mwc] > 0))
+    if (any(which_mwcs)) {
+      which.max(which_mwcs)
+    } else {
+      NA
+    }
+  })
+}
+
+assign_strict_mwc <- function(strategies, mwcs) {
+  apply(strategies, 1, function(strategy) {
+    matches <- sapply(mwcs, function(mwc) {
+      all(strategy[-mwc] == 0) && all(strategy[mwc] > 0)
+    })
+    if (any(matches)) which.max(matches) else NA
+  })
+}
+
 # ========== Allocation Functions ==========
 
 #' Adjust a raw numeric vector to sum to a target using proportional rounding.
@@ -570,6 +595,10 @@ evaluate_strategies <- function(matrix_data, vector_weights, quota = 70) {
   zero_counts <- colSums(matrix_data == 0)
   zero_percentage <- (zero_counts / n) * 100
   means <- colMeans(matrix_data)
+  sd_unit <- apply(matrix_data, 2, sd)         # Standard deviation
+  medians <- apply(matrix_data, 2, median)     # Median
+  min_unit <- apply(matrix_data, 2, min)        # Min
+  max_unit <- apply(matrix_data, 2, max)        # Max
   ec_covered <- apply(matrix_data > 0, 1, function(x) sum(vector_weights[x]))
   rational <- ec_covered >= quota
   percent_rational <- mean(rational) * 100
@@ -578,7 +607,11 @@ evaluate_strategies <- function(matrix_data, vector_weights, quota = 70) {
     position = 1:m,
     zero_count = zero_counts,
     zero_percent = round(zero_percentage, 1),
-    mean_allocation = round(means, 2)
+    mean_allocation = round(means, 2),
+    median_allocation = round(medians, 2),
+    sd_allocation = round(sd_unit, 2),
+    min_allocation = round(min_unit, 2),
+    max_allocation = round(max_unit, 2)
   )
 
   cat("Strategy Evaluation Summary:\n")
