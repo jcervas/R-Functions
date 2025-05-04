@@ -441,6 +441,7 @@ blotto_compare <- function(matrix_data, game_weights, sample = FALSE, n_opponent
     cat("→ Max Win %:", max(combinations_df$Win_Percentage), "\n")
     cat("→ Min Win %:", min(combinations_df$Win_Percentage), "\n")
     cat("→ # of Unique Ranks:", length(unique(combinations_df$Rank)), "\n")
+    return(combinations_df)
 }
 
 # ========== Sample MWC Distributions ==========
@@ -625,3 +626,17 @@ evaluate_strategies <- function(matrix_data, vector_weights, quota = 70) {
     ec_coverage = ec_covered
   )
 }
+
+
+# Function to compute ENCM for a single strategy (Effective Number of Coalition Members (ENCM))
+calc_encm <- function(allocation) {
+  p <- allocation / sum(allocation)
+  1 / sum(p^2)
+}
+
+# # Apply to all user strategies
+# encm_values <- apply(user_matrix_adj, 1, calc_encm)
+
+# # Summary
+# summary(encm_values)
+
