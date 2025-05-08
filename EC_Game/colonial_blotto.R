@@ -426,14 +426,14 @@ blotto_compare <- function(matrix_data, game_weights, sample = FALSE, n_opponent
   combinations_df$Opponents_Faced <- opp_counts
   combinations_df$Win_Percentage <- round((win_counts / opp_counts) * 100, 2)
   combinations_df$Rank <- rank(-combinations_df$Win_Count, ties.method = "first")
-  combinations_df <- combinations_df[order(combinations_df$Rank), ]
+  combinations_df_ordered <- combinations_df[order(combinations_df$Rank), ]
   # Show top 10 strategies
     cat("\n🏆 Top 10 Strategies:\n")
-    print(head(combinations_df, 10))
+    print(head(combinations_df_ordered, 10))
 
     # Show bottom 10 strategies
     cat("\n🔻 Bottom 10 Strategies:\n")
-    print(tail(combinations_df, 10))
+    print(tail(combinations_df_ordered, 10))
 
     # Summary statistics
     cat("\n📊 Summary Stats:\n")
@@ -443,6 +443,42 @@ blotto_compare <- function(matrix_data, game_weights, sample = FALSE, n_opponent
     cat("→ # of Unique Ranks:", length(unique(combinations_df$Rank)), "\n")
     return(combinations_df)
 }
+
+# Expanded Coalitions
+get_expanded_mwc_match <- function(strategy_row, mwcs, ec_weights, quota = 70, tol = 1e-6) {
+  supported <- which(strategy_row > tol)
+  
+  for (i in seq_along(mwcs)) {
+    coal <- mwcs[[i]]
+    if (!all(coal %in% supported)) next
+    extra <- setdiff(supported, coal)
+    if (length(extra) != 1) next
+    extra_state <- extra[1]
+    if (ec_weights[extra_state] >= min(ec_weights[coal])) {
+      if (sum(ec_weights[supported]) >= quota) {
+        return(list(mwc_index = i, extra_state = extra_state))
+      }
+    }
+  }
+  return(NULL)
+}
+
+# Monotonicity (test global monotonicity (i.e. x[1] ≤ x[2] ≤ x[3] ≤ ...)
+
+monotonicity <- function(x, include_zeros = TRUE) {
+  if (is.matrix(x)) {
+    apply(x, 1, monotonicity, include_zeros = include_zeros)
+  } else {
+    if (!include_zeros) x <- x[x > 0]
+    all(diff(x) >= 0)
+  }
+}
+
+
+
+# monotonic_flags <- monotonicity(participant_matrix_adj, include_zeros = TRUE)
+
+
 
 # ========== Sample MWC Distributions ==========
 
