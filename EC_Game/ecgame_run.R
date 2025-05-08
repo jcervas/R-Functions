@@ -287,7 +287,87 @@ cat("• Mean allocation to State F: ", round(F_mean, 2), "\n• Mean allocation
 cat(sprintf("V = %.1f, p = %.5f\n", wtest$statistic, wtest$p.value))
 cat(sprintf("p-value = %.3f\n", ttest$p.value))
 
+# ===========================================================
+# Hypothesis 2c: 
 
+# 1. Get all coalitions
+all_coals <- all_combinations(ec_weights)
+
+# 2. Revised expanded coalition finder
+get_all_expanded_mwcs <- function(all_coals, mwcs, ec_weights, quota = 70) {
+  expanded <- list()
+  idx <- 1
+  
+  for (coal in all_coals) {
+    if (length(coal) <= 1 || sum(ec_weights[coal]) < quota) next
+    
+    for (mwc in mwcs) {
+      if (!all(mwc %in% coal)) next
+      extra <- setdiff(coal, mwc)
+      if (length(extra) != 1) next
+      
+      extra_state <- extra[1]
+      w_extra <- ec_weights[extra_state]
+      w_mwc <- ec_weights[mwc]
+      
+      pair_sums <- outer(w_mwc, w_mwc, "+")[upper.tri(matrix(0, length(w_mwc), length(w_mwc)))]
+      
+      if (w_extra >= min(w_mwc) && all(w_extra < pair_sums)) {
+        expanded[[idx]] <- sort(coal)
+        idx <- idx + 1
+        break
+      }
+    }
+  }
+  
+  unique_expanded <- unique(lapply(expanded, function(x) paste(x, collapse = "-")))
+  return(lapply(unique_expanded, function(s) as.integer(strsplit(s, "-")[[1]])))
+}
+
+# 3. Run it
+expanded_coals <- get_all_expanded_mwcs(all_coals, mwcs, ec_weights, quota = 70)
+
+# 4. Label expanded coalitions
+expanded_labels <- sapply(expanded_coals, function(coal) {
+  for (mwc in mwcs) {
+    if (all(mwc %in% coal) && length(setdiff(coal, mwc)) == 1) {
+      extra <- setdiff(coal, mwc)
+      mwc_label <- paste(state_names[sort(mwc)], collapse = ",")
+      extra_label <- state_names[extra]
+      return(paste0(mwc_label, " + ", extra_label))
+    }
+  }
+  return("Unmatched")
+})
+
+# 5. Apply detection to strategy matrix
+get_expanded_mwc_match <- function(strategy_row, mwcs, ec_weights, quota = 70, tol = 1e-6) {
+  supported <- which(strategy_row > tol)
+  
+  for (i in seq_along(mwcs)) {
+    coal <- mwcs[[i]]
+    if (!all(coal %in% supported)) next
+    extra <- setdiff(supported, coal)
+    if (length(extra) != 1) next
+    extra_state <- extra[1]
+    w_extra <- ec_weights[extra_state]
+    w_mwc <- ec_weights[coal]
+    pair_sums <- outer(w_mwc, w_mwc, "+")[upper.tri(matrix(0, length(w_mwc), length(w_mwc)))]
+    if (w_extra >= min(w_mwc) && all(w_extra < pair_sums)) {
+      if (sum(ec_weights[supported]) >= quota) {
+        return(list(mwc_index = i, extra_state = extra_state))
+      }
+    }
+  }
+  return(NULL)
+}
+
+expanded_matches <- apply(participant_matrix_adj, 1, get_expanded_mwc_match, mwcs = mwcs, ec_weights = ec_weights)
+matched_flags <- sapply(expanded_matches, function(x) !is.null(x))
+table(matched_flags)
+
+
+# ===========================================================
 # Hypothesis 3b: Preference for State D over E
 
 # Mean allocations for all states
@@ -423,8 +503,6 @@ knitr::kable(df, format = "simple", caption = "Win rates for deterministic strat
 
 
 
-
-
 # ========== Strategy Typologies and Allocation Patterns ==========
 k = 5
 # Perform clustering
@@ -436,6 +514,8 @@ rownames(centroids_k5) <- paste("Cluster", 1:5)
 
 centroid_table <- as.data.frame(round(centroids_k5, 2))
 centroid_table$n <- as.vector(table(kmeans_participant$cluster))
+# Assign cluster to a named vector
+cluster_vec <- kmeans_participant$cluster
 
 knitr::kable(centroid_table, format = "simple", caption = "Allocation Profiles by Cluster (k = 5) with Avg Win %")
 
@@ -469,20 +549,56 @@ knitr::kable(cluster_summary, format = "simple", caption = "Performance of Clust
 compare_coinflip_df <- as.data.frame(blotto_compare(participant_matrix_adj, ec_weights, tie_method = "cointoss"))
 compare_p2wins_df   <- as.data.frame(blotto_compare(participant_matrix_adj, ec_weights, tie_method = "p2wins"))
 
-# # ========== 2. Top 10 Strategies by Rule ==========
+# # ========== 2. Top 10 Strategies ==========
 colnames(compare_coinflip_df)[1:7] <- colnames(compare_p2wins_df)[1:7] <- LETTERS[1:7]
+# Assign cluster vector directly (same order)
+compare_coinflip_df$Cluster <- compare_p2wins_df$Cluster <- factor(kmeans_participant$cluster)
+
 
 top_coinflip <- head(compare_coinflip_df[order(compare_coinflip_df$Rank), ], 10)
 top_p2wins   <- head(compare_p2wins_df[order(compare_p2wins_df$Rank), ], 10)
 
-cols <- c(LETTERS[1:7], "Win_Count", "Win_Percentage")
+cols <- c(LETTERS[1:7], "Win_Count", "Win_Percentage", "Cluster")
 top_both <- rbind(
   cbind(Tie_Break = "Coin Flip", top_coinflip[, cols]),
   cbind(Tie_Break = "Player 2 Wins", top_p2wins[, cols])
 )
 
+# ==== Appendix Table: Top 10 Strategies by Tie-Breaking Rule
 knitr::kable(top_both, format = "simple", row.names = FALSE,
              caption = "Top 10 Strategies by Tie-Breaking Rule")
+
+# ==== Top/Bottom 10 Strategies
+# Compute EC coverage
+ec_covered <- apply(participant_matrix_adj > 0, 1, function(row) sum(ec_weights[row]))
+
+# Filter rational strategies
+rational_ids <- which(ec_covered >= quota)
+rational_df <- compare_p2wins_df[rational_ids, ]
+
+# Define columns for display
+cols <- c(paste(LETTERS[1:7]), "Win_Count", "Win_Percentage", "Cluster")
+
+# Extract top/bottom 10 rational strategies
+top_10 <- rational_df[order(rational_df$Rank), ][1:10, cols]
+bottom_10 <- rational_df[order(rational_df$Rank), ][nrow(rational_df):(nrow(rational_df)-9), cols]
+
+# --- Output
+
+cat("Table: Top/Bottom 10 Strategies Among Participants\n\n")
+cat("Top 10 Strategies\n")
+knitr::kable(top_10, format = "simple", row.names = FALSE)
+cat("\nBottom 10 Strategies\n")
+knitr::kable(bottom_10, format = "simple", row.names = FALSE)
+
+cat("\nNote: This table excludes strategies that fail to allocate resources to a combination of states meeting the 70-vote quota. While such strategies were submitted, they are excluded here due to their limited analytical value.\n")
+
+
+# Create binary outcome
+win_flag <- as.integer(compare_p2wins_df$Win_Percentage > 50)
+table(compare_p2wins_df$Cluster, win_flag)
+
+# ==== Appendix Table: Top 10 Strategies
 
 # ========== 3. Strategy Rank Stability ==========
 rank_cf <- rank(-compare_coinflip_df$Win_Count, ties.method = "first")
@@ -504,20 +620,20 @@ names(point_color) <- names(x)
 point_color[moved_up_ids]   <- "blue"
 point_color[moved_down_ids] <- "red"
 
+
+# === Figure A: The Effect of Tie-Breaker Rule on Participate Win Success
+
+pdf(paste0(figure_directory, "appendix-tie-breaker-win-success.pdf"), width = 5, height = 5)
+par(family = "Palatino", xpd = NA)
+
 plot(x, y, pch = 21, bg = point_color, col = "black",
      xlab = "Rank under Coin Flip", ylab = "Rank under Player 2 Wins",
      main = "Rank Stability with Movers Highlighted")
 abline(a = 0, b = 1, col = "darkgray", lty = 2); grid()
 legend("bottomright", legend = c("Stable", "Moved Up", "Moved Down"),
        pt.bg = c("gray70", "blue", "red"), pch = 21, title = "Strategy Type")
+dev.off()
 
-compare_coinflip_df <- compare_coinflip_df[common_ids, ]
-compare_p2wins_df   <- compare_p2wins_df[common_ids, ]
-
-rank_cf <- rank(-compare_coinflip_df$Win_Count, ties.method = "first")
-rank_p2 <- rank(-compare_p2wins_df$Win_Count, ties.method = "first")
-names(rank_cf) <- rownames(compare_coinflip_df)
-names(rank_p2) <- rownames(compare_p2wins_df)
 
 avg_rank_up_cf   <- mean(rank_cf[moved_up_ids], na.rm = TRUE)
 avg_rank_up_p2   <- mean(rank_p2[moved_up_ids], na.rm = TRUE)
@@ -539,9 +655,9 @@ cat("\u2192 Strategies moving from top to bottom half:", sum(cf_top & !p2_top), 
 print(transition_table)
 
 # ========== 5. Allocation Profiles ==========
-stable_high_ids <- rownames(compare_coinflip_df)[cf_top & p2_top]
-stable_low_ids  <- rownames(compare_coinflip_df)[!cf_top & !p2_top]
-mover_ids       <- rownames(compare_coinflip_df)[xor(cf_top, p2_top)]
+stable_high_ids <- cf_top & p2_top
+stable_low_ids  <- !cf_top & !p2_top
+mover_ids       <- xor(cf_top, p2_top)
 
 mean_high  <- colMeans(participant_matrix_adj[stable_high_ids, , drop = FALSE])
 mean_low   <- colMeans(participant_matrix_adj[stable_low_ids, , drop = FALSE])
@@ -551,13 +667,79 @@ print(round(mean_high, 2))
 print(round(mean_mover, 2))
 print(round(mean_low, 2))
 
+
+# ========== Count MWC by Participants ==========
+
+sum(1 * !is.na(strict_assignments))
+
+t.test(
+  compare_p2wins_df[is.na(strict_assignments), "Win_Percentage"], 
+  compare_p2wins_df[!is.na(strict_assignments), "Win_Percentage"])
+
+
+
+
+# ========== Count MWC and Expanded Coalitions by Participants ==========
+
+expanded_matches <- apply(participant_matrix_adj, 1, get_expanded_mwc_match, mwcs = mwcs, ec_weights = ec_weights)
+matched_flags <- sapply(expanded_matches, function(x) !is.null(x))
+table(matched_flags)
+
+
+expanded_matches <- apply(participant_matrix_adj, 1, get_expanded_mwc_match, mwcs = mwcs, ec_weights = ec_weights)
+
+# Filter non-null entries (actual expanded MWC users)
+expanded_valid <- Filter(Negate(is.null), expanded_matches)
+
+# Count them
+length(expanded_valid)
+
+# Optional: tabulate MWC usage
+table(sapply(expanded_valid, `[[`, "mwc_index"))
+
+
+# Run matcher
+expanded_matches <- apply(participant_matrix_adj, 1, get_expanded_mwc_match, mwcs = mwcs, ec_weights = ec_weights)
+
+# Get matching row indices
+valid_ids <- which(!sapply(expanded_matches, is.null))
+
+# Build data frame
+expanded_df <- data.frame(
+  row_number = valid_ids,
+  mwc_index = sapply(expanded_matches[valid_ids], `[[`, "mwc_index"),
+  extra_state = sapply(expanded_matches[valid_ids], `[[`, "extra_state")
+)
+
+print(expanded_df)
+
+dim(expanded_df)
+
+
+# Expanded vs. Everyone Else
+t.test(
+  compare_p2wins_df[-expanded_df[,"row_number"], "Win_Percentage"],
+  compare_p2wins_df[expanded_df[,"row_number"], "Win_Percentage"]
+)
+
+# Expanded vs. Strict MWC strategies
+t.test(
+  compare_p2wins_df[expanded_df[,"row_number"], "Win_Percentage"], 
+  compare_p2wins_df[!is.na(strict_assignments), "Win_Percentage"])
+
+
+
+
 # ========== 6. MWC Coverage by Winning Strategies ==========
-winning_ids   <- rownames(compare_p2wins_df)[compare_p2wins_df$Win_Percentage > 50]
-winning_allocs <- participant_matrix_adj[winning_ids, , drop = FALSE]
+winning_ids   <- compare_p2wins_df[compare_p2wins_df$Win_Percentage > 50,]
+winning_allocs <- winning_ids[,1:7]
 
 count_mwcs_covered <- function(strategy_row, mwcs) {
   sum(sapply(mwcs, function(coal) all(strategy_row[coal] > 0)))
 }
+
+mwc_counts <- apply(participant_matrix_adj, 1, count_mwcs_covered, mwcs = mwcs)
+print(table(mwc_counts))
 
 mwc_counts <- apply(winning_allocs, 1, count_mwcs_covered, mwcs = mwcs)
 
