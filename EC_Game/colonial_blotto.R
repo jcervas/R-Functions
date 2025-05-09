@@ -39,6 +39,67 @@ find_mwcs <- function(vector_weights, quota) {
   return(mwcs)
 }
 
+generate_expanded_mwcs <- function(mwcs, vector_weights, quota) {
+  n <- length(vector_weights)
+  expanded <- list()
+  origins <- list()
+  idx <- 1
+
+  for (mwc in mwcs) {
+    coal_weights <- vector_weights[mwc]
+    remaining <- setdiff(1:n, mwc)
+    for (extra in remaining) {
+      extra_weight <- vector_weights[extra]
+      if (extra_weight < min(coal_weights)) next
+      replaceable_combinations <- combn(coal_weights, 2, simplify = TRUE)
+      if (any(colSums(replaceable_combinations) <= extra_weight)) next
+      new_coal <- sort(c(mwc, extra))
+      if (sum(vector_weights[new_coal]) >= quota) {
+        expanded[[idx]] <- new_coal
+        origins[[idx]] <- mwc
+        idx <- idx + 1
+      }
+    }
+  }
+
+  list(
+    expanded = expanded,
+    origins = origins
+  )
+}
+
+label_coalition <- function(coalition, state_names) {
+  paste(state_names[coalition], collapse = ",")
+}
+
+label_expanded_coalition <- function(expanded, mwc, state_names) {
+  added <- setdiff(expanded, mwc)
+  left <- paste(state_names[mwc], collapse = ",")
+  right <- paste(state_names[added], collapse = ",")
+  paste0(left, " + ", right)
+}
+
+# Test Function
+# mwcs <- find_mwcs(blotto_weights, 70)
+# res <- generate_expanded_mwcs(mwcs, blotto_weights, 70)
+# length(res$expanded)  # should be > 0
+
+# # Optional: label
+# label_expanded_coalition <- function(expanded, mwc, state_names) {
+#   added <- setdiff(expanded, mwc)
+#   left <- paste(state_names[mwc], collapse = ",")
+#   right <- paste(state_names[added], collapse = ",")
+#   paste0(left, " + ", right)
+# }
+
+# expanded_labels <- mapply(
+#   label_expanded_coalition,
+#   res$expanded,
+#   res$origins,
+#   MoreArgs = list(state_names = state_names)
+# )
+
+
 drop_irrational_allocations <- function(matrix_data, vector_weights, quota = 70) {
   valid_rows <- apply(matrix_data, 1, function(row) sum(vector_weights[row > 0]) >= quota)
   matrix_data[valid_rows, , drop = FALSE]
@@ -239,7 +300,7 @@ new_combinations <- function(
   vector_weights, quota = 70, target_sum = 100, max_small_digits = 6, max_zeros = 5,
   method = c("uniform", "uniform_skewed", "normal", "poisson", "gamma", "beta", "exponential", "geometric", "custom"),
   small_mean = 0, small_sd = 5, min_small = 0, max_small = 100,
-  custom_generator = NULL, check_weights = ec_weights
+  custom_generator = NULL, check_weights = vector_weights
 ) {
   method <- match.arg(method)
   vec_length <- length(vector_weights)
@@ -444,25 +505,6 @@ blotto_compare <- function(matrix_data, game_weights, sample = FALSE, n_opponent
     return(combinations_df)
 }
 
-# Expanded Coalitions
-get_expanded_mwc_match <- function(strategy_row, mwcs, ec_weights, quota = 70, tol = 1e-6) {
-  supported <- which(strategy_row > tol)
-  
-  for (i in seq_along(mwcs)) {
-    coal <- mwcs[[i]]
-    if (!all(coal %in% supported)) next
-    extra <- setdiff(supported, coal)
-    if (length(extra) != 1) next
-    extra_state <- extra[1]
-    if (ec_weights[extra_state] >= min(ec_weights[coal])) {
-      if (sum(ec_weights[supported]) >= quota) {
-        return(list(mwc_index = i, extra_state = extra_state))
-      }
-    }
-  }
-  return(NULL)
-}
-
 # Monotonicity (test global monotonicity (i.e. x[1] ≤ x[2] ≤ x[3] ≤ ...)
 
 monotonicity <- function(x, include_zeros = TRUE) {
@@ -637,6 +679,7 @@ evaluate_strategies <- function(matrix_data, vector_weights, quota = 70) {
   min_unit <- apply(matrix_data, 2, min)        # Min
   max_unit <- apply(matrix_data, 2, max)        # Max
   ec_covered <- apply(matrix_data > 0, 1, function(x) sum(vector_weights[x]))
+  states_covered <- apply(matrix_data > 0, 1, function(x) sum(x))
   rational <- ec_covered >= quota
   percent_rational <- mean(rational) * 100
 
@@ -654,6 +697,7 @@ evaluate_strategies <- function(matrix_data, vector_weights, quota = 70) {
   cat("Strategy Evaluation Summary:\n")
   cat("→ Total strategies:", n, "\n")
   cat("→ Rational strategies (meet quota):", sum(rational), "/", n, sprintf("(%.1f%%)\n", percent_rational))
+  cat("→ Mean # States with non-zero allocations:", round(mean(states_covered), 2), "\n")
   cat("→ Mean EC coverage per strategy:", round(mean(ec_covered), 1), "\n")
 
   list(
