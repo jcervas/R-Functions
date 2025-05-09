@@ -12,17 +12,17 @@ source('/Users/cervas/Library/CloudStorage/GoogleDrive-jcervas@andrew.cmu.edu/My
 figure_directory <- '/Users/cervas/Library/CloudStorage/GoogleDrive-jcervas@andrew.cmu.edu/My Drive/Academic/Working Papers/EC Game/figures/'
 
 # Electoral College weights and quota
-ec_weights <- c(3, 5, 8, 13, 21, 34, 55)
+blotto_weights <- c(3, 5, 8, 13, 21, 34, 55)
 quota <- 70
 state_names <- LETTERS[1:7]
 state_labels <- paste("State", state_names)
-names(ec_weights) <- state_names
+names(blotto_weights) <- state_names
 
 
 # ========== 2. Coalition Analysis ==========
 
-ec_Banzhaf <- banzhaf(names(ec_weights), ec_weights, quota)     # Compute Banzhaf index
-mwcs <- find_mwcs(vector_weights = ec_weights, quota = quota)   # Identify minimal winning coalitions (MWCs)
+ec_Banzhaf <- banzhaf(names(blotto_weights), blotto_weights, quota)     # Compute Banzhaf index
+mwcs <- find_mwcs(vector_weights = blotto_weights, quota = quota)   # Identify minimal winning coalitions (MWCs)
 
 
 # ========== 3. User Data ==========
@@ -33,7 +33,7 @@ participant_matrix <- deduplicate_combinations(participant_matrix_raw)
 
 participant_matrix_adj <- t(apply(participant_matrix, 1, function (x) apportion_values(x, target_sum = 100)))
 
-participant_results <- evaluate_strategies(participant_matrix_adj, ec_weights, 70)
+participant_results <- evaluate_strategies(participant_matrix_adj, blotto_weights, 70)
 
 # Rename and clean up column names for publication
 participant_summary_table <- participant_results$position_summary
@@ -94,7 +94,7 @@ dev.off()
 
 
 # Compute normalized summary statistics for user strategies
-proportional_vector <- normalize(ec_weights)
+proportional_vector <- normalize(blotto_weights)
 banzhaf_vector <- normalize(ec_Banzhaf)
 user_means_norm <- normalize(user_means)
 user_medians_norm <- normalize(user_medians)
@@ -291,15 +291,15 @@ cat(sprintf("p-value = %.3f\n", ttest$p.value))
 # Hypothesis 2c: 
 
 # 1. Get all coalitions
-all_coals <- all_combinations(ec_weights)
+all_coals <- all_combinations(blotto_weights)
 
 # 2. Revised expanded coalition finder
-get_all_expanded_mwcs <- function(all_coals, mwcs, ec_weights, quota = 70) {
+get_all_expanded_mwcs <- function(all_coals, mwcs, blotto_weights, quota = 70) {
   expanded <- list()
   idx <- 1
   
   for (coal in all_coals) {
-    if (length(coal) <= 1 || sum(ec_weights[coal]) < quota) next
+    if (length(coal) <= 1 || sum(blotto_weights[coal]) < quota) next
     
     for (mwc in mwcs) {
       if (!all(mwc %in% coal)) next
@@ -307,8 +307,8 @@ get_all_expanded_mwcs <- function(all_coals, mwcs, ec_weights, quota = 70) {
       if (length(extra) != 1) next
       
       extra_state <- extra[1]
-      w_extra <- ec_weights[extra_state]
-      w_mwc <- ec_weights[mwc]
+      w_extra <- blotto_weights[extra_state]
+      w_mwc <- blotto_weights[mwc]
       
       pair_sums <- outer(w_mwc, w_mwc, "+")[upper.tri(matrix(0, length(w_mwc), length(w_mwc)))]
       
@@ -325,7 +325,7 @@ get_all_expanded_mwcs <- function(all_coals, mwcs, ec_weights, quota = 70) {
 }
 
 # 3. Run it
-expanded_coals <- get_all_expanded_mwcs(all_coals, mwcs, ec_weights, quota = 70)
+expanded_coals <- get_all_expanded_mwcs(all_coals, mwcs, blotto_weights, quota = 70)
 
 # 4. Label expanded coalitions
 expanded_labels <- sapply(expanded_coals, function(coal) {
@@ -341,7 +341,7 @@ expanded_labels <- sapply(expanded_coals, function(coal) {
 })
 
 # 5. Apply detection to strategy matrix
-get_expanded_mwc_match <- function(strategy_row, mwcs, ec_weights, quota = 70, tol = 1e-6) {
+get_expanded_mwc_match <- function(strategy_row, mwcs, blotto_weights, quota = 70, tol = 1e-6) {
   supported <- which(strategy_row > tol)
   
   for (i in seq_along(mwcs)) {
@@ -350,11 +350,11 @@ get_expanded_mwc_match <- function(strategy_row, mwcs, ec_weights, quota = 70, t
     extra <- setdiff(supported, coal)
     if (length(extra) != 1) next
     extra_state <- extra[1]
-    w_extra <- ec_weights[extra_state]
-    w_mwc <- ec_weights[coal]
+    w_extra <- blotto_weights[extra_state]
+    w_mwc <- blotto_weights[coal]
     pair_sums <- outer(w_mwc, w_mwc, "+")[upper.tri(matrix(0, length(w_mwc), length(w_mwc)))]
     if (w_extra >= min(w_mwc) && all(w_extra < pair_sums)) {
-      if (sum(ec_weights[supported]) >= quota) {
+      if (sum(blotto_weights[supported]) >= quota) {
         return(list(mwc_index = i, extra_state = extra_state))
       }
     }
@@ -362,7 +362,7 @@ get_expanded_mwc_match <- function(strategy_row, mwcs, ec_weights, quota = 70, t
   return(NULL)
 }
 
-expanded_matches <- apply(participant_matrix_adj, 1, get_expanded_mwc_match, mwcs = mwcs, ec_weights = ec_weights)
+expanded_matches <- apply(participant_matrix_adj, 1, get_expanded_mwc_match, mwcs = mwcs, blotto_weights = blotto_weights)
 matched_flags <- sapply(expanded_matches, function(x) !is.null(x))
 table(matched_flags)
 
@@ -435,7 +435,7 @@ for (i in 1:3) {
 
 
 # Hypothesis 4: Rationality check: does each strategy meet the quota?
-eval_sample_strat <- evaluate_strategies(participant_matrix_adj, ec_weights, quota = quota)
+eval_sample_strat <- evaluate_strategies(participant_matrix_adj, blotto_weights, quota = quota)
 
 # Endowment violations
 below_endow <- sum(1 * rowSums(participant_matrix) < 100)
@@ -451,9 +451,9 @@ cat("# relying on tie-breaking cointoss:", nrow(participant_matrix_raw)-nrow(par
 
 # ----- Define Strategies -----
 
-# Electoral weights and Banzhaf (assumed already defined: ec_weights, ec_Banzhaf)
-strategy_ec         <- apportion_values(ec_weights, 100)
-strategy_ec2        <- apportion_values(ec_weights^2, 100)
+# Electoral weights and Banzhaf (assumed already defined: blotto_weights, ec_Banzhaf)
+strategy_ec         <- apportion_values(blotto_weights, 100)
+strategy_ec2        <- apportion_values(blotto_weights^2, 100)
 strategy_banzhaf    <- apportion_values(ec_Banzhaf, 100)
 strategy_banzhaf2   <- apportion_values(ec_Banzhaf^2, 100)
 strategy_proportional <- apportion_values(c(rep(1/7,5),rep(1/6.999,2)), 100)
@@ -471,7 +471,7 @@ rownames(all_strategies) <- c("ec", "ec2", "banzhaf", "banzhaf2", "proportional"
 
 # Compare each strategy against participant pool
 all_strategies_results <- lapply(1:nrow(all_strategies), function(i) {
-  blotto_compare(participant_matrix, game_weights = ec_weights, tie_method = "p2wins", single_strategy = all_strategies[i, ])
+  blotto_compare(participant_matrix, game_weights = blotto_weights, tie_method = "p2wins", single_strategy = all_strategies[i, ])
 })
 names(all_strategies_results) <- rownames(all_strategies)
 
@@ -501,6 +501,18 @@ df <- data.frame(Strategy = strategy_labels, `Win %` = paste0(round(win_rates,1)
 
 knitr::kable(df, format = "simple", caption = "Win rates for deterministic strategies under p2wins tie-breaking", row.names = FALSE)
 
+# ========== Check for Monotonicity ==========
+
+monotonic_w_zeroes_flags <- monotonicity(participant_matrix_adj, include_zeros = TRUE)
+monotonic_wo_zeroes_flags <- monotonicity(participant_matrix_adj, include_zeros = FALSE)
+
+table(monotonic_wo_zeroes_flags)
+table(monotonic_w_zeroes_flags)
+
+monotonic_strategies <- participant_matrix_adj[monotonic_wo_zeroes_flags, , drop = FALSE]
+non_monotonic_strategies <- participant_matrix_adj[!monotonic_wo_zeroes_flags, , drop = FALSE]
+evaluate_strategies(monotonic_strategies, blotto_weights)
+evaluate_strategies(non_monotonic_strategies, blotto_weights)
 
 
 # ========== Strategy Typologies and Allocation Patterns ==========
@@ -528,7 +540,7 @@ cluster_strategies <- as.matrix(centroid_table[, 1:7])
 # Run comparisons
 cluster_results <- lapply(1:5, function(i) {
   blotto_compare(matrix_data = participant_matrix_adj,
-                 game_weights = ec_weights,
+                 game_weights = blotto_weights,
                  single_strategy = apportion_values(cluster_strategies[i, ],100))
 })
 
@@ -546,8 +558,8 @@ knitr::kable(cluster_summary, format = "simple", caption = "Performance of Clust
 
 # # ========== 1. Round-Robin Comparison of Participant Strategies ==========
 
-compare_coinflip_df <- as.data.frame(blotto_compare(participant_matrix_adj, ec_weights, tie_method = "cointoss"))
-compare_p2wins_df   <- as.data.frame(blotto_compare(participant_matrix_adj, ec_weights, tie_method = "p2wins"))
+compare_coinflip_df <- as.data.frame(blotto_compare(participant_matrix_adj, blotto_weights, tie_method = "cointoss"))
+compare_p2wins_df   <- as.data.frame(blotto_compare(participant_matrix_adj, blotto_weights, tie_method = "p2wins"))
 
 # # ========== 2. Top 10 Strategies ==========
 colnames(compare_coinflip_df)[1:7] <- colnames(compare_p2wins_df)[1:7] <- LETTERS[1:7]
@@ -570,7 +582,7 @@ knitr::kable(top_both, format = "simple", row.names = FALSE,
 
 # ==== Top/Bottom 10 Strategies
 # Compute EC coverage
-ec_covered <- apply(participant_matrix_adj > 0, 1, function(row) sum(ec_weights[row]))
+ec_covered <- apply(participant_matrix_adj > 0, 1, function(row) sum(blotto_weights[row]))
 
 # Filter rational strategies
 rational_ids <- which(ec_covered >= quota)
@@ -677,16 +689,14 @@ t.test(
   compare_p2wins_df[!is.na(strict_assignments), "Win_Percentage"])
 
 
-
-
 # ========== Count MWC and Expanded Coalitions by Participants ==========
 
-expanded_matches <- apply(participant_matrix_adj, 1, get_expanded_mwc_match, mwcs = mwcs, ec_weights = ec_weights)
+expanded_matches <- apply(participant_matrix_adj, 1, get_expanded_mwc_match, mwcs = mwcs, blotto_weights = blotto_weights)
 matched_flags <- sapply(expanded_matches, function(x) !is.null(x))
 table(matched_flags)
 
 
-expanded_matches <- apply(participant_matrix_adj, 1, get_expanded_mwc_match, mwcs = mwcs, ec_weights = ec_weights)
+expanded_matches <- apply(participant_matrix_adj, 1, get_expanded_mwc_match, mwcs = mwcs, blotto_weights = blotto_weights)
 
 # Filter non-null entries (actual expanded MWC users)
 expanded_valid <- Filter(Negate(is.null), expanded_matches)
@@ -699,7 +709,7 @@ table(sapply(expanded_valid, `[[`, "mwc_index"))
 
 
 # Run matcher
-expanded_matches <- apply(participant_matrix_adj, 1, get_expanded_mwc_match, mwcs = mwcs, ec_weights = ec_weights)
+expanded_matches <- apply(participant_matrix_adj, 1, get_expanded_mwc_match, mwcs = mwcs, blotto_weights = blotto_weights)
 
 # Get matching row indices
 valid_ids <- which(!sapply(expanded_matches, is.null))
@@ -767,7 +777,7 @@ print(table(mwc_counts))
 #   ifelse(label_vector %in% c("F-Heavy", "G-Heavy"), "F-or-G-Heavy", "Other")
 # }
 
-# results <- blotto_compare(participant_matrix_adj, game_weights = ec_weights, tie_method = "p2wins")
+# results <- blotto_compare(participant_matrix_adj, game_weights = blotto_weights, tie_method = "p2wins")
 # results$FG_Label <- label_fg_bias(as.matrix(results[, 1:7]))
 
 
@@ -835,7 +845,7 @@ print(table(mwc_counts))
 
 # margins_over_70 <- sapply(rownames(participant_matrix_adj), function(id) {
 #   if (id == top_id) return(NA)
-#   compute_margin_over_threshold(top_alloc, participant_matrix_adj[id, ], ec_weights)
+#   compute_margin_over_threshold(top_alloc, participant_matrix_adj[id, ], blotto_weights)
 # }, USE.NAMES = FALSE)
 
 # mean_margin_over <- mean(margins_over_70[margins_over_70 > 0], na.rm = TRUE)
@@ -885,7 +895,7 @@ for (i in seq_along(strategy_ids)) {
     if (i == j) next
     p1 <- participant_matrix_adj[i, ]
     p2 <- participant_matrix_adj[j, ]
-    win_points <- sum(ec_weights[p2 < p1])
+    win_points <- sum(blotto_weights[p2 < p1])
     outcome <- as.integer(win_points > 70)
     results <- rbind(results, data.frame(
       Winner = strategy_ids[i],
@@ -946,7 +956,7 @@ generate_sample_set <- function(vector_weights, methods, n = 10000) {
   }), methods)
 }
 
-all_random_samples_ec <- generate_sample_set(ec_weights, methods_ec)
+all_random_samples_ec <- generate_sample_set(blotto_weights, methods_ec)
 all_random_samples_banzhaf <- generate_sample_set(ec_Banzhaf, methods_ec)
 all_random_samples_equal <- generate_sample_set(rep(1/7, 7), methods_ec)
 
@@ -965,7 +975,7 @@ cat("Original:", nrow(all_random_samples_raw), "→ Unique:", nrow(all_random_sa
 # ========== 5. MWC Sampling ==========
 
 mwc_samples <- sample_mwc_distributions(
-  mwcs, vector_weights = ec_weights, target_sum = 100, total_samples_goal = 1e6
+  mwcs, vector_weights = blotto_weights, target_sum = 100, total_samples_goal = 1e6
 )
 all_mwc_samples <- do.call(rbind, mwc_samples)
 cat("✓ Total Number of MWC Samples Generated:", nrow(all_mwc_samples), "\n")
@@ -973,7 +983,7 @@ cat("✓ Total Number of MWC Samples Generated:", nrow(all_mwc_samples), "\n")
 
 # ========== 6. Sample Validation ==========
 
-validate_sampling_methods(ec_weights, methods_ec)
+validate_sampling_methods(blotto_weights, methods_ec)
 
 # ========== 7. Visualization ==========
 
@@ -984,7 +994,7 @@ stacked_hist_plot(rbind(all_mwc_samples, all_random_samples), main = "Full Sampl
 
 # ========== 8. Strategy Evaluation and Round Robin ==========
 
-all_mwc_results <- blotto_compare(all_mwc_samples, game_weights = ec_weights, tie_method = "p2wins")
+all_mwc_results <- blotto_compare(all_mwc_samples, game_weights = blotto_weights, tie_method = "p2wins")
 
 cat("\n🏆 Top 10 Strategies:\n")
 print(head(all_mwc_results, 10))
@@ -999,16 +1009,16 @@ cat("→ Min Win %:", min(all_mwc_results$Win_Percentage), "\n")
 cat("→ # of Unique Ranks:", length(unique(all_mwc_results$Rank)), "\n")
 
 sample_strategies_raw <- all_random_samples[sample(nrow(all_random_samples), 100000), , drop = FALSE]
-sample_strategies <- drop_irrational_allocations(sample_strategies_raw, ec_weights, quota = quota)
-eval_sample_strat <- evaluate_strategies(sample_strategies, ec_weights, quota = quota)
+sample_strategies <- drop_irrational_allocations(sample_strategies_raw, blotto_weights, quota = quota)
+eval_sample_strat <- evaluate_strategies(sample_strategies, blotto_weights, quota = quota)
 
 start_time <- Sys.time()
-all_sample_results <- blotto_compare(sample_strategies, game_weights = ec_weights, tie_method = "p2wins")
+all_sample_results <- blotto_compare(sample_strategies, game_weights = blotto_weights, tie_method = "p2wins")
 end_time <- Sys.time()
 cat(sprintf("\nTotal execution time: %.2f minutes\n", as.numeric(difftime(end_time, start_time, units = "mins"))))
 
 top_mwc_strategies <- as.matrix(all_mwc_results[1:1000, 1:7])
-top_1000_results <- blotto_compare(top_mwc_strategies, game_weights = ec_weights, tie_method = "p2wins")
+top_1000_results <- blotto_compare(top_mwc_strategies, game_weights = blotto_weights, tie_method = "p2wins")
 
 
 # ========== 9. Strategy Comparisons ==========
