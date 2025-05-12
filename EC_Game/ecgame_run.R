@@ -290,55 +290,7 @@ cat(sprintf("p-value = %.3f\n", ttest$p.value))
 # ===========================================================
 # Hypothesis 2c: 
 
-# 1. Get all coalitions
-all_coals <- all_combinations(blotto_weights)
-
-# 2. Revised expanded coalition finder
-get_all_expanded_mwcs <- function(all_coals, mwcs, blotto_weights, quota = 70) {
-  expanded <- list()
-  idx <- 1
-  
-  for (coal in all_coals) {
-    if (length(coal) <= 1 || sum(blotto_weights[coal]) < quota) next
-    
-    for (mwc in mwcs) {
-      if (!all(mwc %in% coal)) next
-      extra <- setdiff(coal, mwc)
-      if (length(extra) != 1) next
-      
-      extra_state <- extra[1]
-      w_extra <- blotto_weights[extra_state]
-      w_mwc <- blotto_weights[mwc]
-      
-      pair_sums <- outer(w_mwc, w_mwc, "+")[upper.tri(matrix(0, length(w_mwc), length(w_mwc)))]
-      
-      if (w_extra >= min(w_mwc) && all(w_extra < pair_sums)) {
-        expanded[[idx]] <- sort(coal)
-        idx <- idx + 1
-        break
-      }
-    }
-  }
-  
-  unique_expanded <- unique(lapply(expanded, function(x) paste(x, collapse = "-")))
-  return(lapply(unique_expanded, function(s) as.integer(strsplit(s, "-")[[1]])))
-}
-
-# 3. Run it
-expanded_coals <- get_all_expanded_mwcs(all_coals, mwcs, blotto_weights, quota = 70)
-
-# 4. Label expanded coalitions
-expanded_labels <- sapply(expanded_coals, function(coal) {
-  for (mwc in mwcs) {
-    if (all(mwc %in% coal) && length(setdiff(coal, mwc)) == 1) {
-      extra <- setdiff(coal, mwc)
-      mwc_label <- paste(state_names[sort(mwc)], collapse = ",")
-      extra_label <- state_names[extra]
-      return(paste0(mwc_label, " + ", extra_label))
-    }
-  }
-  return("Unmatched")
-})
+expanded_matches <- generate_expanded_mwcs(mwcs, blotto_weights, quota)
 
 # 5. Apply detection to strategy matrix
 get_expanded_mwc_match <- function(strategy_row, mwcs, blotto_weights, quota = 70, tol = 1e-6) {
@@ -366,6 +318,30 @@ expanded_matches <- apply(participant_matrix_adj, 1, get_expanded_mwc_match, mwc
 matched_flags <- sapply(expanded_matches, function(x) !is.null(x))
 table(matched_flags)
 
+
+# Hypothesis 2d?
+# 1. Calculate MWC support counts
+support_counts <- rowSums(sapply(mwcs, function(coal) rowSums(participant_matrix_adj[, coal, drop = FALSE] > 0) == length(coal)))
+
+# 2. Extract unique support levels
+support_levels <- sort(unique(support_counts))
+
+# 3. Split strategies by support count
+groups <- lapply(support_levels, function(k) participant_matrix_adj[support_counts == k, , drop = FALSE])
+names(groups) <- as.character(support_levels)
+
+# 4. Initialize win percentage matrix
+win_matrix <- matrix(NA, nrow = length(groups), ncol = length(groups),
+                     dimnames = list(names(groups), names(groups)))
+
+# 5. Fill matrix with average win percentages
+for (i in seq_along(groups)) {
+  for (j in seq_along(groups)) {
+    win_matrix[i, j] <- group_vs_group_winrate(groups[[i]], groups[[j]], blotto_weights, tie_method = "cointoss")
+  }
+}
+
+print(round(win_matrix, 1))
 
 # ===========================================================
 # Hypothesis 3b: Preference for State D over E
