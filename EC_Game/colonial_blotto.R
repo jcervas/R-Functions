@@ -425,7 +425,7 @@ progress_reporter <- function(i, total, start_time, last_update, min_interval = 
 
 # ========== Blotto Compare ==========
 
-blotto_compare <- function(matrix_data, game_weights, sample = FALSE, n_opponents = 1000, tie_method = "cointoss", single_strategy = NULL) {
+blotto_compare <- function(matrix_data, game_weights, sample = FALSE, n_opponents = 1000, tie_method = "coinflip", single_strategy = NULL) {
   total_weight <- sum(game_weights)
   threshold <- total_weight / 2
 
@@ -474,7 +474,7 @@ blotto_compare <- function(matrix_data, game_weights, sample = FALSE, n_opponent
     tie_matrix <- opponents == p1_matrix
     win_points <- win_matrix %*% game_weights
     tie_points <- switch(tie_method,
-                         "cointoss" = (tie_matrix * matrix(rbinom(length(tie_matrix), 1, 0.5), nrow = n_opps)) %*% game_weights,
+                         "coinflip" = (tie_matrix * matrix(rbinom(length(tie_matrix), 1, 0.5), nrow = n_opps)) %*% game_weights,
                          "p2wins" = matrix(0, nrow = n_opps, ncol = 1),
                          stop("Invalid tie_method"))
     total_points <- win_points + tie_points
