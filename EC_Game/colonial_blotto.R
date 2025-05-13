@@ -425,8 +425,8 @@ progress_reporter <- function(i, total, start_time, last_update, min_interval = 
 
 # ========== Blotto Compare ==========
 
-blotto_compare <- function(matrix_data, game_weights, sample = FALSE, n_opponents = 1000, tie_method = "coinflip", single_strategy = NULL) {
-  total_weight <- sum(game_weights)
+blotto_compare <- function(matrix_data, weights, sample = FALSE, n_opponents = 1000, tie_method = "coinflip", single_strategy = NULL) {
+  total_weight <- sum(weights)
   threshold <- total_weight / 2
 
   if (!is.null(single_strategy)) {
@@ -435,13 +435,22 @@ blotto_compare <- function(matrix_data, game_weights, sample = FALSE, n_opponent
     p1_mat <- matrix(rep(single_strategy, each = n_opps), nrow = n_opps)
     win_matrix <- opponents < p1_mat
     tie_matrix <- opponents == p1_mat
-    win_points <- win_matrix %*% game_weights
+
+    win_points <- win_matrix %*% weights
     tie_points <- switch(tie_method,
-                         "cointoss" = (tie_matrix * matrix(rbinom(length(tie_matrix), 1, 0.5), nrow = n_opps)) %*% game_weights,
+                         "coinflip" = (tie_matrix * matrix(rbinom(length(tie_matrix), 1, 0.5), nrow = n_opps)) %*% weights,
                          "p2wins" = matrix(0, nrow = n_opps, ncol = 1),
+                         "winhalf" = (tie_matrix * 0.5) %*% weights,
+                         "tie" = matrix(0, nrow = n_opps, ncol = 1),
                          stop("Invalid tie_method"))
+
     total_points <- win_points + tie_points
-    wins <- sum(total_points > threshold)
+    wins <- if (tie_method == "tie") {
+      sum(win_points > threshold) + 0.5 * sum(win_points <= threshold)
+    } else {
+      sum(total_points > threshold) + 0.5 * sum(total_points == threshold)
+    }
+
     return(list(
       Win_Count = wins,
       Opponents_Faced = n_opps,
@@ -469,16 +478,26 @@ blotto_compare <- function(matrix_data, game_weights, sample = FALSE, n_opponent
     opponents <- matrix_data[opponents_idx, , drop = FALSE]
     n_opps <- length(opponents_idx)
     opp_counts[i] <- n_opps
+
     p1_matrix <- matrix(p1, nrow = n_opps, ncol = length(p1), byrow = TRUE)
     win_matrix <- opponents < p1_matrix
     tie_matrix <- opponents == p1_matrix
-    win_points <- win_matrix %*% game_weights
+
+    win_points <- win_matrix %*% weights
     tie_points <- switch(tie_method,
-                         "coinflip" = (tie_matrix * matrix(rbinom(length(tie_matrix), 1, 0.5), nrow = n_opps)) %*% game_weights,
+                         "coinflip" = (tie_matrix * matrix(rbinom(length(tie_matrix), 1, 0.5), nrow = n_opps)) %*% weights,
                          "p2wins" = matrix(0, nrow = n_opps, ncol = 1),
+                         "winhalf" = (tie_matrix * 0.5) %*% weights,
+                         "tie" = matrix(0, nrow = n_opps, ncol = 1),
                          stop("Invalid tie_method"))
+
     total_points <- win_points + tie_points
-    win_counts[i] <- sum(total_points > threshold)
+    win_counts[i] <- if (tie_method == "tie") {
+      sum(win_points > threshold) + 0.5 * sum(win_points <= threshold)
+    } else {
+      sum(total_points > threshold) + 0.5 * sum(total_points == threshold)
+    }
+
     last_update <- progress_reporter(i, n_players, start_time, last_update)
   }
 
@@ -487,23 +506,10 @@ blotto_compare <- function(matrix_data, game_weights, sample = FALSE, n_opponent
   combinations_df$Opponents_Faced <- opp_counts
   combinations_df$Win_Percentage <- round((win_counts / opp_counts) * 100, 2)
   combinations_df$Rank <- rank(-combinations_df$Win_Count, ties.method = "first")
-  combinations_df_ordered <- combinations_df[order(combinations_df$Rank), ]
-  # Show top 10 strategies
-    cat("\n🏆 Top 10 Strategies:\n")
-    print(head(combinations_df_ordered, 10))
-
-    # Show bottom 10 strategies
-    cat("\n🔻 Bottom 10 Strategies:\n")
-    print(tail(combinations_df_ordered, 10))
-
-    # Summary statistics
-    cat("\n📊 Summary Stats:\n")
-    cat("→ Mean Win %:", round(mean(combinations_df$Win_Percentage), 2), "\n")
-    cat("→ Max Win %:", max(combinations_df$Win_Percentage), "\n")
-    cat("→ Min Win %:", min(combinations_df$Win_Percentage), "\n")
-    cat("→ # of Unique Ranks:", length(unique(combinations_df$Rank)), "\n")
-    return(combinations_df)
+  combinations_df[order(combinations_df$Rank), ]
 }
+
+
 
 # Monotonicity (test global monotonicity (i.e. x[1] ≤ x[2] ≤ x[3] ≤ ...)
 
