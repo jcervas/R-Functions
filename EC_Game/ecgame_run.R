@@ -343,6 +343,44 @@ for (i in seq_along(groups)) {
 
 print(round(win_matrix, 1))
 
+medians <- lapply(groups, function(mat) apply(mat, 2, median))
+
+# Label all used MWC
+# Step 3: MWC label names
+state_names <- c("A", "B", "C", "D", "E", "F", "G")  # adjust if needed
+mwc_labels <- sapply(mwcs, function(coal) paste(sort(state_names[coal]), collapse = ","))
+
+# Step 4: For each unique support level, collect and label supported MWCs
+support_level_labels <- lapply(sort(unique(support_counts)), function(level) {
+  relevant_rows <- mwc_support_matrix[support_counts == level, , drop = FALSE]
+  if (nrow(relevant_rows) == 0) return("None")
+  supported <- colSums(relevant_rows) > 0
+  if (!any(supported)) return("None")
+  paste(mwc_labels[supported], collapse = " | ")
+})
+
+# Step 5: Assign names
+names(support_level_labels) <- sort(unique(support_counts))
+
+# # Label each strategy according to all their MWC
+# # Step 1: Build MWC labels
+# state_names <- c("A", "B", "C", "D", "E", "F", "G")  # adjust as needed
+# mwc_labels <- sapply(mwcs, function(coal) paste(sort(state_names[coal]), collapse = ","))
+
+# # Step 2: Get MWC support per participant
+# mwc_support_matrix <- sapply(mwcs, function(coal) {
+#   rowSums(participant_matrix_adj[, coal, drop = FALSE] > 0) == length(coal)
+# })
+
+# # Step 3: Assign labels per participant
+# participant_mwc_labels <- apply(mwc_support_matrix, 1, function(row) {
+#   supported <- which(row)
+#   if (length(supported) == 0) return("None")
+#   paste(mwc_labels[supported], collapse = " | ")
+# })
+
+
+
 # ===========================================================
 # Hypothesis 3b: Preference for State D over E
 
