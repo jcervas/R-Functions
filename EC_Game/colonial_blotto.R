@@ -425,8 +425,8 @@ progress_reporter <- function(i, total, start_time, last_update, min_interval = 
 
 # ========== Blotto Compare ==========
 
-blotto_compare <- function(matrix_data, weights, sample = FALSE, n_opponents = 1000, tie_method = "coinflip", single_strategy = NULL) {
-  total_weight <- sum(weights)
+blotto_compare <- function(matrix_data, game_weights, sample = FALSE, n_opponents = 1000, tie_method = "coinflip", single_strategy = NULL) {
+  total_weight <- sum(game_weights)
   threshold <- total_weight / 2
 
   if (!is.null(single_strategy)) {
@@ -436,11 +436,11 @@ blotto_compare <- function(matrix_data, weights, sample = FALSE, n_opponents = 1
     win_matrix <- opponents < p1_mat
     tie_matrix <- opponents == p1_mat
 
-    win_points <- win_matrix %*% weights
+    win_points <- win_matrix %*% game_weights
     tie_points <- switch(tie_method,
-                         "coinflip" = (tie_matrix * matrix(rbinom(length(tie_matrix), 1, 0.5), nrow = n_opps)) %*% weights,
+                         "coinflip" = (tie_matrix * matrix(rbinom(length(tie_matrix), 1, 0.5), nrow = n_opps)) %*% game_weights,
                          "p2wins" = matrix(0, nrow = n_opps, ncol = 1),
-                         "winhalf" = (tie_matrix * 0.5) %*% weights,
+                         "winhalf" = (tie_matrix * 0.5) %*% game_weights,
                          "tie" = matrix(0, nrow = n_opps, ncol = 1),
                          stop("Invalid tie_method"))
 
@@ -483,11 +483,11 @@ blotto_compare <- function(matrix_data, weights, sample = FALSE, n_opponents = 1
     win_matrix <- opponents < p1_matrix
     tie_matrix <- opponents == p1_matrix
 
-    win_points <- win_matrix %*% weights
+    win_points <- win_matrix %*% game_weights
     tie_points <- switch(tie_method,
-                         "coinflip" = (tie_matrix * matrix(rbinom(length(tie_matrix), 1, 0.5), nrow = n_opps)) %*% weights,
+                         "coinflip" = (tie_matrix * matrix(rbinom(length(tie_matrix), 1, 0.5), nrow = n_opps)) %*% game_weights,
                          "p2wins" = matrix(0, nrow = n_opps, ncol = 1),
-                         "winhalf" = (tie_matrix * 0.5) %*% weights,
+                         "winhalf" = (tie_matrix * 0.5) %*% game_weights,
                          "tie" = matrix(0, nrow = n_opps, ncol = 1),
                          stop("Invalid tie_method"))
 

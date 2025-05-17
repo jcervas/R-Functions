@@ -470,14 +470,14 @@ strategy_ec         <- apportion_values(blotto_weights, 100)
 strategy_ec2        <- apportion_values(blotto_weights^2, 100)
 strategy_banzhaf    <- apportion_values(ec_Banzhaf, 100)
 strategy_banzhaf2   <- apportion_values(ec_Banzhaf^2, 100)
-strategy_proportional <- apportion_values(c(rep(1/7,5),rep(1/6.999,2)), 100)
+strategy_uniform <- apportion_values(c(rep(1/7,5),rep(1/6.999,2)), 100)
 # Combine strategies
 all_strategies <- rbind(
   strategy_ec,
   strategy_ec2,
   strategy_banzhaf,
   strategy_banzhaf2,
-  strategy_proportional
+  strategy_uniform
 )
 rownames(all_strategies) <- c("ec", "ec2", "banzhaf", "banzhaf2", "proportional")
 
