@@ -74,17 +74,50 @@ normalize_inputs <- function(table, variables, custom_states, state_fips, datase
   )
 }
 
-get_acs_data <- function(url) {
-  if (!requireNamespace("httr", quietly = TRUE)) stop("Please install 'httr'.")
-  resp <- httr::GET(url, httr::timeout(30))
-  if (httr::http_error(resp)) stop("HTTP error ", httr::status_code(resp))
-  raw <- httr::content(resp, as = "text", encoding = "UTF-8")
-  parsed <- tryCatch(jsonlite::fromJSON(raw), error = function(e) stop("Invalid JSON"))
-  if (!is.list(parsed) && !is.matrix(parsed)) stop("Unexpected API response")
+# get_acs_data <- function(url) {
+#   if (!requireNamespace("httr", quietly = TRUE)) stop("Please install 'httr'.")
+#   resp <- httr::GET(url, httr::timeout(30))
+#   if (httr::http_error(resp)) stop("HTTP error ", httr::status_code(resp))
+#   raw <- httr::content(resp, as = "text", encoding = "UTF-8")
+#   parsed <- tryCatch(jsonlite::fromJSON(raw), error = function(e) stop("Invalid JSON"))
+#   if (!is.list(parsed) && !is.matrix(parsed)) stop("Unexpected API response")
+#   df <- as.data.frame(parsed[-1, , drop = FALSE], stringsAsFactors = FALSE)
+#   names(df) <- unlist(parsed[1, ])
+#   df
+# }
+
+get_acs_data <- function(url, timeout = getOption("timeout")) {
+  # temporarily bump R’s download timeout
+  old_to <- getOption("timeout")
+  options(timeout = timeout)
+  on.exit(options(timeout = old_to), add = TRUE)
+  
+  # open a libcurl connection and read all lines
+  con <- url(url, open = "rb", method = "libcurl")
+  on.exit(close(con), add = TRUE)
+  
+  raw <- tryCatch(
+    readLines(con, warn = FALSE),
+    error = function(e) stop("Download error: ", e$message)
+  )
+  
+  # parse JSON
+  parsed <- tryCatch(
+    jsonlite::fromJSON(paste(raw, collapse = "")),
+    error = function(e) stop("Invalid JSON: ", e$message)
+  )
+  
+  # sanity check
+  if (!(is.matrix(parsed) || is.list(parsed))) {
+    stop("Unexpected API response format")
+  }
+  
+  # turn into a data.frame, using first row as header
   df <- as.data.frame(parsed[-1, , drop = FALSE], stringsAsFactors = FALSE)
   names(df) <- unlist(parsed[1, ])
   df
 }
+
 
 compute_geoid <- function(df) {
   if ("GEO_ID" %in% names(df)) {
