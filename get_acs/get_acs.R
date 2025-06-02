@@ -19,43 +19,72 @@ infer_dataset_from_table <- function(table) {
 }
 
 construct_group_url <- function(table, geography, geo_filter, state_fips, year, dataset) {
-  root <- geo_prefix_root(state_fips)
-  suffix <- switch(
-    geography,
-    county = "$0500000)",
-    place = "$1600000)",
-    "county subdivision" = "$0600000)",
-    puma = "$7950000)",
-    state = NULL,
-    stop("Unsupported geography for group URL.")
-  )
+  # (we’ll only use geo_filter/state_fips for county/place/etc.;
+  #  for AIANNH, we ignore state_fips entirely)
+  
   if (geography == "state") {
-    ucgid <- paste0("0400000US", state_fips)
+    # State‐level “pseudo(0400000US<STATEFP>)” is unchanged:
+    ucgid     <- paste0("0400000US", state_fips)
+    geo_clause<- paste0("&ucgid=", ucgid)
+    
+  } else if (geography == "aian") {
+    # National‐level AIANNH: summary level 251, root = 0100000US
+    # → “pseudo(0100000US$2510000)”
+    ucgid     <- "pseudo(0100000US$2500000)"
+    # no URLencode needed (no extra characters besides “(” “)” and “$”)
+    geo_clause<- paste0("&ucgid=", ucgid)
+    
   } else {
-    ucgid <- paste0(root, suffix)
+    # county/place/county subdivision/puma: same as before, but leave AIANNH out
+    root   <- geo_prefix_root(state_fips)  # e.g. “pseudo(0400000US36” if state_fips = "36"
+    suffix <- switch(
+      geography,
+      county               = "$0500000)",
+      place                = "$1600000)",
+      "county subdivision" = "$0600000)",
+      puma                 = "$7950000)",
+      stop("Unsupported geography for group URL.")
+    )
+    ucgid     <- paste0(root, suffix)
+    geo_clause<- paste0("&ucgid=", URLencode(ucgid, reserved = TRUE))
   }
-  geo_clause <- if (geography == "state") paste0("&ucgid=", ucgid) else paste0("&ucgid=", URLencode(ucgid, reserved = TRUE))
+  
   vars_clause <- paste0("group(", table, ")")
-  paste0("https://api.census.gov/data/", year, "/", dataset, "?get=", vars_clause, geo_clause)
+  paste0(
+    "https://api.census.gov/data/", year, "/", dataset,
+    "?get=",     vars_clause,
+    geo_clause
+  )
 }
+
 
 construct_standard_url <- function(variables, geography, state_fips, year, dataset) {
   vars_clause <- paste(variables, collapse = ",")
-  # PUMS only supports state-level queries
+  
   if (grepl("/pums$", dataset)) {
     geo_clause <- paste0("&for=state:", state_fips)
   } else {
     geo_clause <- switch(
       geography,
-      state = paste0("&for=state:", state_fips),
-      county = paste0("&for=county:*&in=state:", state_fips),
-      place = paste0("&for=place:*&in=state:", state_fips),
+      
+      state   = paste0("&for=state:", state_fips),
+      county  = paste0("&for=county:*&in=state:", state_fips),
+      place   = paste0("&for=place:*&in=state:",  state_fips),
       "county subdivision" = paste0("&for=county%20subdivision:*&in=state:", state_fips),
+      
+      aiannh  = "for=american%20indian%20area/alaska%20native%20area/hawaiian%20home%20land:*",   # NO “&in=state:” because ACS does not support it
+      
       stop("Unsupported geography")
     )
   }
-  paste0("https://api.census.gov/data/", year, "/", dataset, "?get=", vars_clause, geo_clause)
+  
+  paste0(
+    "https://api.census.gov/data/", year, "/", dataset,
+    "?get=",     vars_clause,
+    geo_clause
+  )
 }
+
 
 normalize_inputs <- function(table, variables, custom_states, state_fips, dataset) {
   table <- if (!is.null(table)) toupper(table) else NULL
