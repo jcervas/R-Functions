@@ -115,7 +115,14 @@ normalize_inputs <- function(table, variables, custom_states, state_fips, datase
 #   df
 # }
 
-get_acs_data <- function(url, timeout = getOption("timeout")) {
+set_timeout <- function(timeout = getOption("timeout")) {
+    # temporarily bump R’s download timeout
+  old_to <- getOption("timeout")
+  options(timeout = timeout)
+  on.exit(options(timeout = old_to), add = TRUE)
+}
+
+get_acs_data <- function(url, timeout = set_timeout(300)) {
   # temporarily bump R’s download timeout
   old_to <- getOption("timeout")
   options(timeout = timeout)
@@ -273,23 +280,90 @@ get_acs <- function(table = NULL,
 # Wrapper: Retrieve PUMS (Public Use Microdata Sample) data
 get_pums <- function(variables,
                      state_fips = "36",
-                     year = 2023,
-                     tidy = FALSE,
-                     save_to = NULL,
-                     label = FALSE,
-                     var_types = NULL) {
-  if (is.null(variables)) stop("Must specify variables for PUMS.")
-  dataset <- "acs/acs5/pums"
-  vars <- toupper(variables)
-  url <- construct_standard_url(vars, "state", state_fips, year, dataset)
-  message("PUMS API URL: ", url)
-  df <- get_acs_data(url)
-  df <- make_numeric(df)
-  df <- apply_tidy(df, tidy)
-  df <- apply_labels(df, label)
-  maybe_save_to_file(df, save_to)
-  df
+                     year       = 2023,
+                     tidy       = FALSE,
+                     save_to    = NULL,
+                     label      = FALSE,
+                     var_types  = NULL) {
+  if (is.null(variables) || length(variables) == 0) {
+    stop("Must specify at least one variable for PUMS.")
+  }
+  
+  # 1) Always use both join‐keys, even if the user only wants housing‐unit variables.
+  join_keys <- c("SERIALNO", "SPORDER")
+  
+  # 2) Uppercase the user’s requested variables
+  vars_upper <- toupper(variables)
+  
+  # 3) If either join_key is missing, prepend both in order
+  missing_keys <- setdiff(join_keys, vars_upper)
+  if (length(missing_keys) > 0) {
+    vars_upper <- unique(c(join_keys, vars_upper))
+  }
+  
+  # 4) Split into ≤50‐variable chunks.
+  #    Each chunk must contain both SERIALNO and SPORDER, leaving 48 “other” slots.
+  dataset    <- "acs/acs5/pums"
+  max_vars   <- 50
+  all_vars   <- unique(vars_upper)
+  other_vars <- setdiff(all_vars, join_keys)
+  
+  chunk_size  <- max_vars - length(join_keys)  # 50 - 2 = 48
+  chunk_parts <- split(
+    other_vars,
+    ceiling(seq_along(other_vars) / chunk_size)
+  )
+  chunks      <- lapply(chunk_parts, function(x) c(join_keys, x))
+  
+  # 5) Fetch each chunk and coerce join_keys to character
+  df_list <- vector("list", length(chunks))
+  for (i in seq_along(chunks)) {
+    this_vars <- chunks[[i]]
+    url <- construct_standard_url(
+      variables  = this_vars,
+      geography   = "state",
+      state_fips  = state_fips,
+      year        = year,
+      dataset     = dataset
+    )
+    message(sprintf("PUMS API URL (chunk %d/%d): %s",
+                    i, length(chunks), url))
+    
+    df_chunk <- get_acs_data(url)
+    # Coerce both join‐keys to character so merge works perfectly
+    for (key in join_keys) {
+      if (!(key %in% names(df_chunk))) {
+        stop("Join‐key '", key, "' not found in chunk ", i)
+      }
+      df_chunk[[key]] <- as.character(df_chunk[[key]])
+    }
+    df_list[[i]] <- df_chunk
+  }
+  
+  # 6) Merge every chunk on c("SERIALNO","SPORDER")
+  df_merged <- df_list[[1]]
+  if (length(df_list) > 1) {
+    for (i in 2:length(df_list)) {
+      df_merged <- merge(
+        df_merged, 
+        df_list[[i]],
+        by   = join_keys,
+        all  = TRUE,
+        sort = FALSE
+      )
+    }
+  }
+  
+  # 7) Post‐processing: numeric conversion, tidy, label, optional save
+  df_out <- make_numeric(df_merged)
+  df_out <- apply_tidy(df_out, tidy)
+  df_out <- apply_labels(df_out, label)
+  maybe_save_to_file(df_out, save_to)
+  
+  df_out
 }
+
+
 
 annotate_geography <- function(df, state_fips, state_abbrev) {
   # ensure GEOID is character
