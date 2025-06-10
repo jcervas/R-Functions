@@ -335,11 +335,16 @@ win_matrix <- matrix(NA, nrow = length(groups), ncol = length(groups),
                      dimnames = list(names(groups), names(groups)))
 
 # 5. Fill matrix with average win percentages
-for (i in seq_along(groups)) {
-  for (j in seq_along(groups)) {
-    win_matrix[i, j] <- group_vs_group_winrate(groups[[i]], groups[[j]], blotto_weights, tie_method = "cointoss")
+n <- length(groups)
+win_matrix <- matrix(NA, nrow = n, ncol = n)
+
+for (i in seq_len(n)) {
+  for (j in seq_len(n)) {
+    res <- blotto_compare(strategy_set_A = groups[[i]], strategy_set_B = groups[[j]], weights = blotto_weights, tie_method = "coinflip")
+    win_matrix[i, j] <- res$Win_Percentage[1]  # extract scalar from result df
   }
 }
+
 
 print(round(win_matrix, 1))
 
