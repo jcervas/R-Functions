@@ -425,38 +425,68 @@ progress_reporter <- function(i, total, start_time, last_update, min_interval = 
 
 # ========== Blotto Compare ==========
 
-blotto_compare <- function(matrix_data, game_weights, sample = FALSE, n_opponents = 1000, tie_method = "coinflip", single_strategy = NULL) {
-  total_weight <- sum(game_weights)
+blotto_compare <- function(matrix_data = NULL, weights, sample = FALSE, n_opponents = 1000, tie_method = "coinflip", single_strategy = NULL, strategy_set_A = NULL, strategy_set_B = NULL) {
+  total_weight <- sum(weights)
   threshold <- total_weight / 2
 
+  # Single vs many comparison
   if (!is.null(single_strategy)) {
+    if (is.null(matrix_data)) stop("matrix_data must be provided for single_strategy comparison.")
     opponents <- matrix_data
     n_opps <- nrow(opponents)
     p1_mat <- matrix(rep(single_strategy, each = n_opps), nrow = n_opps)
     win_matrix <- opponents < p1_mat
     tie_matrix <- opponents == p1_mat
-
-    win_points <- win_matrix %*% game_weights
+    win_points <- win_matrix %*% weights
     tie_points <- switch(tie_method,
-                         "coinflip" = (tie_matrix * matrix(rbinom(length(tie_matrix), 1, 0.5), nrow = n_opps)) %*% game_weights,
+                         "coinflip" = (tie_matrix * matrix(rbinom(length(tie_matrix), 1, 0.5), nrow = n_opps)) %*% weights,
                          "p2wins" = matrix(0, nrow = n_opps, ncol = 1),
-                         "winhalf" = (tie_matrix * 0.5) %*% game_weights,
+                         "winhalf" = (tie_matrix * 0.5) %*% weights,
                          "tie" = matrix(0, nrow = n_opps, ncol = 1),
                          stop("Invalid tie_method"))
-
     total_points <- win_points + tie_points
     wins <- if (tie_method == "tie") {
       sum(win_points > threshold) + 0.5 * sum(win_points <= threshold)
     } else {
       sum(total_points > threshold) + 0.5 * sum(total_points == threshold)
     }
+    return(list(Win_Count = wins, Opponents_Faced = n_opps, Win_Percentage = round((wins / n_opps) * 100, 2)))
+  }
 
-    return(list(
-      Win_Count = wins,
-      Opponents_Faced = n_opps,
-      Win_Percentage = round((wins / n_opps) * 100, 2)
+  # Set A vs Set B comparison
+  if (!is.null(strategy_set_A) && !is.null(strategy_set_B)) {
+    n_A <- nrow(strategy_set_A)
+    n_B <- nrow(strategy_set_B)
+    win_counts <- numeric(n_A)
+    for (i in 1:n_A) {
+      p1 <- strategy_set_A[i, ]
+      p1_mat <- matrix(rep(p1, each = n_B), nrow = n_B)
+      win_matrix <- strategy_set_B < p1_mat
+      tie_matrix <- strategy_set_B == p1_mat
+      win_points <- win_matrix %*% weights
+      tie_points <- switch(tie_method,
+                           "coinflip" = (tie_matrix * matrix(rbinom(length(tie_matrix), 1, 0.5), nrow = n_B)) %*% weights,
+                           "p2wins" = matrix(0, nrow = n_B, ncol = 1),
+                           "winhalf" = (tie_matrix * 0.5) %*% weights,
+                           "tie" = matrix(0, nrow = n_B, ncol = 1),
+                           stop("Invalid tie_method"))
+      total_points <- win_points + tie_points
+      win_counts[i] <- if (tie_method == "tie") {
+        sum(win_points > threshold) + 0.5 * sum(win_points <= threshold)
+      } else {
+        sum(total_points > threshold) + 0.5 * sum(total_points == threshold)
+      }
+    }
+    return(data.frame(
+      Strategy_ID = 1:n_A,
+      Win_Count = win_counts,
+      Opponents_Faced = n_B,
+      Win_Percentage = round((win_counts / n_B) * 100, 2)
     ))
   }
+
+  # Default full matrix comparison (unchanged)
+  if (is.null(matrix_data)) stop("matrix_data must be provided if not using single_strategy or strategy_set_A/B.")
 
   n_players <- nrow(matrix_data)
   win_counts <- numeric(n_players)
@@ -478,26 +508,22 @@ blotto_compare <- function(matrix_data, game_weights, sample = FALSE, n_opponent
     opponents <- matrix_data[opponents_idx, , drop = FALSE]
     n_opps <- length(opponents_idx)
     opp_counts[i] <- n_opps
-
     p1_matrix <- matrix(p1, nrow = n_opps, ncol = length(p1), byrow = TRUE)
     win_matrix <- opponents < p1_matrix
     tie_matrix <- opponents == p1_matrix
-
-    win_points <- win_matrix %*% game_weights
+    win_points <- win_matrix %*% weights
     tie_points <- switch(tie_method,
-                         "coinflip" = (tie_matrix * matrix(rbinom(length(tie_matrix), 1, 0.5), nrow = n_opps)) %*% game_weights,
+                         "coinflip" = (tie_matrix * matrix(rbinom(length(tie_matrix), 1, 0.5), nrow = n_opps)) %*% weights,
                          "p2wins" = matrix(0, nrow = n_opps, ncol = 1),
-                         "winhalf" = (tie_matrix * 0.5) %*% game_weights,
+                         "winhalf" = (tie_matrix * 0.5) %*% weights,
                          "tie" = matrix(0, nrow = n_opps, ncol = 1),
                          stop("Invalid tie_method"))
-
     total_points <- win_points + tie_points
     win_counts[i] <- if (tie_method == "tie") {
       sum(win_points > threshold) + 0.5 * sum(win_points <= threshold)
     } else {
       sum(total_points > threshold) + 0.5 * sum(total_points == threshold)
     }
-
     last_update <- progress_reporter(i, n_players, start_time, last_update)
   }
 
@@ -508,6 +534,7 @@ blotto_compare <- function(matrix_data, game_weights, sample = FALSE, n_opponent
   combinations_df$Rank <- rank(-combinations_df$Win_Count, ties.method = "first")
   combinations_df[order(combinations_df$Rank), ]
 }
+
 
 
 
