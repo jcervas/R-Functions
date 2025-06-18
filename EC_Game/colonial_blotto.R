@@ -100,9 +100,9 @@ label_expanded_coalition <- function(expanded, mwc, state_names) {
 # )
 
 
-drop_irrational_allocations <- function(matrix_data, vector_weights, quota = 70) {
-  valid_rows <- apply(matrix_data, 1, function(row) sum(vector_weights[row > 0]) >= quota)
-  matrix_data[valid_rows, , drop = FALSE]
+drop_irrational_allocations <- function(strategy_matrix, vector_weights, quota = 70) {
+  valid_rows <- apply(strategy_matrix, 1, function(row) sum(vector_weights[row > 0]) >= quota)
+  strategy_matrix[valid_rows, , drop = FALSE]
 }
 
 deduplicate_combinations <- function(mat) {
@@ -425,115 +425,104 @@ progress_reporter <- function(i, total, start_time, last_update, min_interval = 
 
 # ========== Blotto Compare ==========
 
-blotto_compare <- function(matrix_data = NULL, weights, sample = FALSE, n_opponents = 1000, tie_method = "coinflip", single_strategy = NULL, strategy_set_A = NULL, strategy_set_B = NULL) {
-  total_weight <- sum(weights)
-  threshold <- total_weight / 2
+blotto_compare <- function(strategy_matrix = NULL, weights, sample = FALSE, n_opponents = 1000,
+                           tie_method = "coinflip", single_strategy = NULL,
+                           strategy_set_A = NULL, strategy_set_B = NULL) {
 
-  # Single vs many comparison
-  if (!is.null(single_strategy)) {
-    if (is.null(matrix_data)) stop("matrix_data must be provided for single_strategy comparison.")
-    opponents <- matrix_data
-    n_opps <- nrow(opponents)
-    p1_mat <- matrix(rep(single_strategy, each = n_opps), nrow = n_opps)
-    win_matrix <- opponents < p1_mat
-    tie_matrix <- opponents == p1_mat
-    win_points <- win_matrix %*% weights
-    tie_points <- switch(tie_method,
-                         "coinflip" = (tie_matrix * matrix(rbinom(length(tie_matrix), 1, 0.5), nrow = n_opps)) %*% weights,
-                         "p2wins" = matrix(0, nrow = n_opps, ncol = 1),
-                         "winhalf" = (tie_matrix * 0.5) %*% weights,
-                         "tie" = matrix(0, nrow = n_opps, ncol = 1),
-                         stop("Invalid tie_method"))
-    total_points <- win_points + tie_points
-    wins <- if (tie_method == "tie") {
-      sum(win_points > threshold) + 0.5 * sum(win_points <= threshold)
+  total_weight <- sum(weights)
+  n_districts <- length(weights)
+
+  compute_points <- function(p1, p2) {
+    win_matrix <- p2 < p1
+    tie_matrix <- p2 == p1
+    lose_matrix <- p2 > p1
+
+    if (tie_method %in% c("coinflip", "cointoss")) {
+      tie_split <- rbinom(n_districts, 1, 0.5)
+      p1_points <- sum((win_matrix + tie_matrix * tie_split) * weights)
+      p2_points <- sum((lose_matrix + tie_matrix * (1 - tie_split)) * weights)
+    } else if (tie_method == "p2wins") {
+      p1_points <- sum(win_matrix * weights)
+      p2_points <- sum((lose_matrix + tie_matrix) * weights)
+    } else if (tie_method == "tie") {
+      p1_points <- sum(win_matrix * weights)
+      p2_points <- sum(lose_matrix * weights)
+    } else if (tie_method == "winhalf") {
+      p1_points <- sum((win_matrix + 0.5 * tie_matrix) * weights)
+      p2_points <- sum((lose_matrix + 0.5 * tie_matrix) * weights)
     } else {
-      sum(total_points > threshold) + 0.5 * sum(total_points == threshold)
+      stop("Invalid tie_method.")
     }
-    return(list(Win_Count = wins, Opponents_Faced = n_opps, Win_Percentage = round((wins / n_opps) * 100, 2)))
+
+    if (p1_points > p2_points) return(1)
+    else if (p1_points < p2_points) return(0)
+    else return(0.5)
   }
 
-  # Set A vs Set B comparison
+  # Case 1: Single strategy vs many
+  if (!is.null(single_strategy)) {
+    if (is.null(strategy_matrix)) stop("strategy_matrix must be provided for single_strategy comparison.")
+    opponents <- strategy_matrix
+    n_opps <- nrow(opponents)
+    wins <- 0
+    for (i in 1:n_opps) {
+      wins <- wins + compute_points(single_strategy, opponents[i, ])
+    }
+    return(list(
+      Win_Count = wins,
+      Opponents_Faced = n_opps,
+      Win_Percentage = round(100 * wins / n_opps, 2)
+    ))
+  }
+
+  # Case 2: Set A vs Set B
   if (!is.null(strategy_set_A) && !is.null(strategy_set_B)) {
+    if (is.vector(strategy_set_A)) strategy_set_A <- matrix(strategy_set_A, nrow = 1)
+    if (is.vector(strategy_set_B)) strategy_set_B <- matrix(strategy_set_B, nrow = 1)
+
     n_A <- nrow(strategy_set_A)
     n_B <- nrow(strategy_set_B)
     win_counts <- numeric(n_A)
+
     for (i in 1:n_A) {
-      p1 <- strategy_set_A[i, ]
-      p1_mat <- matrix(rep(p1, each = n_B), nrow = n_B)
-      win_matrix <- strategy_set_B < p1_mat
-      tie_matrix <- strategy_set_B == p1_mat
-      win_points <- win_matrix %*% weights
-      tie_points <- switch(tie_method,
-                           "coinflip" = (tie_matrix * matrix(rbinom(length(tie_matrix), 1, 0.5), nrow = n_B)) %*% weights,
-                           "p2wins" = matrix(0, nrow = n_B, ncol = 1),
-                           "winhalf" = (tie_matrix * 0.5) %*% weights,
-                           "tie" = matrix(0, nrow = n_B, ncol = 1),
-                           stop("Invalid tie_method"))
-      total_points <- win_points + tie_points
-      win_counts[i] <- if (tie_method == "tie") {
-        sum(win_points > threshold) + 0.5 * sum(win_points <= threshold)
-      } else {
-        sum(total_points > threshold) + 0.5 * sum(total_points == threshold)
+      for (j in 1:n_B) {
+        win_counts[i] <- win_counts[i] + compute_points(strategy_set_A[i, ], strategy_set_B[j, ])
       }
     }
+
     return(data.frame(
       Strategy_ID = 1:n_A,
       Win_Count = win_counts,
       Opponents_Faced = n_B,
-      Win_Percentage = round((win_counts / n_B) * 100, 2)
+      Win_Percentage = round(100 * win_counts / n_B, 2)
     ))
   }
 
-  # Default full matrix comparison (unchanged)
-  if (is.null(matrix_data)) stop("matrix_data must be provided if not using single_strategy or strategy_set_A/B.")
+  # Case 3: Round-robin all-vs-all
+  if (is.null(strategy_matrix)) stop("strategy_matrix must be provided.")
 
-  n_players <- nrow(matrix_data)
+  n_players <- nrow(strategy_matrix)
   win_counts <- numeric(n_players)
-  opp_counts <- numeric(n_players)
-  start_time <- Sys.time()
-  last_update <- start_time
-  cat(sprintf("Starting comparison of %d strategies...\n", n_players))
-  cat("Estimated total time: calculating...\n")
 
-  for (i in 1:n_players) {
-    p1 <- matrix_data[i, ]
-    opponents_idx <- setdiff(1:n_players, i)
-    if (sample) {
-      if (length(opponents_idx) < n_opponents) {
-        stop("Not enough players to sample the requested number of opponents.")
-      }
-      opponents_idx <- sample(opponents_idx, n_opponents)
+  cat(sprintf("Starting round-robin comparison of %d strategies...\n", n_players))
+
+  for (i in 1:(n_players - 1)) {
+    for (j in (i + 1):n_players) {
+      result <- compute_points(strategy_matrix[i, ], strategy_matrix[j, ])
+      win_counts[i] <- win_counts[i] + result
+      win_counts[j] <- win_counts[j] + (1 - result)
     }
-    opponents <- matrix_data[opponents_idx, , drop = FALSE]
-    n_opps <- length(opponents_idx)
-    opp_counts[i] <- n_opps
-    p1_matrix <- matrix(p1, nrow = n_opps, ncol = length(p1), byrow = TRUE)
-    win_matrix <- opponents < p1_matrix
-    tie_matrix <- opponents == p1_matrix
-    win_points <- win_matrix %*% weights
-    tie_points <- switch(tie_method,
-                         "coinflip" = (tie_matrix * matrix(rbinom(length(tie_matrix), 1, 0.5), nrow = n_opps)) %*% weights,
-                         "p2wins" = matrix(0, nrow = n_opps, ncol = 1),
-                         "winhalf" = (tie_matrix * 0.5) %*% weights,
-                         "tie" = matrix(0, nrow = n_opps, ncol = 1),
-                         stop("Invalid tie_method"))
-    total_points <- win_points + tie_points
-    win_counts[i] <- if (tie_method == "tie") {
-      sum(win_points > threshold) + 0.5 * sum(win_points <= threshold)
-    } else {
-      sum(total_points > threshold) + 0.5 * sum(total_points == threshold)
-    }
-    last_update <- progress_reporter(i, n_players, start_time, last_update)
   }
 
-  combinations_df <- as.data.frame(matrix_data)
+  combinations_df <- as.data.frame(strategy_matrix)
   combinations_df$Win_Count <- win_counts
-  combinations_df$Opponents_Faced <- opp_counts
-  combinations_df$Win_Percentage <- round((win_counts / opp_counts) * 100, 2)
+  combinations_df$Opponents_Faced <- n_players - 1
+  combinations_df$Win_Percentage <- round(100 * win_counts / (n_players - 1), 2)
   combinations_df$Rank <- rank(-combinations_df$Win_Count, ties.method = "first")
-  combinations_df[order(combinations_df$Rank), ]
+  combinations_df <- combinations_df[order(as.numeric(rownames(combinations_df))), ]
+  return(combinations_df)
 }
+
 
 
 
@@ -696,23 +685,23 @@ stacked_hist_plot <- function(
 #' Calculates zero usage, average allocation, and the percentage of
 #' strategies that meet the winning quota.
 #'
-#' @param matrix_data Strategy matrix (rows = strategies).
+#' @param strategy_matrix Strategy matrix (rows = strategies).
 #' @param vector_weights Electoral weights.
 #' @param quota Threshold for coalition success.
 #' @return A summary list including position stats and rationality rate.
 #' @export
-evaluate_strategies <- function(matrix_data, vector_weights, quota = 70) {
-  n <- nrow(matrix_data)
-  m <- ncol(matrix_data)
-  zero_counts <- colSums(matrix_data == 0)
+evaluate_strategies <- function(strategy_matrix, vector_weights, quota = 70) {
+  n <- nrow(strategy_matrix)
+  m <- ncol(strategy_matrix)
+  zero_counts <- colSums(strategy_matrix == 0)
   zero_percentage <- (zero_counts / n) * 100
-  means <- colMeans(matrix_data)
-  sd_unit <- apply(matrix_data, 2, sd)         # Standard deviation
-  medians <- apply(matrix_data, 2, median)     # Median
-  min_unit <- apply(matrix_data, 2, min)        # Min
-  max_unit <- apply(matrix_data, 2, max)        # Max
-  ec_covered <- apply(matrix_data > 0, 1, function(x) sum(vector_weights[x]))
-  states_covered <- apply(matrix_data > 0, 1, function(x) sum(x))
+  means <- colMeans(strategy_matrix)
+  sd_unit <- apply(strategy_matrix, 2, sd)         # Standard deviation
+  medians <- apply(strategy_matrix, 2, median)     # Median
+  min_unit <- apply(strategy_matrix, 2, min)        # Min
+  max_unit <- apply(strategy_matrix, 2, max)        # Max
+  ec_covered <- apply(strategy_matrix > 0, 1, function(x) sum(vector_weights[x]))
+  states_covered <- apply(strategy_matrix > 0, 1, function(x) sum(x))
   rational <- ec_covered >= quota
   percent_rational <- mean(rational) * 100
 
