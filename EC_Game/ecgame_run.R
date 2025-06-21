@@ -184,10 +184,26 @@ extract_model_info <- function(model, predictor_name, outcome_name, model_label)
 
 # Output: Table comparing regression models
 comparison_table <- rbind(
-    extract_model_info(model_means_ec, "EC Weights", "Mean Allocation", "Model 1"),
-    extract_model_info(model_means_bz, "Banzhaf Power", "Mean Allocation", "Model 2"),
-    extract_model_info(model_medians_ec, "EC Weights", "Median Allocation", "Model 3"),
-    extract_model_info(model_medians_bz, "Banzhaf Power", "Median Allocation", "Model 4")
+    extract_model_info(
+        model_means_ec, 
+        "EC Weights", 
+        "Mean Allocation", 
+        "Model 1"),
+    extract_model_info(
+        model_means_bz, 
+        "Banzhaf Power", 
+        "Mean Allocation", 
+        "Model 2"),
+    extract_model_info(
+        model_medians_ec, 
+        "EC Weights", 
+        "Median Allocation", 
+        "Model 3"),
+    extract_model_info(
+        model_medians_bz, 
+        "Banzhaf Power", 
+        "Median Allocation", 
+        "Model 4")
 )
 knitr::kable(comparison_table,
     format = "simple",
@@ -274,10 +290,18 @@ barplot(
     yaxt = "n",
     names.arg = rownames(strategies_matrix),
     legend.text = colnames(strategies_matrix),
-    args.legend = list(x = "topleft", bty = "n", inset = 0.01, x.intersp = 0.5, y.intersp = 0.8),
+    args.legend = list(
+        x = "topleft", 
+        bty = "n", 
+        inset = 0.01, 
+        x.intersp = 0.5, 
+        y.intersp = 0.8),
     las = 1
 )
-axis(2, at = seq(0, 50, by = 10), labels = paste0(seq(0, 50, by = 10), "%"), las = 1)
+axis(2, 
+at = seq(0, 50, by = 10), 
+labels = paste0(seq(0, 50, by = 10), "%"), 
+las = 1)
 dev.off()
 
 # ========== 7. Distance and Error Analysis: User vs. Benchmarks ==========
