@@ -1,17 +1,47 @@
-
 # -- colonial_blotto_full.R
 
 # ========== Utility Functions ==========
+
+# Function to compute Euclidean distance
+euclidean <- function(x, y) sqrt(sum((x - y)^2))
 
 all_combinations <- function(vector_weights) {
   n <- length(vector_weights)
   unlist(lapply(1:n, function(k) combn(n, k, simplify = FALSE)), recursive = FALSE)
 }
 
+all_winning_combinations <- function(members, vector_weights) {
+  for (k in seq_along(members)) {
+    combos <- combn(members, k, simplify = FALSE)
+    for (combo in combos) {
+      weight_sum <- sum(vector_weights[combo])
+      if (weight_sum > quota) {
+        results[[index]] <- list(Combo = combo, Total = weight_sum)
+      }
+    }
+  }
+
+  ### Convert to a data frame
+  results_df <- do.call(rbind, lapply(results, function(x) {
+    data.frame(
+      Members = paste(x$Combo, collapse = ", "),
+      Coalition_Size = length(x$Combo),
+      Total_Weight = x$Total,
+      stringsAsFactors = FALSE
+    )
+  }))
+
+  return(results_df) # View the results
+}
+
 is_minimum <- function(x, quota) {
-  if (sum(x) < quota) return(FALSE)
+  if (sum(x) < quota) {
+    return(FALSE)
+  }
   for (k in seq_along(x)) {
-    if (sum(x[-k]) >= quota) return(FALSE)
+    if (sum(x[-k]) >= quota) {
+      return(FALSE)
+    }
   }
   return(TRUE)
 }
@@ -112,7 +142,7 @@ deduplicate_combinations <- function(mat) {
 }
 
 normalize <- function(vector) {
-  norm_vector <- vector/sum(vector)
+  norm_vector <- vector / sum(vector)
   return(norm_vector)
 }
 
@@ -140,7 +170,7 @@ assign_strict_mwc <- function(strategies, mwcs) {
 
 #' Adjust a raw numeric vector to sum to a target using proportional rounding.
 #'
-#' Scales and rounds a numeric vector so its sum matches a specified target. 
+#' Scales and rounds a numeric vector so its sum matches a specified target.
 #' Optionally accepts bias weights to influence which elements get nudged.
 #'
 #' @param raw_values A numeric vector of raw values.
@@ -176,15 +206,15 @@ adjust_allocation <- function(raw_values, target_sum, bias_weights = NULL) {
 apportion_values <- function(values, target_sum, method = c("Hill-Huntington", "Jefferson", "Adams", "Webster"), initial_seats = 0) {
   method <- match.arg(method)
   n <- length(values)
-  
+
   if (target_sum < n * initial_seats) {
     stop("Target sum must be at least the total number of initial seats.")
   }
-  
+
   # Assign initial seats
   allocations <- rep(initial_seats, n)
   remaining <- target_sum - sum(allocations)
-  
+
   # Define priority function based on method
   priority_function <- switch(method,
     "Jefferson" = function(pop, seats) pop / (seats + 1),
@@ -192,13 +222,13 @@ apportion_values <- function(values, target_sum, method = c("Hill-Huntington", "
     "Webster" = function(pop, seats) pop / (seats + 0.5),
     "Hill-Huntington" = function(pop, seats) pop / sqrt(seats * (seats + 1))
   )
-  
+
   for (i in seq_len(remaining)) {
     priorities <- priority_function(values, allocations)
     winner <- which.max(priorities)
     allocations[winner] <- allocations[winner] + 1
   }
-  
+
   return(allocations)
 }
 
@@ -216,10 +246,9 @@ apportion_values <- function(values, target_sum, method = c("Hill-Huntington", "
 #' @return An integer vector summing to `target_sum`, or list if `return_raw = TRUE`.
 #' @export
 generate_random_allocations <- function(
-  vector_weights, target_sum = 100,
-  method = c("uniform", "uniform_skewed", "normal", "poisson", "gamma", "beta", "exponential", "geometric", "custom"),
-  sd_factor = 0.3, custom_generator = NULL, return_raw = FALSE
-) {
+    vector_weights, target_sum = 100,
+    method = c("uniform", "uniform_skewed", "normal", "poisson", "gamma", "beta", "exponential", "geometric", "custom"),
+    sd_factor = 0.3, custom_generator = NULL, return_raw = FALSE) {
   method <- match.arg(method)
   norm_weights <- vector_weights / sum(vector_weights)
   raw_values <- switch(method,
@@ -247,8 +276,10 @@ generate_random_allocations <- function(
     },
     stop("Invalid method.")
   )
-alloc <- apportion_values(raw_values, target_sum)
-  if (return_raw) return(list(alloc = alloc, raw = raw_values))
+  alloc <- apportion_values(raw_values, target_sum)
+  if (return_raw) {
+    return(list(alloc = alloc, raw = raw_values))
+  }
   alloc
 }
 
@@ -297,11 +328,10 @@ alloc <- apportion_values(raw_values, target_sum)
 #' @return Integer vector of allocations summing to `target_sum` and satisfying quota.
 #' @export
 new_combinations <- function(
-  vector_weights, quota = 70, target_sum = 100, max_small_digits = 6, max_zeros = 5,
-  method = c("uniform", "uniform_skewed", "normal", "poisson", "gamma", "beta", "exponential", "geometric", "custom"),
-  small_mean = 0, small_sd = 5, min_small = 0, max_small = 100,
-  custom_generator = NULL, check_weights = vector_weights
-) {
+    vector_weights, quota = 70, target_sum = 100, max_small_digits = 6, max_zeros = 5,
+    method = c("uniform", "uniform_skewed", "normal", "poisson", "gamma", "beta", "exponential", "geometric", "custom"),
+    small_mean = 0, small_sd = 5, min_small = 0, max_small = 100,
+    custom_generator = NULL, check_weights = vector_weights) {
   method <- match.arg(method)
   vec_length <- length(vector_weights)
   max_attempts <- 1000
@@ -337,7 +367,9 @@ new_combinations <- function(
     if (sum(raw) == 0) next
     combo[remaining_positions] <- raw
 
-    if (quota == 0 || sum(check_weights[combo > 0]) >= quota) return(combo)
+    if (quota == 0 || sum(check_weights[combo > 0]) >= quota) {
+      return(combo)
+    }
   }
 }
 
@@ -345,7 +377,7 @@ new_combinations <- function(
 
 #' Compute Banzhaf power index for a set of members.
 #'
-#' Calculates the proportion of swing votes attributed to each member 
+#' Calculates the proportion of swing votes attributed to each member
 #' in all possible coalitions.
 #'
 #' @param member A character vector of member names.
@@ -416,8 +448,10 @@ progress_reporter <- function(i, total, start_time, last_update, min_interval = 
   if (elapsed_secs > min_interval || i == total) {
     avg_time_per_iter <- as.numeric(difftime(now, start_time, units = "secs")) / i
     remaining_mins <- avg_time_per_iter * (total - i) / 60
-    cat(sprintf("→ Compared %d of %d strategies...\nElapsed time: %.1f minutes\nEstimated time remaining: %.1f minutes\n\n",
-                i, total, total_elapsed, remaining_mins))
+    cat(sprintf(
+      "→ Compared %d of %d strategies...\nElapsed time: %.1f minutes\nEstimated time remaining: %.1f minutes\n\n",
+      i, total, total_elapsed, remaining_mins
+    ))
     return(now)
   }
   return(last_update)
@@ -432,96 +466,93 @@ blotto_compare <- function(strategy_matrix = NULL, weights, sample = FALSE, n_op
   n_districts <- length(weights)
 
   compute_points <- function(p1, p2) {
-    win_matrix <- p2 < p1
-    tie_matrix <- p2 == p1
-    lose_matrix <- p2 > p1
+    win <- p2 < p1
+    tie <- p2 == p1
+    lose <- p2 > p1
 
     if (tie_method %in% c("coinflip", "cointoss")) {
       tie_split <- rbinom(n_districts, 1, 0.5)
-      p1_points <- sum((win_matrix + tie_matrix * tie_split) * weights)
-      p2_points <- sum((lose_matrix + tie_matrix * (1 - tie_split)) * weights)
+      p1_pts <- sum((win + tie * tie_split) * weights)
+      p2_pts <- sum((lose + tie * (1 - tie_split)) * weights)
     } else if (tie_method == "p2wins") {
-      p1_points <- sum(win_matrix * weights)
-      p2_points <- sum((lose_matrix + tie_matrix) * weights)
+      p1_pts <- sum(win * weights)
+      p2_pts <- sum((lose + tie) * weights)
     } else if (tie_method == "tie") {
-      p1_points <- sum(win_matrix * weights)
-      p2_points <- sum(lose_matrix * weights)
+      p1_pts <- sum(win * weights)
+      p2_pts <- sum(lose * weights)
     } else if (tie_method == "winhalf") {
-      p1_points <- sum((win_matrix + 0.5 * tie_matrix) * weights)
-      p2_points <- sum((lose_matrix + 0.5 * tie_matrix) * weights)
+      p1_pts <- sum((win + 0.5 * tie) * weights)
+      p2_pts <- sum((lose + 0.5 * tie) * weights)
     } else {
       stop("Invalid tie_method.")
     }
 
-    margin <- abs(p1_points - p2_points)
+    margin <- abs(p1_pts - p2_pts)
+    winner <- if (p1_pts > p2_pts) 1 else if (p2_pts > p1_pts) 0 else 0.5
+    list(winner = winner, margin = margin)
+  }
 
-    if (p1_points > p2_points) return(list(winner = 1, margin = margin))
-    else if (p2_points > p1_points) return(list(winner = 0, margin = margin))
-    else return(list(winner = 0.5, margin = 0))
+  calc_stats <- function(wins, win_margins, loss_margins, total) {
+    list(
+      Win_Count = wins,
+      Opponents_Faced = total,
+      Win_Percentage = round(100 * wins / total, 2),
+      Avg_Win_Margin = if (length(win_margins)) round(mean(win_margins), 2) else NA,
+      Avg_Loss_Margin = if (length(loss_margins)) round(mean(loss_margins), 2) else NA
+    )
   }
 
   if (!is.null(single_strategy)) {
-    if (is.null(strategy_matrix)) stop("strategy_matrix must be provided for single_strategy comparison.")
-    opponents <- strategy_matrix
-    n_opps <- nrow(opponents)
+    stopifnot(!is.null(strategy_matrix))
+    n_opps <- nrow(strategy_matrix)
+    win_margins <- numeric(n_opps)
+    loss_margins <- numeric(n_opps)
     wins <- 0
-    win_margins <- c()
-    loss_margins <- c()
 
-    for (i in 1:n_opps) {
-      result <- compute_points(single_strategy, opponents[i, ])
-      wins <- wins + result$winner
-      if (result$winner == 1) {
-        win_margins <- c(win_margins, result$margin)
-      } else if (result$winner == 0) {
-        loss_margins <- c(loss_margins, result$margin)
-      }
+    for (i in seq_len(n_opps)) {
+      res <- compute_points(single_strategy, strategy_matrix[i, ])
+      wins <- wins + res$winner
+      if (res$winner == 1) {
+        win_margins[i] <- res$margin
+      } else if (res$winner == 0) loss_margins[i] <- res$margin
     }
 
-    return(list(
-      Win_Count = wins,
-      Opponents_Faced = n_opps,
-      Win_Percentage = round(100 * wins / n_opps, 2),
-      Avg_Win_Margin = if (length(win_margins) > 0) round(mean(win_margins), 2) else NA,
-      Avg_Loss_Margin = if (length(loss_margins) > 0) round(mean(loss_margins), 2) else NA
-    ))
+    return(calc_stats(wins, win_margins[win_margins > 0], loss_margins[loss_margins > 0], n_opps))
   }
 
   if (!is.null(strategy_set_A) && !is.null(strategy_set_B)) {
-    if (is.vector(strategy_set_A)) strategy_set_A <- matrix(strategy_set_A, nrow = 1)
-    if (is.vector(strategy_set_B)) strategy_set_B <- matrix(strategy_set_B, nrow = 1)
+    strategy_set_A <- if (is.vector(strategy_set_A)) matrix(strategy_set_A, nrow = 1) else strategy_set_A
+    strategy_set_B <- if (is.vector(strategy_set_B)) matrix(strategy_set_B, nrow = 1) else strategy_set_B
 
     n_A <- nrow(strategy_set_A)
     n_B <- nrow(strategy_set_B)
     win_counts <- numeric(n_A)
-    win_margins_list <- vector("list", n_A)
-    loss_margins_list <- vector("list", n_A)
+    win_margins <- vector("list", n_A)
+    loss_margins <- vector("list", n_A)
 
-    for (i in 1:n_A) {
-      for (j in 1:n_B) {
-        result <- compute_points(strategy_set_A[i, ], strategy_set_B[j, ])
-        win_counts[i] <- win_counts[i] + result$winner
-        if (result$winner == 1) {
-          win_margins_list[[i]] <- c(win_margins_list[[i]], result$margin)
-        } else if (result$winner == 0) {
-          loss_margins_list[[i]] <- c(loss_margins_list[[i]], result$margin)
-        }
+    for (i in seq_len(n_A)) {
+      for (j in seq_len(n_B)) {
+        res <- compute_points(strategy_set_A[i, ], strategy_set_B[j, ])
+        win_counts[i] <- win_counts[i] + res$winner
+        if (res$winner == 1) {
+          win_margins[[i]] <- c(win_margins[[i]], res$margin)
+        } else if (res$winner == 0) loss_margins[[i]] <- c(loss_margins[[i]], res$margin)
       }
     }
 
     return(data.frame(
-      Strategy_ID = 1:n_A,
+      Strategy_ID = seq_len(n_A),
       Win_Count = win_counts,
       Opponents_Faced = n_B,
       Win_Percentage = round(100 * win_counts / n_B, 2),
-      Avg_Win_Margin = sapply(win_margins_list, function(x) if (length(x)) round(mean(x), 2) else NA),
-      Avg_Loss_Margin = sapply(loss_margins_list, function(x) if (length(x)) round(mean(x), 2) else NA)
+      Avg_Win_Margin = sapply(win_margins, function(x) if (length(x)) round(mean(x), 2) else NA),
+      Avg_Loss_Margin = sapply(loss_margins, function(x) if (length(x)) round(mean(x), 2) else NA)
     ))
   }
 
   if (is.null(strategy_matrix)) stop("strategy_matrix must be provided.")
-
   n_players <- nrow(strategy_matrix)
+
   win_counts <- numeric(n_players)
   win_margins <- vector("list", n_players)
   loss_margins <- vector("list", n_players)
@@ -530,16 +561,16 @@ blotto_compare <- function(strategy_matrix = NULL, weights, sample = FALSE, n_op
 
   for (i in 1:(n_players - 1)) {
     for (j in (i + 1):n_players) {
-      result <- compute_points(strategy_matrix[i, ], strategy_matrix[j, ])
-      win_counts[i] <- win_counts[i] + result$winner
-      win_counts[j] <- win_counts[j] + (1 - result$winner)
+      res <- compute_points(strategy_matrix[i, ], strategy_matrix[j, ])
+      win_counts[i] <- win_counts[i] + res$winner
+      win_counts[j] <- win_counts[j] + (1 - res$winner)
 
-      if (result$winner == 1) {
-        win_margins[[i]] <- c(win_margins[[i]], result$margin)
-        loss_margins[[j]] <- c(loss_margins[[j]], result$margin)
-      } else if (result$winner == 0) {
-        win_margins[[j]] <- c(win_margins[[j]], result$margin)
-        loss_margins[[i]] <- c(loss_margins[[i]], result$margin)
+      if (res$winner == 1) {
+        win_margins[[i]] <- c(win_margins[[i]], res$margin)
+        loss_margins[[j]] <- c(loss_margins[[j]], res$margin)
+      } else if (res$winner == 0) {
+        win_margins[[j]] <- c(win_margins[[j]], res$margin)
+        loss_margins[[i]] <- c(loss_margins[[i]], res$margin)
       }
     }
   }
@@ -548,13 +579,14 @@ blotto_compare <- function(strategy_matrix = NULL, weights, sample = FALSE, n_op
   combinations_df$Win_Count <- win_counts
   combinations_df$Opponents_Faced <- n_players - 1
   combinations_df$Win_Percentage <- round(100 * win_counts / (n_players - 1), 2)
-  combinations_df$Avg_Win_Margin <- sapply(win_margins, function(x) if (length(x)) round(mean(x), 2) else NA)
-  combinations_df$Avg_Loss_Margin <- sapply(loss_margins, function(x) if (length(x)) round(mean(x), 2) else NA)
+  combinations_df$Avg_Win_Margin <- sapply(win_margins, function(x) if (length(x)) round(mean(x), 2) else 0)
+  combinations_df$Avg_Loss_Margin <- sapply(loss_margins, function(x) if (length(x)) round(mean(x), 2) else 0)
   combinations_df$Rank <- rank(-combinations_df$Win_Count, ties.method = "first")
 
   combinations_df <- combinations_df[order(as.numeric(rownames(combinations_df))), ]
   return(combinations_df)
 }
+
 
 
 
@@ -580,9 +612,8 @@ monotonicity <- function(x, include_zeros = TRUE) {
 # ========== Sample MWC Distributions ==========
 
 sample_mwc_distributions <- function(
-  mwcs, vector_weights, target_sum = 100, total_samples_goal = 10000,
-  samples_per_mwc = NULL, verbose = TRUE
-) {
+    mwcs, vector_weights, target_sum = 100, total_samples_goal = 10000,
+    samples_per_mwc = NULL, verbose = TRUE) {
   n_mwcs <- length(mwcs)
   if (is.null(samples_per_mwc)) {
     samples_per_mwc <- ceiling(total_samples_goal / n_mwcs)
@@ -611,8 +642,10 @@ validate_sampling_methods <- function(vector_weights, methods, target_sum = 100)
   par(mfrow = c(3, 3))
   for (m in methods) {
     sims <- t(replicate(1000, new_combinations(vector_weights, target_sum = target_sum, method = m)))
-    matplot(t(sims), type = "l", col = adjustcolor("gray50", alpha.f = 0.1), lty = 1,
-            main = paste("Method:", m), xlab = "Position", ylab = "Allocation")
+    matplot(t(sims),
+      type = "l", col = adjustcolor("gray50", alpha.f = 0.1), lty = 1,
+      main = paste("Method:", m), xlab = "Position", ylab = "Allocation"
+    )
   }
   par(mfrow = c(1, 1))
 }
@@ -637,14 +670,13 @@ validate_sampling_methods <- function(vector_weights, methods, target_sum = 100)
 #' @return A stacked histogram plot.
 #' @export
 stacked_hist_plot <- function(
-  random_vectors,
-  overlay_vectors = NULL,
-  state_names = rev(c("A", "B", "C", "D", "E", "F", "G")),
-  main = "Distribution",
-  show_density = FALSE,
-  show_legend = FALSE,
-  legend_labels = c("EC vector_weights", "Banzhaf")
-) {
+    random_vectors,
+    overlay_vectors = NULL,
+    state_names = rev(c("A", "B", "C", "D", "E", "F", "G")),
+    main = "Distribution",
+    show_density = FALSE,
+    show_legend = FALSE,
+    legend_labels = c("EC vector_weights", "Banzhaf")) {
   df <- as.data.frame(random_vectors)
   colnames(df) <- state_names
   num_states <- length(state_names)
@@ -655,11 +687,15 @@ stacked_hist_plot <- function(
   }
 
   par(mar = c(5, 6, 4, 2))
-  plot(NULL, xlim = c(0, 100), ylim = c(0, num_states * 1.2 + 1.5),
-       xlab = "Allocation", ylab = "", yaxt = "n", main = main)
+  plot(NULL,
+    xlim = c(0, 100), ylim = c(0, num_states * 1.2 + 1.5),
+    xlab = "Allocation", ylab = "", yaxt = "n", main = main
+  )
 
-  axis(2, at = seq(0.6, num_states * 1.2 - 0.6, by = 1.2),
-       labels = state_names, las = 1)
+  axis(2,
+    at = seq(0.6, num_states * 1.2 - 0.6, by = 1.2),
+    labels = state_names, las = 1
+  )
 
   base_colors <- gray.colors(num_states, start = 0.2, end = 0.7)
   overlay_color <- gray(0.1, alpha = 0.4)
@@ -671,8 +707,9 @@ stacked_hist_plot <- function(
     scaled <- if (max(h$counts) > 0) h$counts / max(h$counts) * 0.8 else rep(0, length(h$counts))
 
     rect(h$breaks[-length(h$breaks)], position,
-         h$breaks[-1], position + scaled,
-         col = adjustcolor(base_colors[i], alpha.f = 0.5), border = NA)
+      h$breaks[-1], position + scaled,
+      col = adjustcolor(base_colors[i], alpha.f = 0.5), border = NA
+    )
 
     if (!is.null(overlay_vectors)) {
       overlay_vals <- df_overlay[[i]]
@@ -680,8 +717,9 @@ stacked_hist_plot <- function(
       scaled_overlay <- if (max(h_overlay$counts) > 0) h_overlay$counts / max(h_overlay$counts) * 0.8 else rep(0, length(h_overlay$counts))
 
       rect(h_overlay$breaks[-length(h_overlay$breaks)], position,
-           h_overlay$breaks[-1], position + scaled_overlay,
-           col = overlay_color, border = NA)
+        h_overlay$breaks[-1], position + scaled_overlay,
+        col = overlay_color, border = NA
+      )
 
       if (show_density && length(unique(overlay_vals)) > 1) {
         dens_overlay <- density(overlay_vals, from = 0, to = 100, bw = 0.5)
@@ -701,11 +739,12 @@ stacked_hist_plot <- function(
 
   if (!is.null(overlay_vectors) && show_legend) {
     legend("topright",
-           legend = legend_labels,
-           fill = c(adjustcolor("gray50", alpha.f = 0.5), overlay_color),
-           border = c("gray50", "black"),
-           lty = c(1, 2), lwd = 1,
-           bty = "o")
+      legend = legend_labels,
+      fill = c(adjustcolor("gray50", alpha.f = 0.5), overlay_color),
+      border = c("gray50", "black"),
+      lty = c(1, 2), lwd = 1,
+      bty = "o"
+    )
   }
 }
 
@@ -729,10 +768,10 @@ evaluate_strategies <- function(strategy_matrix, vector_weights, quota = 70) {
   zero_counts <- colSums(strategy_matrix == 0)
   zero_percentage <- (zero_counts / n) * 100
   means <- colMeans(strategy_matrix)
-  sd_unit <- apply(strategy_matrix, 2, sd)         # Standard deviation
-  medians <- apply(strategy_matrix, 2, median)     # Median
-  min_unit <- apply(strategy_matrix, 2, min)        # Min
-  max_unit <- apply(strategy_matrix, 2, max)        # Max
+  sd_unit <- apply(strategy_matrix, 2, sd) # Standard deviation
+  medians <- apply(strategy_matrix, 2, median) # Median
+  min_unit <- apply(strategy_matrix, 2, min) # Min
+  max_unit <- apply(strategy_matrix, 2, max) # Max
   ec_covered <- apply(strategy_matrix > 0, 1, function(x) sum(vector_weights[x]))
   states_covered <- apply(strategy_matrix > 0, 1, function(x) sum(x))
   rational <- ec_covered >= quota
@@ -774,4 +813,3 @@ calc_encm <- function(allocation) {
 
 # # Summary
 # summary(encm_values)
-
