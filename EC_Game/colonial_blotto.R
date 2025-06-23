@@ -10,26 +10,35 @@ all_combinations <- function(vector_weights) {
   unlist(lapply(1:n, function(k) combn(n, k, simplify = FALSE)), recursive = FALSE)
 }
 
-all_winning_combinations <- function(members, vector_weights) {
-  for (k in seq_along(members)) {
-    combos <- combn(members, k, simplify = FALSE)
-    for (combo in combos) {
-      weight_sum <- sum(vector_weights[combo])
-      if (weight_sum > quota) {
-        results[[index]] <- list(Combo = combo, Total = weight_sum)
-      }
+all_winning_combinations <- function(members, vector_weights, threshold = 70) { 
+# Collect results
+results <- list()
+index <- 1
+
+for (k in 1:length(members)) {
+  combos <- combn(members, k, simplify = FALSE)
+  for (combo in combos) {
+    weight_sum <- sum(vector_weights[combo])
+    if (weight_sum > threshold) {
+      weight_labels <- combo
+      results[[index]] <- list(
+        Members = paste(weight_labels, collapse = ", "),
+        Total_Weight = weight_sum
+      )
+      index <- index + 1
     }
   }
+}
 
-  ### Convert to a data frame
-  results_df <- do.call(rbind, lapply(results, function(x) {
-    data.frame(
-      Members = paste(x$Combo, collapse = ", "),
-      Coalition_Size = length(x$Combo),
-      Total_Weight = x$Total,
-      stringsAsFactors = FALSE
-    )
-  }))
+# Convert to data frame
+results_df <- do.call(rbind, lapply(results, function(x) {
+  data.frame(
+    Members = x$Members,
+    Coalition_Size = length(unlist(strsplit(x$Members, ","))),
+    Total_Weight = x$Total_Weight,
+    stringsAsFactors = FALSE
+  )
+})) 
 
   return(results_df) # View the results
 }
