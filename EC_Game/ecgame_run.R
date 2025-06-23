@@ -40,7 +40,8 @@ knitr::kable(
     winning_combos,
     format = "simple",
     align = "c",
-    caption = "All Possible Winning Combinations"
+    caption = "All Possible Winning Combinations",
+    row.names = FALSE
 )
 
 unique_weights <- unique(winning_combos$Total_Weight)
