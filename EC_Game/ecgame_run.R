@@ -64,6 +64,41 @@ mwcs <- find_mwcs(
     quota = quota
 )
 
+
+# ========== 3. 2024 Election ===========
+data2024 <- read.csv('/Users/cervas/Downloads/dataset.csv')
+trump24 <- data2024[data2024$candidate %in% c("Trump","Vance"),]
+harris24 <- data2024[data2024$candidate %in% c("Biden", "Harris","Walz"),]
+
+round(prop.table(table(trump24$state)) * 100, 2)
+round(prop.table(table(harris24$state)) * 100, 2)
+
+election_2024 <- data.frame(
+    state_labels = c("Arizona", "Georgia", "Michigan", "Nevada", "North Carolina", "Pennsylvania", "Wisconsin"),
+    ec = c(11, 16, 15, 6, 16, 19, 10)
+    )
+
+quota_GOP <- 51
+quota_DEM <- 44
+
+banzhaf_GOP <- banzhaf(
+    election_2024$state_labels,
+    election_2024$ec,
+    quota_GOP
+)
+
+banzhaf_DEM <- banzhaf(
+    election_2024$state_labels,
+    election_2024$ec,
+    quota_DEM
+)
+
+round(100 * rbind(
+    EC = election_2024$ec/sum(election_2024$ec),
+    `Trump Campaign Banzhaf` = banzhaf_GOP,
+    `Biden/Harris Campaign Banzhaf` = banzhaf_DEM
+    ), d=2)
+    
 # ========== 3. User Data Processing ==========
 
 # Load participant data from JSON file
