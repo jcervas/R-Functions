@@ -7,16 +7,16 @@ domain <- c(1, 5, 10, 15, 20)`
 ## Define color range (mapped to domain + 1 levels)
 
 ## These are hex approximations of d3.interpolateGreys values
-`
-range <- c("#E5E5E5",  # ~ d3.interpolateGreys(0.1)
+
+`range <- c("#E5E5E5",  # ~ d3.interpolateGreys(0.1)
            "#BFBFBF",  # ~ d3.interpolateGreys(0.35)
            "#999999",  # ~ d3.interpolateGreys(0.5)
            "#7A7A7A",  # ~ d3.interpolateGreys(0.65)
            "#595959",  # ~ d3.interpolateGreys(0.8)
-           "#262626")  # ~ d3.interpolateGreys(0.95)
+           "#262626")  # ~ d3.interpolateGreys(0.95)`
 
-range <- add_alpha(range, alpha = 0.5)
-`
+`range <- add_alpha(range, alpha = 0.5)`
+
 
 
 # Ensure `rate` is clean
