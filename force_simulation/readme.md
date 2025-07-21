@@ -1,6 +1,8 @@
 ## Read County Coordinates Data
 `counties <- read.csv('/Users/cervas/Library/CloudStorage/GoogleDrive-jcervas@andrew.cmu.edu/My Drive/GitHub/R-Functions/force_simulation/counties.csv')`
 
+## Read Population Data
+`pop <- read.csv('/Users/cervas/Library/CloudStorage/GoogleDrive-jcervas@andrew.cmu.edu/My Drive/GitHub/R-Functions/force_simulation/counties-citizens.csv')`
 
 ## Helper Functions
 
