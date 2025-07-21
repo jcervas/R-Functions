@@ -1,5 +1,5 @@
 ## Read County Coordinates Data
-`counties <- read.csv()`
+`counties <- read.csv('/Users/cervas/Library/CloudStorage/GoogleDrive-jcervas@andrew.cmu.edu/My Drive/GitHub/R-Functions/force_simulation/counties.csv')`
 
 
 ## Helper Functions
@@ -14,8 +14,7 @@
 
 
 ## Define domain thresholds
-`
-domain <- c(1, 5, 10, 15, 20)`
+`domain <- c(1, 5, 10, 15, 20)`
 
 ## Define color range (mapped to domain + 1 levels)
 
@@ -33,8 +32,8 @@ domain <- c(1, 5, 10, 15, 20)`
 
 
 # Ensure `rate` is clean
-`valid <- complete.cases(countiesrate, countiescx, countiescy)
-rate_vals <- countiesrate[valid]`
+`valid <- complete.cases(counties$rate, counties$S, counties$Y)`
+`rate_vals <- counties$rate[valid]`
 
 # Use findInterval to bin each value into one of the thresholds
 `rate_bins <- findInterval(rate_vals, domain, rightmost.closed = TRUE, all.inside = TRUE)`
@@ -43,9 +42,9 @@ rate_vals <- countiesrate[valid]`
 `fill_colors <- range[rate_bins + 1]  # +1 because R is 1-based`
 
 
-`sim_result <- force_simulation(values = countiestotal[valid],
-                               initial_x = countiescx[valid],
-                               initial_y = countiescy[valid],
+`sim_result <- force_simulation(values = counties$total[valid],
+                               initial_x = counties$X[valid],
+                               initial_y = counties$Y[valid],
                                radius_scale = 120,
                                max_iter = 20,
                                learning_rate = 0.6)`
