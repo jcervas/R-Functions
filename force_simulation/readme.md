@@ -6,13 +6,15 @@ source('/Users/cervas/Library/CloudStorage/GoogleDrive-jcervas@andrew.cmu.edu/My
 ```
 
 ## Read County Coordinates Data
-`counties <- read.csv('/Users/cervas/Library/CloudStorage/GoogleDrive-jcervas@andrew.cmu.edu/My Drive/GitHub/R-Functions/force_simulation/counties.csv')`
+```
+counties <- read.csv('/Users/cervas/Library/CloudStorage/GoogleDrive-jcervas@andrew.cmu.edu/My Drive/GitHub/R-Functions/force_simulation/counties.csv')
 
-`citizen <- read.csv('/Users/cervas/Library/CloudStorage/GoogleDrive-jcervas@andrew.cmu.edu/My Drive/GitHub/R-Functions/force_simulation/citizenship.csv')`
+citizen <- read.csv('/Users/cervas/Library/CloudStorage/GoogleDrive-jcervas@andrew.cmu.edu/My Drive/GitHub/R-Functions/force_simulation/citizenship.csv')
 
-`citizen$id <- sprintf("%05d", citizen$id)`
+citizen$id <- sprintf("%05d", citizen$id)
 
-`counties_citizen <- merge(counties, citizen, by.x="GEOID", by.y="id")`
+counties_citizen <- merge(counties, citizen, by.x="GEOID", by.y="id")
+```
 
 ## Read Population Data
 <!-- `pop <- read.csv('/Users/cervas/Library/CloudStorage/GoogleDrive-jcervas@andrew.cmu.edu/My Drive/GitHub/R-Functions/force_simulation/counties-citizens.csv')` -->
