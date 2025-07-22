@@ -75,7 +75,8 @@ fill_colors <- range[rate_bins + 1]  # +1 because R is 1-based
 
 ## This runs the force simulation
 ```
-sim_result <- force_simulation(values = as.numeric(counties_citizen$total[valid]),
+sim_result <- force_simulation(id = counties_citizen$GEOID,
+                               values = as.numeric(counties_citizen$total[valid]),
                                initial_x = counties_citizen$X[valid],
                                initial_y = counties_citizen$Y[valid],
                                radius_scale = 120,
