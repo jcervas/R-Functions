@@ -82,9 +82,6 @@ sim_result <- force_simulation(id = counties_citizen$GEOID,
                                radius_scale = 120,
                                max_iter = 20,
                                learning_rate = 0.6)
-
-sim_data <- as.data.frame(sim_result)
-sim_data <- cbind.data.frame(id=counties_citizen$GEOID, sim_data)
 ```
 
 ## Save new centriod and r
