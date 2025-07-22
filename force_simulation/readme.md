@@ -76,12 +76,12 @@ fill_colors <- range[rate_bins + 1]  # +1 because R is 1-based
 ## This runs the force simulation
 ```
 sim_result <- force_simulation(id = counties_citizen$GEOID,
-                               values = counties_citizen$total[valid],
-                               initial_x = counties_citizen$X[valid],
-                               initial_y = counties_citizen$Y[valid],
-                               radius_scale = 120,
+                               values = counties_citizen$total,
+                               initial_x = counties_citizen$X,
+                               initial_y = counties_citizen$Y,
                                max_iter = 20,
-                               learning_rate = 0.6)
+                               learning_rate = 0.6,
+                               verbose = TRUE)
 ```
 
 ## Save new centriod and r
