@@ -1,4 +1,5 @@
-force_simulation <- function(values,
+force_simulation <- function(id,
+                             values,
                              radius_fn = function(v) sqrt(v),
                              initial_x = NULL,
                              initial_y = NULL,
@@ -48,7 +49,7 @@ force_simulation <- function(values,
     if (!moved) break
   }
   
-  return(list(x = x, y = y, radii = radii, values = values))
+  return(data.frame(id = id, x_adj = x, y_adj = y, r = radii, values = values))
 }
 
 get_circle_specs <- function(sim_result,
