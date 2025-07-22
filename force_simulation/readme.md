@@ -86,7 +86,10 @@ sim_data <- as.data.frame(sim_result)
 sim_data <- cbind(counties_citizen$GEOID, sim_data)
 ```
 
-
+## Save new centriod and r
+```
+write.csv(sim_data, '/Users/cervas/Library/CloudStorage/GoogleDrive-jcervas@andrew.cmu.edu/My Drive/GitHub/R-Functions/force_simulation/sim_data.csv', row.names=F)
+```
 
 ```
 circles <- get_circle_specs(sim_result, fill = fill_colors, lwd = 0.4)
