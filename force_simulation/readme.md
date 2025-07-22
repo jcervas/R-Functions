@@ -1,3 +1,10 @@
+# Force Simulation
+
+## Port force_simulation.R
+```
+source('/Users/cervas/Library/CloudStorage/GoogleDrive-jcervas@andrew.cmu.edu/My Drive/GitHub/R-Functions/force_simulation/force_simulation.R')
+```
+
 ## Read County Coordinates Data
 `counties <- read.csv('/Users/cervas/Library/CloudStorage/GoogleDrive-jcervas@andrew.cmu.edu/My Drive/GitHub/R-Functions/force_simulation/counties.csv')`
 
