@@ -47,13 +47,13 @@ range <- add_alpha(range, alpha = 0.5)
 
 
 
-# Ensure `rate` is clean
+## Ensure `rate` is clean
 ```
 valid <- complete.cases(counties_citizen$rate, counties_citizen$S, counties_citizen$Y)
 rate_vals <- counties_citizen$rate[valid]
 ```
 
-# Use findInterval to bin each value into one of the thresholds
+## Use findInterval to bin each value into one of the thresholds
 ```
 rate_bins <- findInterval(rate_vals, domain, rightmost.closed = TRUE, all.inside = TRUE)
 ```
@@ -64,6 +64,7 @@ fill_colors <- range[rate_bins + 1]  # +1 because R is 1-based
 ```
 
 
+## This runs the force simulation
 ```
 sim_result <- force_simulation(values = as.numeric(counties_citizen$total[valid]),
                                initial_x = counties_citizen$X[valid],
@@ -82,11 +83,13 @@ sim_data <- cbind(counties_citizen$GEOID, sim_data)
 circles <- get_circle_specs(sim_result, fill = fill_colors, lwd = 0.4)
 ```
 
-# Flip the Y axis using range
+## Flip the Y axis using range
 `circles$y <- max(circles$y) - circles$y + min(circles$y)`
 
 
-`svg("custom_circle_plot.svg", width = 8, height = 8*0.7)
+## Save plot as .svg
+```
+svg("custom_circle_plot.svg", width = 8, height = 8*0.7)
 plot(
      NA, 
      xlim = circle_layout_bbox(sim_result)$xlim,
@@ -101,4 +104,5 @@ with(circles, {
             lwd = 0.1)
   }
 })
-dev.off()`
+dev.off()
+```
