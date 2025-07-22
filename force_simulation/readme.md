@@ -22,14 +22,14 @@ counties_citizen <- merge(counties, citizen, by.x="GEOID", by.y="id")
 ## Helper Functions
 
 ## add_alpha
-`
+```
 add_alpha <- function(hex_colors, alpha = 1) {
   rgb_matrix <- col2rgb(hex_colors) / 255
   apply(rgb_matrix, 2, function(col) {
     rgb(col[1], col[2], col[3], alpha = alpha, maxColorValue = 1)
   })
 }
-`
+```
 
 
 ## Define domain thresholds
