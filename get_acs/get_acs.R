@@ -1,8 +1,22 @@
 geo_prefix_root <- function(state_fips) sprintf("pseudo(0400000US%02d", as.integer(state_fips))
 
-dataset_map <- c(DP = "acs/acs5/profile", S = "acs/acs5/subject", default = "acs/acs5", pums = "acs/acs5/pums")
+build_dataset_map <- function(acs_year = 5) {
+  # Validate acs_year input
+  if (!acs_year %in% c(1, 3, 5)) {
+    stop("acs_year must be 1, 3, or 5")
+  }
+  
+  acs_suffix <- paste0("acs", acs_year)
+  c(
+    DP = paste0("acs/", acs_suffix, "/profile"),
+    S = paste0("acs/", acs_suffix, "/subject"), 
+    default = paste0("acs/", acs_suffix),
+    pums = paste0("acs/", acs_suffix, "/pums")
+  )
+}
 
-infer_dataset_from_table <- function(table) {
+infer_dataset_from_table <- function(table, acs_year = 5) {
+  dataset_map <- build_dataset_map(acs_year)
   if (is.null(table) || nchar(table) < 1) return(dataset_map["default"])
   tbl <- toupper(table)
   if (tbl == "PUMS") {
@@ -19,24 +33,31 @@ infer_dataset_from_table <- function(table) {
 }
 
 construct_group_url <- function(table, geography, geo_filter, state_fips, year, dataset) {
-  # (we’ll only use geo_filter/state_fips for county/place/etc.;
+  # (we'll only use geo_filter/state_fips for county/place/etc.;
   #  for AIANNH, we ignore state_fips entirely)
   
   if (geography == "state") {
-    # State‐level “pseudo(0400000US<STATEFP>)” is unchanged:
+    # State‐level "pseudo(0400000US<STATEFP>)" is unchanged:
     ucgid     <- paste0("0400000US", state_fips)
     geo_clause<- paste0("&ucgid=", ucgid)
     
   } else if (geography == "aian") {
     # National‐level AIANNH: summary level 251, root = 0100000US
-    # → “pseudo(0100000US$2510000)”
+    # → "pseudo(0100000US$2510000)"
     ucgid     <- "pseudo(0100000US$2500000)"
-    # no URLencode needed (no extra characters besides “(” “)” and “$”)
+    # no URLencode needed (no extra characters besides "(" ")" and "$")
+    geo_clause<- paste0("&ucgid=", ucgid)
+    
+  } else if (geography == "cd") {
+    # National‐level Congressional Districts: summary level 500, root = 0100000US
+    # → "pseudo(0100000US$5000000)"
+    ucgid     <- "pseudo(0100000US$5000000)"
+    # no URLencode needed (no extra characters besides "(" ")" and "$")
     geo_clause<- paste0("&ucgid=", ucgid)
     
   } else {
     # county/place/county subdivision/puma: same as before, but leave AIANNH out
-    root   <- geo_prefix_root(state_fips)  # e.g. “pseudo(0400000US36” if state_fips = "36"
+    root   <- geo_prefix_root(state_fips)  # e.g. "pseudo(0400000US36" if state_fips = "36"
     suffix <- switch(
       geography,
       county               = "$0500000)",
@@ -72,7 +93,8 @@ construct_standard_url <- function(variables, geography, state_fips, year, datas
       place   = paste0("&for=place:*&in=state:",  state_fips),
       "county subdivision" = paste0("&for=county%20subdivision:*&in=state:", state_fips),
       
-      aiannh  = "for=american%20indian%20area/alaska%20native%20area/hawaiian%20home%20land:*",   # NO “&in=state:” because ACS does not support it
+      aiannh  = "for=american%20indian%20area/alaska%20native%20area/hawaiian%20home%20land:*",   # NO "&in=state:" because ACS does not support it
+      cd      = "&for=congressional%20district:*",   # Congressional Districts - national level
       
       stop("Unsupported geography")
     )
@@ -86,14 +108,14 @@ construct_standard_url <- function(variables, geography, state_fips, year, datas
 }
 
 
-normalize_inputs <- function(table, variables, custom_states, state_fips, dataset) {
+normalize_inputs <- function(table, variables, custom_states, state_fips, dataset, acs_year = 5) {
   table <- if (!is.null(table)) toupper(table) else NULL
   if (!is.null(variables)) variables <- toupper(variables)
   if (!is.null(custom_states) && length(custom_states) == 1) {
     state_fips <- custom_states[[1]]
     custom_states <- NULL
   }
-  if (is.null(dataset)) dataset <- infer_dataset_from_table(table)
+  if (is.null(dataset)) dataset <- infer_dataset_from_table(table, acs_year)
   list(
     table = table,
     variables = variables,
@@ -116,14 +138,14 @@ normalize_inputs <- function(table, variables, custom_states, state_fips, datase
 # }
 
 set_timeout <- function(timeout = getOption("timeout")) {
-    # temporarily bump R’s download timeout
+    # temporarily bump R's download timeout
   old_to <- getOption("timeout")
   options(timeout = timeout)
   on.exit(options(timeout = old_to), add = TRUE)
 }
 
 get_acs_data <- function(url, timeout = set_timeout(300)) {
-  # temporarily bump R’s download timeout
+  # temporarily bump R's download timeout
   old_to <- getOption("timeout")
   options(timeout = timeout)
   on.exit(options(timeout = old_to), add = TRUE)
@@ -213,10 +235,12 @@ apply_tidy <- function(df, tidy) {
 
 apply_labels <- local({
   cache <- NULL
-  function(df, label) {
+  function(df, label, acs_year = 5, year = 2023) {
     if (!label) return(df)
     vars <- setdiff(names(df), c("NAME", "GEOID"))
-    if (is.null(cache)) cache <<- tryCatch(jsonlite::fromJSON("https://api.census.gov/data/2023/acs/acs5/variables.json")$variables, error = function(e) NULL)
+    acs_suffix <- paste0("acs", acs_year)
+    labels_url <- paste0("https://api.census.gov/data/", year, "/acs/", acs_suffix, "/variables.json")
+    if (is.null(cache)) cache <<- tryCatch(jsonlite::fromJSON(labels_url)$variables, error = function(e) NULL)
     if (!is.null(cache)) {
       lbls <- sapply(vars, function(v) if (!is.null(cache[[v]]$label)) cache[[v]]$label else v, USE.NAMES = FALSE)
       names(df)[match(vars, names(df))] <- lbls
@@ -229,6 +253,10 @@ maybe_save_to_file <- function(df, save_to) {
   if (!is.null(save_to)) write.csv(df, save_to, row.names = FALSE)
 }
 
+# Main function to retrieve ACS data
+# Parameters:
+#   acs_year: ACS dataset year (1, 3, or 5 for 1-year, 3-year, or 5-year estimates)
+#             Default is 5 (5-year estimates)
 get_acs <- function(table = NULL,
                     state_fips = "36",
                     geography = "county",
@@ -241,9 +269,10 @@ get_acs <- function(table = NULL,
                     save_to = NULL,
                     label = FALSE,
                     var_types = c("E"),
-                    use_group = FALSE) {
+                    use_group = FALSE,
+                    acs_year = 5) {
   if (!requireNamespace("jsonlite", quietly = TRUE)) stop("Please install 'jsonlite'.")
-  norm <- normalize_inputs(table, variables, custom_states, state_fips, dataset)
+  norm <- normalize_inputs(table, variables, custom_states, state_fips, dataset, acs_year)
   table <- norm$table; variables <- norm$variables; state_fips <- norm$state_fips; dataset <- norm$dataset
   gl <- handle_group_logic(use_group, table, variables, geo_filter, geography, state_fips, year, dataset)
   use_group <- gl$use_group; geo_filter <- gl$geo_filter
@@ -260,7 +289,7 @@ get_acs <- function(table = NULL,
     keep   <- setdiff(grep(type_pattern, names(df), value=TRUE), core)
     df      <- df[c(core, keep)]
     df <- apply_tidy(df, tidy)
-    df <- apply_labels(df, label)
+    df <- apply_labels(df, label, acs_year, year)
     maybe_save_to_file(df, save_to)
     return(df)
   } else {
@@ -271,20 +300,24 @@ get_acs <- function(table = NULL,
     df <- compute_geoid(df)
     df <- make_numeric(df)
     df <- apply_tidy(df, tidy)
-    df <- apply_labels(df, label)
+    df <- apply_labels(df, label, acs_year, year)
     maybe_save_to_file(df, save_to)
     return(df)
   }
 }
 
 # Wrapper: Retrieve PUMS (Public Use Microdata Sample) data
+# Parameters:
+#   acs_year: ACS dataset year (1, 3, or 5 for 1-year, 3-year, or 5-year estimates)
+#             Default is 5 (5-year estimates)
 get_pums <- function(variables,
                      state_fips = "36",
                      year       = 2023,
                      tidy       = FALSE,
                      save_to    = NULL,
                      label      = FALSE,
-                     var_types  = NULL) {
+                     var_types  = NULL,
+                     acs_year   = 5) {
   if (is.null(variables) || length(variables) == 0) {
     stop("Must specify at least one variable for PUMS.")
   }
@@ -292,7 +325,7 @@ get_pums <- function(variables,
   # 1) Always use both join‐keys, even if the user only wants housing‐unit variables.
   join_keys <- c("SERIALNO", "SPORDER")
   
-  # 2) Uppercase the user’s requested variables
+  # 2) Uppercase the user's requested variables
   vars_upper <- toupper(variables)
   
   # 3) If either join_key is missing, prepend both in order
@@ -302,8 +335,9 @@ get_pums <- function(variables,
   }
   
   # 4) Split into ≤50‐variable chunks.
-  #    Each chunk must contain both SERIALNO and SPORDER, leaving 48 “other” slots.
-  dataset    <- "acs/acs5/pums"
+  #    Each chunk must contain both SERIALNO and SPORDER, leaving 48 "other" slots.
+  dataset_map <- build_dataset_map(acs_year)
+  dataset    <- dataset_map["pums"]
   max_vars   <- 50
   all_vars   <- unique(vars_upper)
   other_vars <- setdiff(all_vars, join_keys)
@@ -357,7 +391,7 @@ get_pums <- function(variables,
   # 7) Post‐processing: numeric conversion, tidy, label, optional save
   df_out <- make_numeric(df_merged)
   df_out <- apply_tidy(df_out, tidy)
-  df_out <- apply_labels(df_out, label)
+  df_out <- apply_labels(df_out, label, acs_year, year)
   maybe_save_to_file(df_out, save_to)
   
   df_out
@@ -438,4 +472,3 @@ annotate_geography <- function(df, state_fips, state_abbrev) {
 
   df
 }
-
