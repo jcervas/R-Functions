@@ -255,10 +255,11 @@ maybe_save_to_file <- function(df, save_to) {
 
 # Main function to retrieve ACS data
 # Parameters:
+#   state_fips: FIPS code for the state (required for most geographies)
 #   acs_year: ACS dataset year (1, 3, or 5 for 1-year, 3-year, or 5-year estimates)
 #             Default is 5 (5-year estimates)
 get_acs <- function(table = NULL,
-                    state_fips = "36",
+                    state_fips = NULL,
                     geography = "county",
                     geo_filter = NULL,
                     custom_states = NULL,
@@ -272,6 +273,12 @@ get_acs <- function(table = NULL,
                     use_group = FALSE,
                     acs_year = 5) {
   if (!requireNamespace("jsonlite", quietly = TRUE)) stop("Please install 'jsonlite'.")
+  
+  # Validate state_fips for geographies that require it
+  if (is.null(state_fips) && !geography %in% c("aian", "cd")) {
+    stop("state_fips is required for geography '", geography, "'. Please provide a state FIPS code (e.g., '36' for New York).")
+  }
+  
   norm <- normalize_inputs(table, variables, custom_states, state_fips, dataset, acs_year)
   table <- norm$table; variables <- norm$variables; state_fips <- norm$state_fips; dataset <- norm$dataset
   gl <- handle_group_logic(use_group, table, variables, geo_filter, geography, state_fips, year, dataset)
@@ -308,10 +315,11 @@ get_acs <- function(table = NULL,
 
 # Wrapper: Retrieve PUMS (Public Use Microdata Sample) data
 # Parameters:
+#   state_fips: FIPS code for the state (required for PUMS data)
 #   acs_year: ACS dataset year (1, 3, or 5 for 1-year, 3-year, or 5-year estimates)
 #             Default is 5 (5-year estimates)
 get_pums <- function(variables,
-                     state_fips = "36",
+                     state_fips = NULL,
                      year       = 2023,
                      tidy       = FALSE,
                      save_to    = NULL,
@@ -320,6 +328,10 @@ get_pums <- function(variables,
                      acs_year   = 5) {
   if (is.null(variables) || length(variables) == 0) {
     stop("Must specify at least one variable for PUMS.")
+  }
+  
+  if (is.null(state_fips)) {
+    stop("state_fips is required for PUMS data. Please provide a state FIPS code (e.g., '36' for New York).")
   }
   
   # 1) Always use both join‐keys, even if the user only wants housing‐unit variables.
