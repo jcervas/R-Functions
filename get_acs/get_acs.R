@@ -42,7 +42,7 @@ construct_group_url <- function(table, geography, geo_filter, state_fips, year, 
       ucgid     <- "pseudo(0100000US$0400000)"  # All states
       geo_clause<- paste0("&ucgid=", ucgid)
     } else {
-      ucgid     <- paste0("0400000US", state_fips)
+      ucgid     <- paste0("pseudo(0400000US", state_fips, ")")
       geo_clause<- paste0("&ucgid=", ucgid)
     }
     
@@ -98,7 +98,7 @@ construct_standard_url <- function(variables, geography, state_fips, year, datas
       place   = paste0("&for=place:*&in=state:",  state_fips),
       "county subdivision" = paste0("&for=county%20subdivision:*&in=state:", state_fips),
       
-      aiannh  = "for=american%20indian%20area/alaska%20native%20area/hawaiian%20home%20land:*",   # NO "&in=state:" because ACS does not support it
+      aiannh  = "&for=american%20indian%20area/alaska%20native%20area/hawaiian%20home%20land:*",   # NO "&in=state:" because ACS does not support it
       cd      = "&for=congressional%20district:*",   # Congressional Districts - national level
       
       stop("Unsupported geography")
