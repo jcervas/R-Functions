@@ -37,9 +37,14 @@ construct_group_url <- function(table, geography, geo_filter, state_fips, year, 
   #  for AIANNH, we ignore state_fips entirely)
   
   if (geography == "state") {
-    # State‐level "pseudo(0400000US<STATEFP>)" is unchanged:
-    ucgid     <- paste0("0400000US", state_fips)
-    geo_clause<- paste0("&ucgid=", ucgid)
+    # State‐level: if state_fips is NULL, get all states; otherwise get specific state
+    if (is.null(state_fips)) {
+      ucgid     <- "pseudo(0100000US$0400000)"  # All states
+      geo_clause<- paste0("&ucgid=", ucgid)
+    } else {
+      ucgid     <- paste0("0400000US", state_fips)
+      geo_clause<- paste0("&ucgid=", ucgid)
+    }
     
   } else if (geography == "aian") {
     # National‐level AIANNH: summary level 251, root = 0100000US
@@ -88,7 +93,7 @@ construct_standard_url <- function(variables, geography, state_fips, year, datas
     geo_clause <- switch(
       geography,
       
-      state   = paste0("&for=state:", state_fips),
+      state   = if (is.null(state_fips)) "&for=state:*" else paste0("&for=state:", state_fips),
       county  = paste0("&for=county:*&in=state:", state_fips),
       place   = paste0("&for=place:*&in=state:",  state_fips),
       "county subdivision" = paste0("&for=county%20subdivision:*&in=state:", state_fips),
@@ -201,7 +206,7 @@ handle_group_logic <- function(use_group, table, variables, geo_filter, geograph
   if (!is.null(table) && is.null(variables)) use_group <- TRUE
   if (use_group && is.null(geo_filter)) {
     if (geography == "state") {
-      geo_filter <- list(state_fips)
+      geo_filter <- if (is.null(state_fips)) list("dummy") else list(state_fips)
     } else if (geography == "county") {
       url <- paste0("https://api.census.gov/data/", year, "/", dataset,
                     "?get=NAME&for=county:*&in=state:", state_fips)
@@ -255,7 +260,8 @@ maybe_save_to_file <- function(df, save_to) {
 
 # Main function to retrieve ACS data
 # Parameters:
-#   state_fips: FIPS code for the state (required for most geographies)
+#   state_fips: FIPS code for the state (required for most geographies except 'state', 'aian', 'cd')
+#               For 'state' geography, if NULL, returns data for all states
 #   acs_year: ACS dataset year (1, 3, or 5 for 1-year, 3-year, or 5-year estimates)
 #             Default is 5 (5-year estimates)
 get_acs <- function(table = NULL,
@@ -274,8 +280,8 @@ get_acs <- function(table = NULL,
                     acs_year = 5) {
   if (!requireNamespace("jsonlite", quietly = TRUE)) stop("Please install 'jsonlite'.")
   
-  # Validate state_fips for geographies that require it
-  if (is.null(state_fips) && !geography %in% c("aian", "cd")) {
+  # Validate state_fips for geographies that require it (except "state" which can get all states)
+  if (is.null(state_fips) && !geography %in% c("state", "aian", "cd")) {
     stop("state_fips is required for geography '", geography, "'. Please provide a state FIPS code (e.g., '36' for New York).")
   }
   
