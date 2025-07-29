@@ -5,7 +5,7 @@ library(httr)
 library(jsonlite)
 
   if (missing(state) || is.null(state) || state == "") {
-    stop("State is not defined. Please provide a valid state.")
+    stop("State is not defined. Please provide a valid state or 'all' for all states.")
   }
 
 # State abbreviations and FIPS codes
@@ -34,6 +34,96 @@ library(jsonlite)
              "36", "37", "38", "39", "40", "41", "42", "44", "45", "46", "47", "48", "49", "50", "51", "53",
              "54", "55", "56")
   )
+
+# Handle "all states" case
+if (tolower(state) == "all") {
+  # Define the base URL and API key
+  base_url <- paste0("https://api.census.gov/data/", year, "/dec/pl")
+  api_key <- "7865f31139b09e17c5865a59c240bdf07f9f44fd"
+  
+  # Define the variables to request
+  if (is.null(variables)) {
+    get_vars <- paste0("group(", table, ")")
+  } else {
+    get_vars <- variables
+  }
+  
+  # Use ucgid parameter for all states data
+  if (geo == "state") {
+    ucgid_param <- "pseudo(0100000US$0400000)"  # All states
+  } else if (geo == "county") {
+    ucgid_param <- "pseudo(0100000US$0500000)"  # All counties
+  } else {
+    # For other geographies, fall back to individual state calls
+    all_data <- list()
+    for (st in state_fips$state) {
+      cat("Processing state:", st, "\n")
+      state_data <- decennialAPI(state = st, geo = geo, county = county, table = table, year = year, variables = variables)
+      all_data[[st]] <- state_data
+    }
+    combined_data <- do.call(rbind, all_data)
+    return(combined_data)
+  }
+  
+  # Chunk the variables into groups of 50
+  variable_chunks <- split(get_vars, ceiling(seq_along(get_vars) / 50))
+  
+  # Create an empty list to store the results
+  data_list <- list()
+  
+  # Iterate over the variable chunks
+  for (chunk in variable_chunks) {
+    get_params <- paste0("get=", paste(chunk, collapse = ","), "&ucgid=", ucgid_param)
+    
+    # Construct the full API URL
+    api_url <- paste0(base_url, "?", get_params)
+    print(api_url)
+    
+    # Make the GET request
+    response <- httr::GET(api_url, httr::add_headers(Authorization = paste0("Bearer ", api_key)))
+    
+    # Extract the content from the response
+    content <- httr::content(response, as = "text")
+    
+    # Convert the JSON content into a data frame
+    chunk_data <- jsonlite::fromJSON(content, simplifyDataFrame = TRUE, flatten = TRUE)
+    
+    colnames(chunk_data) <- chunk_data[1,]
+    chunk_data <- chunk_data[-1,]
+    
+    # Convert to data frame
+    chunk_data <- as.data.frame(chunk_data)
+    
+    # Delete "NA columns
+    chunk_data <- chunk_data[, !grepl("NA$", names(chunk_data))]
+    
+    # Make data numeric
+    for (col in colnames(chunk_data)[colnames(chunk_data) %in% grep("^P", colnames(chunk_data), value = TRUE)]) {
+      chunk_data[, col] <- as.numeric(chunk_data[, col])
+    }
+    
+    # Store the chunk data
+    data_list[[length(data_list) + 1]] <- chunk_data
+  }
+  
+  # Combine all chunks by merging on geographic identifiers
+  if (length(data_list) > 1) {
+    # Get geographic columns (typically the last few columns)
+    geo_cols <- names(data_list[[1]])[grep("^(state|county|tract|block|NAME|ucgid)$", names(data_list[[1]]))]
+    
+    # Start with first chunk
+    combined_data <- data_list[[1]]
+    
+    # Merge additional chunks
+    for (i in 2:length(data_list)) {
+      combined_data <- merge(combined_data, data_list[[i]], by = geo_cols, all = TRUE)
+    }
+    
+    return(combined_data)
+  } else {
+    return(data_list[[1]])
+  }
+}
 
 
 # Define the base URL and API key
@@ -88,12 +178,33 @@ for (chunk in variable_chunks) {
   chunk_data <- as.data.frame(chunk_data)
 
   # Delete "NA columns
-  data <- chunk_data[, !grepl("NA$", names(chunk_data))]
+  chunk_data <- chunk_data[, !grepl("NA$", names(chunk_data))]
 
   # Make data numeric
-  for (col in colnames(data)[colnames(data) %in% grep("^P", colnames(data), value = TRUE)]) {
-    data[, col] <- as.numeric(data[, col])
+  for (col in colnames(chunk_data)[colnames(chunk_data) %in% grep("^P", colnames(chunk_data), value = TRUE)]) {
+    chunk_data[, col] <- as.numeric(chunk_data[, col])
   }
+  
+  # Store the chunk data
+  data_list[[length(data_list) + 1]] <- chunk_data
+}
+
+# Combine all chunks by merging on geographic identifiers
+if (length(data_list) > 1) {
+  # Get geographic columns (typically the last few columns)
+  geo_cols <- names(data_list[[1]])[grep("^(state|county|tract|block|NAME)$", names(data_list[[1]]))]
+  
+  # Start with first chunk
+  combined_data <- data_list[[1]]
+  
+  # Merge additional chunks
+  for (i in 2:length(data_list)) {
+    combined_data <- merge(combined_data, data_list[[i]], by = geo_cols, all = TRUE)
+  }
+  
+  data <- combined_data
+} else {
+  data <- data_list[[1]]
 }
 # Display the resulting data
 # head(data)
