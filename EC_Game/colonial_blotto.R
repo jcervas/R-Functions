@@ -78,6 +78,46 @@ find_mwcs <- function(vector_weights, quota) {
   return(mwcs)
 }
 
+
+find_mwcs_detailed <- function(vector_weights, quota) {
+  members <- names(vector_weights)
+  n <- length(vector_weights)
+  mwcs_list <- list()
+  idx <- 1
+
+  # Generate all possible coalitions (excluding empty set)
+  for (k in 1:n) {
+    combos <- combn(members, k, simplify = FALSE)
+    for (coal in combos) {
+      weight_sum <- sum(vector_weights[coal])
+      if (weight_sum >= quota) {
+        # Check if minimal
+        is_minimal <- TRUE
+        for (j in coal) {
+          if (sum(vector_weights[setdiff(coal, j)]) >= quota) {
+            is_minimal <- FALSE
+            break
+          }
+        }
+        if (is_minimal) {
+          mwcs_list[[idx]] <- list(
+            Members = paste(coal, collapse = ", "),
+            Coalition_Size = length(coal),
+            Total_Weight = weight_sum
+          )
+          idx <- idx + 1
+        }
+      }
+    }
+  }
+
+  # Convert list to data frame
+  mwcs_df <- do.call(rbind, lapply(mwcs_list, as.data.frame, stringsAsFactors = FALSE))
+  rownames(mwcs_df) <- NULL
+  return(mwcs_df)
+}
+
+
 generate_expanded_mwcs <- function(mwcs, vector_weights, quota) {
   n <- length(vector_weights)
   expanded <- list()
