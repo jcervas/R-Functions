@@ -1,0 +1,378 @@
+date,city,county,state,postal,lat,long,fips,candidate,event-type,notes,biden-total-visits-city,biden-total-visits-county,biden-total-visits-state,trump-total-visits-city,trump-total-visits-county,trump-total-visits-state,total-state-visits,total-county-visits,total-city-visits,biden-date,trump-date,city-visits-status,county-text,reg-voters,reg-voters-as-of-date
+3/13/24,Milwaukee,Milwaukee,Wisconsin,WI,43.0642,-87.9673,55079,Biden,Campaign,Roadway infrastructre improvements event,5,7,29,4,4,21,50,11,9,11/4/24,11/1/24,Both,Milwaukee County,"489,950",August 13
+3/14/24,Saginaw,Saginaw,Michigan,MI,43.4199,-83.9501,26145,Biden,Campaign,Meet with campaign workers and supporters,3,3,30,2,3,33,63,6,5,10/28/24,10/29/24,Both,Saginaw County,"159,329",August 6
+3/16/24,Vandalia,Montgomery,Ohio,OH,39.8791,-84.193,39113,Trump,Support other candidate,Rally for U.S. Senate candidate Bernie Moreno,0,0,0,1,1,2,2,1,1,,3/16/24,Trump,Montgomery County,"362,567",March 19
+3/19/24,Phoenix,Maricopa,Arizona,AZ,33.5722,-112.0891,04013,Biden,Campaign,Campaign event,4,10,15,2,8,12,27,18,6,10/26/24,9/5/24,Both,Maricopa County,"2,934,306",July 30
+3/19/24,Reno,Washoe,Nevada,NV,39.5497,-119.8483,32031,Biden,Campaign,Campaign event,4,4,13,3,3,12,25,7,7,10/31/24,10/23/24,Both,Washoe County,"378,608",June 11
+3/19/24,Las Vegas,Clark,Nevada,NV,36.2333,-115.2654,32003,Biden,Campaign,Remarks on lowering costs for families,8,9,13,6,9,12,25,18,14,11/2/24,11/2/24,Both,Clark County,"1,676,870",June 11
+3/20/24,Chandler,Maricopa,Arizona,AZ,33.2827,-111.8517,04013,Biden,Campaign,Tour Intel Ocotillo Campus; announces a preliminary agreement with Intel for a major CHIPS and Science Act award,3,10,15,0,8,12,27,18,3,10/9/24,,Biden,Maricopa County,"2,934,306",July 30
+3/26/24,Raleigh,Wake,North Carolina,NC,35.8324,-78.6438,37183,Biden,Campaign,"Remarks at Chavis Community Center, Raleigh, about the Affordable Care Act; fundraiser afterward",5,5,21,3,3,24,45,8,8,10/30/24,11/4/24,Both,Wake County,"823,509",May 14
+4/2/24,Grand Rapids,Kent,Michigan,MI,42.9615,-85.6557,26081,Trump,Campaign,Speech on immigration ,2,2,30,3,6,33,63,8,5,10/18/24,11/4/24,Both ,Kent County,"518,797",August 6
+4/2/24,Green Bay,Brown,Wisconsin,WI,44.515,-87.9896,55009,Trump,Campaign,Rally at Hyatt Regency Green Bay,2,2,29,2,3,21,50,5,4,10/17/24,10/30/24,Both,Brown County,"148,476",August 13
+4/8/24,Madison,Dane,Wisconsin,WI,43.0827,-89.3923,55025,Biden,Campaign,Remarks at Madison Area Technical College on lowering student loan costs for Americans ,5,5,29,0,1,21,50,6,5,10/30/24,,Biden,Dane County,"375,054",April 2
+4/12/24,Palm Beach,Palm Beach,Florida,FL,26.6773877,-80.0389592,12099,Trump,Campaign,Meeting and news confertence with House Speaker Mike Johnson on election integrity,0,0,1,1,3,6,7,3,1,,4/12/24,Trump,Palm Beach County,"862,178",March 19
+4/13/24,Schnecksville,Lehigh,Pennsylvania,PA,40.6763913,-75.6309196,42077,Trump,Campaign,Rally at Schnecksville Fire Company fairgrounds,0,3,43,1,2,37,80,5,1,,4/13/24,Trump,Lehigh County,"244,035",April 23
+4/16/24,New York,New York,New York,NY,40.6943,-73.9249,36061,Trump,Campaign,Visit to Harlem bodega after jury selection adjourned for the day,1,1,3,5,5,6,9,6,6,10/1/24,10/27/24,Both,New York County,"1,113,601",June 25
+4/16/24,Scranton,Lackawanna,Pennsylvania,PA,41.4044,-75.6649,42069,Biden,Campaign,Two campaign events in Scranton - Remarks at Scranton Cultural Center at the Masonic Temple; visit to Biden childhod home; emarks at Carpenters and Joiners Local Union 445 in south Scranton,3,3,43,1,1,37,80,4,4,11/4/24,10/9/24,Both,Lackawanna County,"143,638",April 23
+4/17/24,Pittsburgh,Allegheny,Pennsylvania,PA,40.4396,-79.9763,42003,Biden,Campaign,Remarks at United Steel Workers Headquarters; brought food to construction workers at Pittsburgh International Airport working on a federally funded infrastructure project,8,8,43,2,3,37,80,11,10,11/4/24,11/4/24,Both,Allegheny County,"904,410",April 23
+4/18/24,Philadelphia,Philadelphia,Pennsylvania,PA,40.0077,-75.1339,42101,Biden,Campaign,"Two campaign events in Philadelphia - one, receiving support of members of Kennedy family",8,8,43,3,3,37,80,11,11,11/4/24,9/10/24,Both,Philadelphia County,"1,035,648",April 23
+4/22/24,Triangle,Prince William,Virginia,VA,38.5483,-77.3195,51153,Biden,Campaign,Earth Day commemoration,1,1,1,0,0,5,6,1,1,4/22/24,,Biden,Prince William County,"321,999",March 5
+4/23/24,Tampa,Hillsborough,Florida,FL,27.9942,-82.4451,12057,Biden,Campaign,Two campaign events,1,1,1,0,0,6,7,1,1,4/23/24,,Biden,Hillsborough County,"824,092",March 19
+4/25/24,Syracuse,Onondaga,New York,NY,43.0409,-76.1438,36067,Biden,Campaign,"Trip to Syracuse, New York - remarks at Milton J. Rubenstein Museum ",1,1,3,0,0,6,9,1,1,4/25/24,,Biden,Onondaga County,"323,810",June 25
+4/25/24,New York,New York,New York,NY,40.6943,-73.9249,36061,Trump,Campaign,Meeting construction workers in midtown Manhattan at construction site of new JPMorgan Chase HQ,1,1,3,5,5,6,9,6,6,10/1/24,10/27/24,Both,New York County,"1,113,601",June 25
+5/1/24,Freeland,Saginaw,Michigan,MI,43.5177994,-84.1603469,26145,Trump,Campaign,Campaign rally at Avflight Saginaw,0,3,30,1,3,33,63,6,1,10/28/24,10/29/24,Both,Saginaw County,"159,329",August 6
+5/1/24,Waukesha,Waukesha,Wisconsin,WI,42.9987326,-88.3217568,55133,Trump,Campaign,Campaign rally at Waukesha County Expo Center,1,2,29,2,2,21,50,4,3,10/28/24,10/20/24,Both,Waukesha County,"278,069",August 13
+5/2/24,Charlotte,Mecklenburg,North Carolina,NC,35.2030383,-80.9482419,37119,Biden,Campaign,"Meets families of slain and wounded law enforcement officers, other members of law enforcement and officials",4,4,21,3,4,24,45,8,7,11/3/24,9/23/24,Both,Mecklenburg County,"790,579",May 14
+5/2/24,Wilmington,New Hanover,North Carolina,NC,34.2157586,-77.9538195,37129,Biden,Campaign,Infrastructure and jobs remarks ,2,2,21,2,2,24,45,4,4,10/24/24,10/16/24,Both,New Hanover County,"181,321",May 14
+5/8/24,Racine,Racine,Wisconsin,WI,42.7083839,-87.9164651,55101,Biden,Campaign,Remarks at Gateway Technical College,2,2,29,2,2,21,50,4,4,10/22/24,10/28/24,Both,Racine County,"109,137",August 13
+5/11/24,Wildwood,Cape May,New Jersey,NJ,38.9860548,-74.8116251,34009,Trump,Campaign,Rally,0,0,0,1,1,2,2,1,1,,5/11/24,Trump,Cape May County,"75,584",June 4
+5/17/24,St. Paul,Ramsey,Minnesota,MN,44.9492479,-93.1335938,27123,Trump,Campaign,Attends Minnesota GOP annual dinner,2,2,2,1,1,2,4,3,3,9/2/24,5/17/24,Both,Ramsey County,"311,256",August 13
+5/18/24,Dallas,Dallas,Texas,TX,32.7739307,-96.804312,48113,Trump,Campaign,Addresses NRA convention,0,0,3,1,1,2,5,1,1,,5/18/24,Trump,Dallas County,"1,419,477",March 5
+5/19/24,Atlanta,Fulton,Georgia,GA,33.7473456,-84.4159076,13121,Biden,Campaign,Commencement address at Morehouse College,5,5,14,5,5,12,26,10,10,11/3/24,11/4/24,Both,Fulton County,"868,981",June 18
+5/19/24,Detroit,Wayne,Michigan,MI,42.3266374,-83.0503179,26163,Biden,Campaign,Speaks at the annual Freedom Fund Dinner hosted by the NAACP Detroit Branch,9,11,30,6,8,33,63,19,15,11/4/24,10/18/24,Both,Wayne County,"1,447,552",August 6
+5/21/24,Nashua,Hillsborough,New Hampshire,NH,42.7958009,-71.5429103,33011,Biden,Campaign,"Remarks at Westwood Park YMCA, Nashua, New Hampshire ",1,1,2,0,0,1,3,1,1,5/21/24,,Biden,Hillsborough County,"3,841",January 23
+5/23/24,New York,New York,New York,NY,40.6943,-73.9249,36061,Trump,Campaign,Rally in Crotona Park in south Bronx,1,1,3,5,5,6,9,6,6,10/1/24,10/27/24,Both,New York County,"1,113,601",June 25
+5/25/24,Washington,District of Columbia,District of Columbia,DC,38.893859,-77.0971485,11001,Trump,Campaign,Remarks at the Libertarian National Convention,4,4,4,4,4,4,8,8,8,9/16/24,9/19/24,Both,,"378,821",June 4
+5/25/24,West Point,Orange,New York,NY,41.3889135,-73.9596876,36071,Biden,Campaign,Remarks to graduates at U.S. Military Academy,1,1,3,0,0,6,9,1,1,5/25/24,,Biden,Orange County,"263,209",June 25
+5/29/24,Philadelphia,Philadelphia,Pennsylvania,PA,40.0077,-75.1339,42101,Biden,Campaign,Campaign rally at Girard College; visit to a small business to speak to members of the Black Chamber of Commerce,8,8,43,3,3,37,80,11,11,11/4/24,9/10/24,Both,Philadelphia County,"1,035,648",April 23
+6/6/24,Phoenix,Maricopa,Arizona,AZ,33.5722,-112.0891,04013,Trump,Campaign,Speaks at TPAction town hall,4,10,15,2,8,12,27,18,6,10/31/24,9/5/24,Both,Maricopa County,"2,934,306",July 30
+6/9/24,Las Vegas,Clark,Nevada,NV,36.2333,-115.2654,32003,Trump,Campaign,Rally,8,9,13,6,9,12,25,18,14,11/2/24,11/2/24,Both,Clark County,"1,676,870",June 11
+6/11/24,Washington,District of Columbia,District of Columbia,DC,38.893859,-77.0971485,11001,Biden,Campaign,Speaks at Everytown’s Gun Sense University at the Washington Hilton,4,4,4,4,4,4,8,8,8,10/29/24,9/19/24,Both,,"378,821",June 4
+6/15/24,Detroit,Wayne,Michigan,MI,42.3266374,-83.0503179,26163,Trump,Campaign,"Roundtable in Detroit; speaks at Turning Point ""People's Convention"" event",9,11,30,6,8,33,63,19,15,11/4/24,10/18/24,Both,Wayne County,"1,447,552",August 6
+6/18/24,Racine,Racine,Wisconsin,WI,42.7083839,-87.9164651,55101,Trump,Campaign,Remarks at campaign event,2,2,29,2,2,21,50,4,4,10/22/24,10/28/24,Both,Racine County,"109,137",August 13
+6/22/24,Washington,District of Columbia,District of Columbia,DC,38.893859,-77.0971485,11001,Trump,Campaign,Remarks at the Faith and Freedom convention,4,4,4,4,4,4,8,8,8,10/29/24,9/19/24,Both,,"378,821",June 4
+6/22/24,Philadelphia,Philadelphia,Pennsylvania,PA,40.0077,-75.1339,42101,Trump,Campaign,Campaign rally at Temple University's Liacouras Center,8,8,43,3,3,37,80,11,11,11/4/24,9/10/24,Both,Philadelphia County,"1,035,648",April 23
+6/26/24,Atlanta,Fulton,Georgia,GA,33.7473456,-84.4159076,13121,Trump,Campaign,Event at Black barber shop,5,5,14,5,5,12,26,10,10,11/3/24,11/4/24,Both,Fulton County,"868,981",June 18
+6/28/24,Raleigh,Wake,North Carolina,NC,35.8044863,-78.7098135,37183,Biden,Campaign,Campaign rally,5,5,21,3,3,24,45,8,8,10/30/24,11/4/24,Both,Wake County,"823,509",May 14
+6/28/24,Chesapeake,Chesapeake City,Virginia,VA,36.6018413,-76.4490084,51550,Trump,Campaign,Campaign rally with Virginia Gov. Glenn Youngkin,0,0,1,1,1,5,6,1,1,,6/28/24,Trump,Chesapeake independent city,"180,864",June 18
+6/29/24,New York,New York,New York,NY,40.6943,-73.9249,36061,Biden,Campaign,Remarks at Stonewall National Monument,1,1,3,5,5,6,9,6,6,10/1/24,10/27/24,Both,New York County,"1,113,601",June 25
+7/5/24,Madison,Dane,Wisconsin,WI,43.0827,-89.3923,55025,Biden,Campaign,Campaign rally,5,5,29,0,1,21,50,6,5,10/30/24,,Biden,Dane County,"377,076",August 13
+7/7/24,Philadelphia,Philadelphia,Pennsylvania,PA,40.0077,-75.1339,42101,Biden,Campaign,"Event at Mt. Airy Church of God in Christ, drop-by of campaign office",8,8,43,3,3,37,80,11,11,11/4/24,9/10/24,Both,Philadelphia County,"1,035,648",April 23
+7/7/24,Harrisburg,Dauphin,Pennsylvania,PA,40.2745727,-76.8994227,42043,Biden,Campaign,Visit to AFSCME local,3,3,43,3,3,37,80,6,6,10/2/24,10/26/24,Both,Dauphin County,"193,452",April 23
+7/9/24,Doral,Miami-Dade,Florida,FL,25.809793,-80.3460198,12025,Trump,Campaign,Campaign rally,0,0,1,2,3,6,7,3,2,,10/22/24,Trump,Miami-Dade County,"1,442,196",March 19
+7/10/24,Washington,District of Columbia,District of Columbia,DC,38.893859,-77.0971485,11001,Biden,Campaign,Meets union members at AFL-CIO,4,4,4,4,4,4,8,8,8,10/29/24,9/19/24,Both,,"378,821",June 4
+7/12/24,Detroit,Wayne,Michigan,MI,42.3266374,-83.0503179,26163,Biden,Campaign,Campaign rally,9,11,30,6,8,33,63,19,15,11/4/24,10/18/24,Both,Wayne County,"1,447,552",August 6
+7/13/24,Butler,Butler,Pennsylvania,PA,40.8635399,-79.9055362,42019,Trump,Campaign,Campaign rally; shooting,0,1,43,2,2,37,80,3,2,,10/5/24,Trump,Butler County,"138,232",April 23
+7/15/24,Milwaukee,Milwaukee,Wisconsin,WI,43.0642,-87.9673,55079,Trump,Campaign,In town for RNC,5,7,29,4,4,21,50,11,9,11/4/24,11/1/24,Both,Milwaukee County,"489,950",August 13
+7/16/24,Las Vegas,Clark,Nevada,NV,36.2333,-115.2654,32003,Biden,Campaign,Speech to NAACP; economic summit,8,9,13,6,9,12,25,18,14,11/2/24,10/24/24,Both,Clark County,"1,676,870",June 11
+7/20/24,Grand Rapids,Kent,Michigan,MI,42.9615,-85.6557,26081,Trump,Campaign,Rally with VP pick JD Vance,2,2,30,3,6,33,63,8,5,10/18/24,11/4/24,Both ,Kent County,"518,797",August 6
+7/22/24,Middletown,Butler,Ohio,OH,39.5033859,-84.3958396,39017,Vance,Campaign,Vance rally,0,0,0,1,1,2,2,1,1,,7/22/24,Vance,Butler County,"252,701",March 19
+7/22/24,Radford,Radford City,Virginia,VA,37.1264789,-80.5866793,51750,Vance,Campaign,Vance rally,0,0,1,1,1,5,6,1,1,,7/22/24,Vance,Radford independent city,"9,262",June 18
+7/23/24,West Allis,Milwaukee,Wisconsin,WI,43.0023312,-88.0481001,55079,Harris,Campaign,Harris rally at West Allis High School,2,7,29,0,4,21,50,11,2,11/1/24,,Harris,Milwaukee County,"489,950",August 13
+7/24/24,Indianapolis,Marion,Indiana,IN,39.7796675,-86.2979005,18097,Harris,Campaign,Harris speech at Zeta Phi Beta Sorority's Grand Boule,1,1,1,0,0,0,1,1,1,7/24/24,,Harris,Marion County,"625,443",May 7
+7/24/24,Charlotte,Mecklenburg,North Carolina,NC,35.2030383,-80.9482419,37119,Trump,Campaign,Trump rally in Charlotte,4,4,21,3,4,24,45,8,7,11/3/24,9/23/24,Both,Mecklenburg County,"790,579",May 14
+7/25/24,Houston,Harris,Texas,TX,29.7879096,-95.4658565,48201,Harris,Campaign,Harris speech to American Federation of Teachers,3,3,3,0,0,2,5,3,3,10/25/24,,Harris,Harris County,"2,604,124",March 5
+7/26/24,West Palm Beach,Palm Beach,Florida,FL,26.7036442,-80.0591653,12099,Trump,Campaign,Trump speaks to Turning Point Believers' Summit,0,0,1,2,3,6,7,3,2,,7/26/24,Trump,Palm Beach County,"862,178",March 19
+7/27/24,St. Cloud,Stearns,Minnesota,MN,45.5426782,-94.2119293,27145,Trump,Campaign,Trump/Vance rally,0,0,2,1,1,2,4,1,1,,7/27/24,Trump/Vance,Stearns County,"94,516",August 13
+7/27/24,Nashville,Davidson ,Tennessee,TN,36.160651,-86.8056063,47037,Trump,Campaign,Trump speaks at cryptocurrency conference,0,0,0,1,1,1,1,1,1,,7/27/24,Trump,Davidson County,"490,424",March 5
+7/30/24,Atlanta,Fulton,Georgia,GA,33.7473456,-84.4159076,13121,Harris,Campaign,Harris rally in Atlanta,5,5,14,5,5,12,26,10,10,11/3/24,11/4/24,Both,Fulton County,"868,981",June 18
+7/30/24,Henderson,Clark,Nevada,NV,36.0376783,-115.0139534,32003,Vance,Campaign,Vance rally,1,9,13,3,9,12,25,18,4,10/27/24,10/31/24,Both,Clark County,"1,676,870",June 11
+7/30/24,Reno,Washoe,Nevada,NV,39.5497,-119.8483,32031,Vance,Campaign,Vance rally,4,4,13,3,3,12,25,7,7,10/31/24,10/23/24,Both,Washoe County,"378,608",June 11
+7/31/24,Glendale,Maricopa,Arizona,AZ,33.6029761,-112.3888516,04013,Vance,Campaign,Vance rally ,1,10,15,2,8,12,27,18,3,8/9/24,7/31/24,Both,Maricopa County,"2,934,306",July 30
+7/31/24,Chicago,Cook,Illinois,IL,41.8336152,-87.896768,17031,Trump,Campaign,Trump speaks at NABJ conference,1,1,1,2,2,2,3,3,3,8/19/24,10/15/24,Both,Cook County,"3,452,398",March 19
+7/31/24,Harrisburg,Dauphin,Pennsylvania,PA,40.2745727,-76.8994227,42043,Trump,Campaign,Trump rally,3,3,43,3,3,37,80,6,6,10/30/24,10/26/24,Both,Dauphin County,"193,452",April 23
+7/31/24,Houston,Harris,Texas,TX,29.7879096,-95.4658565,48201,Harris,Campaign,Harris speech to Sigma Gamma Rho Sorority biennial boule,3,3,3,0,0,2,5,3,3,10/25/24,,Harris,Harris County,"2,604,124",March 5
+8/6/24,Philadelphia,Philadelphia,Pennsylvania,PA,40.0077,-75.1339,42101,Harris,Campaign,Harris rally - introduces Walz as VP pick,8,8,43,3,3,37,80,11,11,11/4/24,9/10/24,Both,Philadelphia County,"1,035,648",April 23
+8/6/24,Philadelphia,Philadelphia,Pennsylvania,PA,40.0077,-75.1339,42101,Vance,Campaign,Vance rally,8,8,43,3,3,37,80,11,11,11/4/24,9/10/24,Both,Philadelphia County,"1,035,648",April 23
+8/7/24,Detroit,Wayne,Michigan,MI,42.3266374,-83.0503179,26163,Harris,Campaign,"Harris, Walz rally",9,11,30,6,8,33,63,19,15,11/4/24,10/18/24,Both,Wayne County,"1,447,552",August 6
+8/7/24,Detroit,Wayne,Michigan,MI,42.3266374,-83.0503179,26163,Vance,Campaign,Vance rally,9,11,30,6,8,33,63,19,15,11/4/24,10/18/24,Both,Wayne County,"1,447,552",August 6
+8/7/24,Eau Claire,Eau Claire,Wisconsin,WI,44.8197654,-91.5224738,55035,Harris,Campaign,"Harirs, Walz rallies",2,2,29,2,2,21,50,4,4,10/14/24,9/17/24,Both,Eau Claire County,"61,148",August 13
+8/7/24,Eau Claire,Eau Claire,Wisconsin,WI,44.8197654,-91.5224738,55035,Vance,Campaign,Vance rally ,2,2,29,2,2,21,50,4,4,10/14/24,9/17/24,Both,Eau Claire County,"61,148",August 13
+8/8/24,West Palm Beach,Palm Beach,Florida,FL,26.7036442,-80.0591653,12099,Trump,Campaign,Trump news conference,0,0,1,2,3,6,7,3,2,,8/8/24,Trump,Palm Beach County,"862,178",March 19
+8/8/24,Wayne,Wayne,Michigan,MI,42.2819214,-83.4114961,26163,Harris,Campaign,"Harris, Walz event at UAW Local 900",1,11,30,0,8,33,63,19,1,8/8/24,,Harris/Walz,Wayne County,"1,447,552",August 6
+8/9/24,Glendale,Maricopa,Arizona,AZ,33.6029761,-112.3888516,04013,Harris,Campaign,"Harris, Walz rally",1,10,15,2,8,12,27,18,3,8/9/24,7/31/24,Both,Maricopa County,"2,934,306",July 30
+8/9/24,Bozeman,Gallatin,Montana,MT,45.6815228,-111.0903537,30031,Trump,Campaign,Trump rally in Bozeman,0,0,0,1,1,1,1,1,1,,8/19/24,Trump,Gallatin County,"91,451",June 4
+8/10/24,Las Vegas,Clark,Nevada,NV,36.2333,-115.2654,32003,Harris,Campaign,"Harris, Walz rally",8,9,13,6,9,12,25,18,14,11/2/24,11/2/24,Both,Clark County,"1,676,870",June 11
+8/13/24,Los Angeles,Los Angeles,California,CA,34.0516723,-118.3730512,06037,Walz,Campaign,Walz speech to AFSCME ,1,1,1,0,0,1,2,1,1,8/13/24,,Walz,Los Angeles County,"5,665,752",March 5
+8/14/24,Byron Center,Kent,Michigan,MI,42.8121206,-85.7485355,26081,Vance,Campaign,Vance address ,0,2,30,1,6,33,63,8,1,,8/14/24,Vance,Kent County,"518,797",August 6
+8/14/24,Asheville,Buncombe,North Carolina,NC,35.5949541,-82.5997781,37021,Trump,Campaign,Trump economic speech in Asheville,2,2,21,1,1,24,45,3,3,10/30/24,8/14/24,Both,Buncombe County,"208,652",May 14
+8/15/24,Largo,Prince George's,Maryland,MD,38.8793707,-76.8345309,24033,Harris,Campaign,Harris and Biden event on drug costs,1,1,1,0,0,0,1,1,1,8/15/24,,Harris,Prince George's County,"604,477",May 14
+8/15/24,Bedminster,Somerset,New Jersey,NJ,40.655764,-74.70022,34035,Trump,Campaign,Trump news conference,0,0,0,1,1,2,2,1,1,,8/15/24,Trump,Somerset County,"256,929",June 4
+8/15/24,New Kensington,Westmoreland,Pennsylvania,PA,40.570023,-79.7665506,42129,Vance,Campaign,Vance speaks at VFW Post 92,0,1,43,1,3,37,80,4,1,,8/15/24,Vance,Westmoreland County,"245,751",April 23
+8/16/24,Raleigh,Wake,North Carolina,NC,35.8324,-78.6438,37183,Harris,Campaign,Harris rally to unveil economic plan,5,5,21,3,3,24,45,8,8,10/30/24,11/4/24,Both,Wake County,"823,509",May 14
+8/16/24,Milwaukee,Milwaukee,Wisconsin,WI,43.0642,-87.9673,55079,Vance,Campaign,Vance speaks to police union ,5,7,29,4,4,21,50,11,9,11/4/24,11/1/24,Both,Milwaukee County,"489,950",August 13
+8/17/24,Omaha,Douglas,Nebraska,NE,41.2482047,-95.97078,31055,Walz,Campaign,Walz rally ,2,2,2,0,0,0,2,2,2,10/19/24,,Walz,Douglas County,"355,604",May 14
+8/17/24,Wilkes-Barre,Luzerne,Pennsylvania,PA,41.246077,-75.8879325,42079,Trump,Campaign,Trump rally,1,1,43,1,1,37,80,2,2,9/13/24,8/17/24,Both,Luzerne County,"198,052",April 23
+8/18/24,Pittsburgh,Allegheny,Pennsylvania,PA,40.4396,-79.9763,42003,Harris,Campaign,Harris/Walz rally,8,8,43,2,3,37,80,11,10,11/4/24,11/4/24,Both,Allegheny County,"904,410",April 23
+8/18/24,Rochester,Beaver,Pennsylvania,PA,40.7028643,-80.3039173,42007,Harris,Campaign,Harris phone bank visit ,1,1,43,0,0,37,80,1,1,,8/18/24,Harris,Beaver County,"112,307",April 23
+8/19/24,Chicago,Cook,Illinois,IL,41.8336152,-87.896768,17031,Harris,Campaign,Harris in town for DNC,1,1,1,2,2,2,3,3,3,8/19/24,10/15/24,Both,Cook County,"3,452,398",March 19
+8/19/24,York,York,Pennsylvania,PA,39.9669437,-76.751489,42133,Trump,Campaign,Trump remarks,1,1,43,1,1,37,80,2,2,10/2/24,8/19/24,Both,York County,"311,832",April 23
+8/19/24,Philadelphia,Philadelphia,Pennsylvania,PA,40.0077,-75.1339,42101,Vance,Campaign,Vance remarks ,8,8,43,3,3,37,80,11,11,11/4/24,9/10/24,Both,Philadelphia County,"1,035,648",April 23
+8/20/24,Howell,Livingston,Michigan,MI,42.6072678,-83.9383683,26093,Trump,Campaign,Trump remarks on crime and safety,0,0,30,1,1,33,63,1,1,,8/20/24,Trump,Livingston County,"166,971",August 6
+8/20/24,Milwaukee,Milwaukee,Wisconsin,WI,43.0642,-87.9673,55079,Harris,Campaign,Harris/Walz rally,5,7,29,4,4,21,50,11,9,11/4/24,11/1/24,Both,Milwaukee County,"489,950",August 13
+8/20/24,Kenosha,Kenosha,Wisconsin,WI,42.5902661,-87.9081141,55059,Vance,Campaign,Vance remarks on crime and safety,0,0,29,1,1,21,50,1,1,,8/20/24,Vance,Kenosha County,"88,131",August 13
+8/21/24,Asheboro,Randolph,North Carolina,NC,35.7136329,-79.8791787,37151,Trump,Campaign,Trump/Vance rally,0,0,21,1,1,24,45,1,1,,8/21/24,Trump/Vance,Randolph County,"95,885",May 14
+8/22/24,Montezuma Pass,Cochise,Arizona,AZ,31.350067,-110.2937908,04003,Trump,Campaign,Trump visits border,0,1,15,1,1,12,27,2,1,,8/22/24,Trump,Cochise County,"89,674",July 30
+8/22/24,Valdosta,Lowndes,Georgia,GA,30.8311569,-83.3176031,13185,Vance,Campaign,Vance remarks on immigration,0,0,14,1,1,12,26,1,1,,8/22/24,Vance,Lowndes County,"74,679",May 21
+8/23/24,Glendale,Maricopa,Arizona,AZ,33.6029761,-112.3888516,04013,Trump,Campaign,Trump rally,1,10,15,2,8,12,27,18,3,8/9/24,8/23/24,Both,Maricopa County,"2,934,306",July 30
+8/23/24,St. Paul,Ramsey,Minnesota,MN,44.9492479,-93.1335938,27123,Walz,Campaign,Walz event,2,2,2,1,1,2,4,3,3,8/23/24,5/17/24,Both,Ramsey County,"311,256",August 13
+8/23/24,Las Vegas,Clark,Nevada,NV,36.2333,-115.2654,32003,Trump,Campaign,Trump event,8,9,13,6,9,12,25,18,14,11/2/24,11/2/24,Both,Clark County,"1,676,870",June 11
+8/26/24,Detroit,Wayne,Michigan,MI,42.3266374,-83.0503179,26163,Trump,Campaign,Trump speaks to national guard group,9,11,30,6,8,33,63,19,15,11/4/24,10/18/24,Both,Wayne County,"1,447,552",August 6
+8/26/24,Arlington,Arlington,Virginia,VA,38.8808582,-77.143409,51013,Trump,Campaign,Trump lays wreath at Arlington National Cemetery,0,0,1,1,1,5,6,1,1,,8/26/24,Trump,Arlington County,"181,203",June 18
+8/26/24,Falls Church,Falls Church independent city,Virginia,VA,38.8809648,-77.1792161,51610,Trump,Campaign,Trump stops by Vietnamese restaurant,0,0,1,1,1,5,6,1,1,,8/26/24,Trump,Falls Church independent city,"11,566",June 18
+8/27/24,Big Rapids,Mecosta,Michigan,MI,43.6994611,-85.500258,26107,Vance,Campaign,Vance economic remarks,0,0,30,1,1,33,63,1,1,,8/27/24,Vance,Mecosta County,"32,583",August 6
+8/28/24,Savannah,Chatham,Georgia,GA,32.0919945,-81.1460978,13051,Harris,Campaign,Harris/Walz bus tour begins,2,2,14,1,1,12,26,3,3,10/29/24,9/24/24,Both,Chatham County,"208,387",May 21
+8/28/24,Hinesville,Liberty,Georgia,GA,31.8324566,-81.6288781,13179,Harris,Campaign,Harris/Walz bus tour stop at high school ,1,1,14,0,0,12,26,1,1,8/28/24,,Harris/Walz,Liberty County,"36,596",May 21
+8/28/24,Boston,Suffolk,Massachusetts,MA,42.3544566,-71.05456,25025,Walz,Campaign,Walz event at international firefighter conference,1,1,1,1,1,1,2,2,2,8/28/24,8/29/24,Both,Suffolk County,"482,855",February 24
+8/28/24,Erie,Erie,Pennsylvania,PA,42.1153771,-80.1121465,42049,Vance,Campaign,Vance remarks on economy,3,3,43,2,2,37,80,5,5,10/31/24,9/29/24,Both,Erie County,"174,073",April 23
+8/28/24,De Pere,Brown,Wisconsin,WI,44.4449729,-88.096732,55009,Vance,Campaign,Vance remarks on economy,0,2,29,1,3,21,50,5,1,,8/28/24,Vance,Brown County,"148,476",August 13
+8/29/24,Boston,Suffolk,Massachusetts,MA,42.3544566,-71.05456,25025,Vance,Campaign,Vance event at international firefighter conference,1,1,1,1,1,1,2,2,2,8/28/24,8/29/24,Both,Suffolk County,"482,855",February 24
+8/29/24,Potterville,Eaton ,Michigan,MI,42.6275115,-84.7497636,26045,Trump,Campaign,Trump event at steel facility,0,0,30,1,1,33,63,1,1,,8/29/24,Trump,Eaton County,"89,967",August 6
+8/29/24,Raleigh,Wake,North Carolina,NC,35.8324,-78.6438,37183,Walz,Campaign,Walz campaign event,5,5,21,3,3,24,45,8,8,10/30/24,11/4/24,Both,Wake County,"823,509",May 14
+8/29/24,La Crosse,La Crosse,Wisconsin,WI,43.8223729,-91.2993139,55063,Trump,Campaign,Trump town hall,2,2,29,2,2,21,50,4,4,11/4/24,11/4/24,Both,La Crosse County,"68,571",August 13
+8/30/24,Washington,District of Columbia,District of Columbia,DC,38.893859,-77.0971485,11001,Trump,Campaign,Trump speaks at Moms for Liberty event,4,4,4,4,4,4,8,8,8,10/29/24,9/19/24,Both,District of Columbia,"378,821",June 4
+8/30/24,Johnstown,Cambria,Pennsylvania,PA,40.3269357,-78.9598965,42021,Trump,Campaign,Trump rally,1,1,43,2,2,37,80,3,3,9/13/24,10/12/24,Both,Cambria County,"84,893",April 23
+9/2/24,St. Paul,Ramsey,Minnesota,MN,44.9492479,-93.1335938,27123,Walz,Campaign,Walz meets local labor leaders,2,2,2,1,1,2,4,3,3,9/2/24,5/17/24,Both,Ramsey County,"311,256",August 13
+9/2/24,Detroit,Wayne,Michigan,MI,42.3266374,-83.0503179,26163,Harris,Campaign,Harris event,9,11,30,6,8,33,63,19,15,11/4/24,10/18/24,Both,Wayne County,"1,447,552",August 6
+9/2/24,Pittsburgh,Allegheny,Pennsylvania,PA,40.4396,-79.9763,42003,Harris,Campaign,Harris event,8,8,43,2,3,37,80,11,10,11/4/24,11/4/24,Both,Allegheny County,"904,410",April 23
+9/2/24,Milwaukee,Milwaukee,Wisconsin,WI,43.0642,-87.9673,55079,Walz,Campaign,Walz speaks at Milwaukee Area Labor Council’s Laborfest 2024,5,7,29,4,4,21,50,11,9,11/4/24,11/1/24,Both,Milwaukee County,"489,950",August 13
+9/4/24,Portsmouth,Rockingham,New Hampshire,NH,43.0570085,-70.809481,33015,Harris,Campaign,Harris event,1,1,2,0,1,1,3,2,1,9/4/24,,Harris,Rockingham County,"15,611",January 23
+9/4/24,Lancaster,Lancaster,Pennsylvania,PA,40.0399681,-76.3416343,42071,Walz,Campaign,Walz event,1,1,43,1,2,37,80,3,2,9/4/24,10/20/24,Both,Lancaster County,"348,110",April 23
+9/4/24,Pittsburgh,Allegheny,Pennsylvania,PA,40.4396,-79.9763,42003,Walz,Campaign,Walz event,8,8,43,2,3,37,80,11,10,11/4/24,11/4/24,Both,Allegheny County,"904,410",April 23
+9/4/24,Harrisburg,Dauphin,Pennsylvania,PA,40.2745727,-76.8994227,42043,Trump,Campaign,Trump Fox town hall,3,3,43,3,3,37,80,6,6,10/30/24,10/26/24,Both,Dauphin County,"193,452",April 23
+9/4/24,Mesa,Maricopa,Arizona,AZ,33.3956159,-111.8203399,04013,Vance,Campaign,Vance speaks at Turning Point Action conference,0,10,15,1,8,12,27,18,1,,9/4/24,Vance,Maricopa County,"2,934,306",July 30
+9/5/24,New York,New York,New York,NY,40.6943,-73.9249,36061,Trump,Campaign,Trump speaks at Economic Club of New York,1,1,3,5,5,6,9,6,6,10/1/24,10/27/24,Both,New York County,"1,113,601",June 25
+9/5/24,Pittsburgh,Allegheny,Pennsylvania,PA,40.4396,-79.9763,42003,Harris,Campaign,Harris event,8,8,43,2,3,37,80,11,10,11/4/24,11/4/24,Both,Allegheny County,"904,410",April 23
+9/5/24,Erie,Erie,Pennsylvania,PA,42.1153771,-80.1121465,42049,Walz,Campaign,Walz event,3,3,43,2,2,37,80,5,5,10/31/24,9/29/24,Both,Erie County,"174,073",April 23
+9/5/24,Phoenix,Maricopa,Arizona,AZ,33.5722,-112.0891,04013,Vance,Campaign,Vance event,4,10,15,2,8,12,27,18,6,10/31/24,9/5/24,Both,Maricopa County,"2,934,306",July 30
+9/6/24,Charlotte,Mecklenburg,North Carolina,NC,35.2030383,-80.9482419,37119,Trump,Campaign,Trump speaks to Fraternal Order of Police,4,4,21,3,4,24,45,8,7,11/3/24,9/23/24,Both,Mecklenburg County,"790,579",May 14
+9/7/24,Washington,District of Columbia,District of Columbia,DC,38.893859,-77.0971485,11001,Walz,Campaign,Walz remarks at Human Rights Campaign event,4,4,4,4,4,4,8,8,8,10/29/24,9/19/24,Both,,"378,821",June 4
+9/7/24,Mosinee,Marathon,Wisconsin,WI,44.7857422,-89.7039635,55073,Trump,Campaign,Trump event,0,1,29,1,2,21,50,3,1,,9/7/24,Trump,Marathon County,"78,640",August 13
+9/9/24,Reno,Washoe,Nevada,NV,39.5497,-119.8483,32031,Walz,Campaign,Walz meets first responders,4,4,13,3,3,12,25,7,7,10/31/24,10/23/24,Both,Washoe County,"378,608",June 11
+9/10/24,Las Vegas,Clark,Nevada,NV,36.2333,-115.2654,32003,Walz,Campaign,Walz drop by coffee shop after fundraiser,8,9,13,6,9,12,25,18,14,11/2/24,11/2/24,Both,Clark County,"1,676,870",June 11
+9/10/24,Tempe,Maricopa,Arizona,AZ,33.3919156,-111.9693863,04013,Walz,Campaign,Walz meets students,1,10,15,1,8,12,27,18,2,9/10/24,10/24/24,Both,Maricopa County,"2,934,306",July 30
+9/12/24,Charlotte,Mecklenburg,North Carolina,NC,35.2030383,-80.9482419,37119,Harris,Campaign,Harris rally,4,4,21,3,4,24,45,8,7,11/3/24,9/23/24,Both,Mecklenburg County,"790,579",May 14
+9/12/24,Greensboro,Guilford,North Carolina,NC,36.1002311,-79.9159503,37081,Harris,Campaign,Harris rally,2,2,21,3,4,24,45,6,5,10/30/24,11/2/24,Both,Guilford County,"377,994",May 14
+9/12/24,Grand Rapids,Kent,Michigan,MI,42.9615,-85.6557,26081,Walz,Campaign,Walz event,2,2,30,3,6,33,63,8,5,10/18/24,11/4/24,Both ,Kent County,"518,797",August 6
+9/12/24,Tucson,Pima,Arizona,AZ,32.1558028,-111.0489548,04019,Trump,Campaign,Trump rally ,2,2,15,2,2,12,27,4,4,10/22/24,10/22/24,Both,Pima County,"708,092",July 30
+9/13/24,East Lansing,Ingham,Michigan,MI,42.7490016,-84.5174747,26065,Walz,Campaign,Walz event - speaks to MSU students,2,3,30,0,0,33,63,3,2,9/13/24,,Walz,Ingham County,"213,952",August 6
+9/13/24,Wausau,Marathon,Wisconsin,WI,44.9623911,-89.7020596,55073,Walz,Campaign,Walz at volunteer appreciation event,1,1,29,1,2,21,50,3,2,9/13/24,10/28/24,Both,Marathon County,"78,640",August 13
+9/13/24,Wilkes-Barre,Luzerne,Pennsylvania,PA,41.246077,-75.8879325,42079,Harris,Campaign,Harris rally,1,1,43,1,1,37,80,2,2,9/13/24,8/17/24,Both,Luzerne County,"198,052",April 23
+9/13/24,Las Vegas,Clark,Nevada,NV,36.2333,-115.2654,32003,Trump,Campaign,Trump rally ,8,9,13,6,9,12,25,18,14,11/2/24,11/2/24,Both,Clark County,"1,676,870",June 11
+9/13/24,Johnstown,Cambria,Pennsylvania,PA,40.3269357,-78.9598965,42021,Harris,Campaign,Harris event,1,1,43,2,2,37,80,3,3,9/13/24,10/12/24,Both,Cambria County,"84,893",April 23
+9/14/24,Superior,Douglas,Wisconsin,WI,46.6966163,-92.1504433,55031,Walz,Campaign,Walz rally ,1,1,29,0,0,21,50,1,1,9/14/24,,Walz,Douglas County,"25,632",August 13
+9/16/24,Atlanta,Fulton,Georgia,GA,33.7473456,-84.4159076,13121,Vance,Campaign,Vance speaks at Georgia Faith and Freedom Coalition dinner,5,5,14,5,5,12,26,10,10,11/3/24,11/4/24,Both,Fulton County,"868,981",June 18
+9/17/24,Flint,Genesee,Michigan,MI,43.0124563,-83.7789869,26049,Trump,Campaign,Trump town hall,2,2,30,2,2,33,63,4,4,11/1/24,11/4/24,Both,Genesee County,"353,671",August 6
+9/17/24,Sparta,Kent,Michigan,MI,43.1553416,-85.7295224,26081,Vance,Campaign,Vance event,0,2,30,1,6,33,63,8,1,,9/17/24,Vance,Kent County,"518,797",August 6
+9/17/24,Eau Claire,Eau Claire,Wisconsin,WI,44.8197654,-91.5224738,55035,Vance,Campaign,Vance event,2,2,29,2,2,21,50,4,4,10/14/24,9/17/24,Both,Eau Claire County,"61,148",August 13
+9/17/24,Macon,Bibb,Georgia,GA,32.8326909,-83.7267418,13021,Walz,Campaign,"Walz visits campaign field office, greets restaurant patrons",1,1,14,1,1,12,26,2,2,9/17/24,11/3/24,Both,Bibb County,"109,546",May 21
+9/17/24,Asheville,Buncombe,North Carolina,NC,35.5949541,-82.5997781,37021,Walz,Campaign,Walz rally ,2,2,21,1,1,24,45,3,3,10/30/24,8/14/24,Both,Buncombe County,"208,652",May 14
+9/17/24,Philadelphia,Philadelphia,Pennsylvania,PA,40.0077,-75.1339,42101,Harris,Campaign,Interview with NABJ journalists,8,8,43,3,3,37,80,11,11,11/4/24,9/10/24,Both,Philadelphia County,"1,035,648",April 23
+9/17/24,Atlanta,Fulton,Georgia,GA,33.7473456,-84.4159076,13121,Walz,Campaign,Walz meets with Georgia Tech students,5,5,14,5,5,12,26,10,10,11/3/24,11/4/24,Both,Fulton County,"868,981",June 18
+9/18/24,Uniondale,Nassau,New York,NY,40.7157841,-73.6371684,36059,Trump,Campaign,Trump rally,0,0,3,1,1,6,9,1,1,,9/18/24,Trump,Nassau County,"1,064,828",June 25
+9/18/24,Raleigh,Wake,North Carolina,NC,35.8324,-78.6438,37183,Vance,Campaign,Vance event,5,5,21,3,3,24,45,8,8,10/30/24,11/4/24,Both,Wake County,"823,509",May 14
+9/19/24,Washington,District of Columbia,District of Columbia,DC,38.893859,-77.0971485,11001,Trump,Campaign,Two Trump events focused on antisemitism,4,4,4,4,4,4,8,8,8,10/29/24,9/19/24,Both,,"378,821",June 4
+9/19/24,Farmington Hills,Oakland,Michigan,MI,42.4842119,-83.4184747,26125,Harris,Campaign,Harris town hall with Oprah Winfrey,1,4,30,0,4,33,63,8,1,9/19/24,,Harris,Oakland County,"1,055,158",August 6
+9/20/24,Madison,Dane,Wisconsin,WI,43.0827,-89.3923,55025,Harris,Campaign,Campaign rally,5,5,29,0,1,21,50,6,5,10/30/24,,Harris,Dane County,"377,076",August 13
+9/20/24,Atlanta,Fulton,Georgia,GA,33.7473456,-84.4159076,13121,Harris,Campaign,Harris event,5,5,14,5,5,12,26,10,10,11/3/24,11/4/24,Both,Fulton County,"868,981",June 18
+9/21/24,Bethlehem,Lehigh,Pennsylvania,PA,40.6252992,-75.4073117,42077,Walz,Campaign,Walz campaign event,1,3,43,0,2,37,80,5,1,9/21/24,,Walz,Lehigh & Northampton Counties,"465,184",April 23
+9/22/24,Wilmington,New Hanover,North Carolina,NC,34.2157586,-77.9538195,37129,Trump,Campaign,Trump rally,2,2,21,2,2,24,45,4,4,10/24/24,10/16/24,Both,New Hanover County,"181,321",May 14
+9/22/24,Leesport,Berks,Pennsylvania,PA,40.4448424,-75.9778107,42011,Vance,Campaign,Vance event,0,2,43,1,3,37,80,5,1,,9/22/24,Vance,Berks County,"262,594",April 23
+9/23/24,Indiana,Indiana,Pennsylvania,PA,40.6220225,-79.1664877,42063,Trump,Campaign,Trump event,0,0,43,1,1,37,80,1,1,,9/23/24,Trump,Indiana County,"48,814",April 23
+9/23/24,Charlotte,Mecklenburg,North Carolina,NC,35.2030383,-80.9482419,37119,Vance,Campaign,Two Vance events ,4,4,21,3,4,24,45,8,7,11/3/24,9/23/24,Both,Mecklenburg County,"790,579",May 14
+9/23/24,Smithton,Westmoreland,Pennsylvania,PA,40.1535176,-79.7464273,42129,Trump,Campaign,Trump remarks at meeting of Protecting America Initiative,0,1,43,1,3,37,80,4,1,,9/23/24,Trump,Westmoreland County,"245,751",April 23
+9/24/24,Savannah,Chatham,Georgia,GA,32.0919945,-81.1460978,13051,Trump,Campaign,Trump speech on economics,2,2,14,1,1,12,26,3,3,10/29/24,9/24/24,Both,Chatham County,"208,387",May 21
+9/25/24,Pittsburgh,Allegheny,Pennsylvania,PA,40.4396,-79.9763,42003,Harris,Campaign,Harris speech on economic plan,8,8,43,2,3,37,80,11,10,11/4/24,11/4/24,Both,Allegheny County,"904,410",April 23
+9/25/24,Mint Hill,Mecklenburg,North Carolina,NC,35.1772167,-80.6936886,37119,Trump,Campaign,Trump event,0,4,21,1,4,24,45,8,1,,9/25/24,Trump,Mecklenburg County,"790,579",May 14
+9/25/24,Traverse City,Grand Traverse,Michigan,MI,44.748911,-85.646207,26055,Vance,Campaign,Vance rally,1,1,30,2,2,33,63,3,3,11/1/24,10/25/24,Both,Grand Traverse County,"83,150",August 6
+9/27/24,Douglas,Cochise,Arizona,AZ,31.4017372,-109.6282452,04003,Harris,Campaign,Harris visit to U.S.-Mexico border,1,1,15,0,1,12,27,2,1,9/27/24,,Harris,Cochise County,"89,674",July 30
+9/27/24,Walker,Kent,Michigan,MI,42.9708694,-85.8072953,26081,Trump,Campaign,Trump event,0,2,30,1,6,33,63,8,1,,9/27/24,Trump,Kent County,"518,797",August 6
+9/27/24,Warren,Macomb,Michigan,MI,42.4927979,-83.0682988,26099,Trump,Campaign,Trump town hall,1,2,30,2,2,33,63,4,3,10/11/24,11/1/24,Both,Macomb County,"724,203",August 6
+9/28/24,Prairie du Chien,Crawford,Wisconsin,WI,43.0461814,-91.210145,55023,Trump,Campaign,Trump remarks,0,0,29,1,1,21,50,1,1,,9/28/24,Trump,Crawford County,"9,035",August 13
+9/28/24,Newtown,Bucks,Pennsylvania,PA,40.2294174,-74.9421847,42017,Vance,Campaign,Vance rally,0,2,43,2,2,37,80,4,2,,11/4/24,Vance,Bucks County,"474,535",April 23
+9/28/24,Monroeville,Allegheny,Pennsylvania,PA,40.4243146,-79.8029538,42003,Vance,Campaign,Vance town hall,0,8,43,1,3,37,80,11,1,,9/28/24,Vance,Allegheny County,"904,410",April 23
+9/29/24,Las Vegas,Clark,Nevada,NV,36.2333,-115.2654,32003,Harris,Campaign,Harris event,8,9,13,6,9,12,25,18,14,11/2/24,11/2/24,Both,Clark County,"1,676,870",June 11
+9/29/24,Erie,Erie,Pennsylvania,PA,42.1153771,-80.1121465,42049,Trump,Campaign,Trump rally,3,3,43,2,2,37,80,5,5,10/31/24,9/29/24,Both,Erie County,"174,073",April 23
+10/1/24,Waunakee,Dane,Wisconsin,WI,43.1830079,-89.4500249,55025,Trump,Campaign,Trump event,0,5,29,1,1,21,50,6,1,,10/1/24,Trump,Dane County,"377,076",August 13
+10/1/24,Milwaukee,Milwaukee,Wisconsin,WI,43.0642,-87.9673,55079,Trump,Campaign,Trump event,5,7,29,4,4,21,50,11,9,11/4/24,11/1/24,Both,Milwaukee County,"489,950",August 13
+10/2/24,Harrisburg,Dauphin,Pennsylvania,PA,40.2745727,-76.8994227,42043,Walz,Campaign,Bus tour stop,3,3,43,3,3,37,80,6,6,10/30/24,10/26/24,Both,Dauphin County,"193,452",April 23
+10/2/24,York,York,Pennsylvania,PA,39.9669437,-76.751489,42133,Walz,Campaign,Bus tour stop,1,1,43,1,1,37,80,2,2,10/2/24,8/19/24,Both,York County,"311,832",April 23
+10/2/24,Reading,Berks,Pennsylvania,PA,40.3337602,-75.9665859,42011,Walz,Campaign,Bus tour stop,2,2,43,2,3,37,80,5,4,11/4/24,11/4/24,Both,Berks County,"262,594",April 23
+10/2/24,Auburn Hills,Oakland,Michigan,MI,42.664726,-83.3103683,26125,Vance,Campaign,Vance event,0,4,30,2,4,33,63,8,2,,10/2/24,Vance,Oakland County,"1,055,158",August 6
+10/2/24,Marne,Ottawa,Michigan,MI,43.0400744,-85.8381344,26139,Vance,Campaign,Vance event,0,0,30,1,2,33,63,2,1,,10/2/24,Vance,Ottawa County,"233,443",August 6
+10/3/24,Ripon,Fond du Lac,Wisconsin,WI,43.8402581,-88.8640509,55039,Harris,Campaign,Harris event,1,1,29,0,0,21,50,1,1,10/3/24,,Harris,Fond du Lac County,"56,954",August 13
+10/3/24,Saginaw,Saginaw,Michigan,MI,43.4199,-83.9501,26145,Trump,Campaign,Trump rally,3,3,30,2,3,33,63,6,5,10/28/24,10/29/24,Both,Saginaw County,"159,329",August 6
+10/4/24,Redford,Wayne,Michigan,MI,42.4233583,-83.2989044,26163,Harris,Campaign,Harris event (visits firefighters),1,11,30,0,8,33,63,19,1,10/4/24,,Harris,Wayne County,"1,447,552",August 6
+10/4/24,Flint,Genesee,Michigan,MI,43.0124563,-83.7789869,26049,Harris,Campaign,Harris event,2,2,30,2,2,33,63,4,4,11/1/24,11/4/24,Both,Genesee County,"353,671",August 6
+10/4/24,Fayetteville,Cumberland,North Carolina,NC,35.0901356,-79.0381627,37051,Trump,Campaign,Trump town hall,0,0,21,1,1,24,45,1,1,,10/4/24,Trump,Cumberland County,"214,629",May 14
+10/4/24,Lindale,Floyd,Georgia,GA,34.1942516,-85.202726,13115,Vance,Campaign,Vance immigration event,0,0,14,1,1,12,26,1,1,,10/4/24,Vance,Floyd County,"62,332",May 21
+10/5/24,Butler,Butler,Pennsylvania,PA,40.8635399,-79.9055362,42019,Trump,Campaign,Campaign rally at same site where July shooting happened,0,1,43,2,2,37,80,3,2,,10/5/24,Trump,Butler County,"138,232",April 23
+10/6/24,Juneau,Dodge,Wisconsin,WI,43.4010931,-88.7249695,55027,Trump,Campaign,Trump rally,0,0,29,1,1,21,50,1,1,,10/6/24,Trump,Dodge County,"49,561",August 13
+10/8/24,Reno,Washoe,Nevada,NV,39.5497,-119.8483,32031,Walz,Campaign,Walz rally ,4,4,13,3,3,12,25,7,7,10/31/24,10/23/24,Both,Washoe County,"378,608",June 11
+10/8/24,Detroit,Wayne,Michigan,MI,42.3266374,-83.0503179,26163,Vance,Campaign,Vance event,9,11,30,6,8,33,63,19,15,11/4/24,10/18/24,Both,Wayne County,"1,447,552",August 6
+10/9/24,Chandler,Maricopa,Arizona,AZ,33.2827,-111.8517,04013,Walz,Campaign,Walz veterans and military families event ,3,10,15,0,8,12,27,18,3,10/9/24,,Walz,Maricopa County,"2,934,306",July 30
+10/9/24,Phoenix,Maricopa,Arizona,AZ,33.5722,-112.0891,04013,Walz,Campaign,Walz  event with tribal leaders,4,10,15,2,8,12,27,18,6,10/31/24,9/5/24,Both,Maricopa County,"2,934,306",July 30
+10/9/24,Tucson,Pima,Arizona,AZ,32.1558028,-111.0489548,04019,Walz,Campaign,Walz rally ,2,2,15,2,2,12,27,4,4,11/2/24,10/22/24,Both,Pima County,"708,092",July 30
+10/9/24,Scranton,Lackawanna,Pennsylvania,PA,41.4044,-75.6649,42069,Trump,Campaign,Trump event,3,3,43,1,1,37,80,4,4,11/4/24,10/9/24,Both,Lackawanna County,"143,638",April 23
+10/9/24,Reading,Berks,Pennsylvania,PA,40.3337602,-75.9665859,42011,Trump,Campaign,Trump event,2,2,43,2,3,37,80,5,4,11/4/24,11/4/24,Both,Berks County,"262,594",April 23
+10/10/24,Las Vegas,Clark,Nevada,NV,36.2333,-115.2654,32003,Harris,Campaign,Harris Univision town hall,8,9,13,6,9,12,25,18,14,11/2/24,11/2/24,Both,Clark County,"1,676,870",June 11
+10/10/24,Detroit,Wayne,Michigan,MI,42.3266374,-83.0503179,26163,Trump,Campaign,Trump speaks to Detroit Economic Club,9,11,30,6,8,33,63,19,15,11/4/24,10/18/24,Both,Wayne County,"1,447,552",August 6
+10/10/24,Greensboro,Guilford,North Carolina,NC,36.1002311,-79.9159503,37081,Vance,Campaign,Vance town hall,2,2,21,3,4,24,45,6,5,10/30/24,11/2/24,Both,Guilford County,"377,994",May 14
+10/10/24,Chandler,Maricopa,Arizona,AZ,33.2827,-111.8517,04013,Harris,Campaign,Harris campaign rally at Rawhide Western Town & Event Center,3,10,15,0,8,12,27,18,3,10/10/24,,Harris,Maricopa County,"2,934,306",July 30
+10/11/24,Aurora,Arapahoe,Colorado,CO,39.6889822,-104.8519828,08005,Trump,Campaign,Trump event in Aurora,0,0,0,1,1,1,1,1,1,,10/11/24,Trump,"Adams, Arapahoe & Douglas counties","1,104,671",March 5
+10/11/24,Reno,Washoe,Nevada,NV,39.5497,-119.8483,32031,Trump,Campaign,Trump event,4,4,13,3,3,12,25,7,7,10/31/24,10/23/24,Both,Washoe County,"378,608",June 11
+10/11/24,Scottsdale,Maricopa,Arizona,AZ,33.6743869,-112.0236042,04013,Harris,Campaign,Harris event,1,10,15,1,8,12,27,18,2,10/11/24,11/2/24,Both,Maricopa County,"2,934,306",July 30
+10/11/24,Warren,Macomb,Michigan,MI,42.4927979,-83.0682988,26099,Walz,Campaign,Walz event,1,2,30,2,2,33,63,4,3,10/11/24,11/1/24,Both,Macomb County,"724,203",August 6
+10/12/24,Henderson,Clark,Nevada,NV,36.0376783,-115.0139534,32003,Trump,Campaign,Trump rally,1,9,13,3,9,12,25,18,4,10/27/24,10/31/24,Both,Clark County,"1,676,870",June 11
+10/12/24,Coachella,Riverside,California,CA,33.686108,-116.1886912,06065,Trump,Campaign,Trump rally ,0,0,1,1,1,1,2,1,1,,10/12/24,Trump,Riverside County,"1,327,141",March 5
+10/12/24,Johnstown,Cambria,Pennsylvania,PA,40.3269357,-78.9598965,42021,Vance,Campaign,Vance event,1,1,43,2,2,37,80,3,3,9/13/24,10/12/24,Both,Cambria County,"84,893",April 23
+10/13/24,Prescott Valley,Yavapai,Arizona,AZ,34.6003315,-112.376537,04025,Trump,Campaign,Trump rally,0,0,15,1,1,12,27,1,1,,10/13/24,Trump,Yavapai County,"189,965",July 30
+10/13/24,Greenville,Pitt,North Carolina,NC,35.6030443,-77.459927,37147,Harris,Campaign,Harris event,2,2,21,1,1,24,45,3,3,10/24/24,10/21/24,Both,Pitt County,"122,432",May 14
+10/14/24,Erie,Erie,Pennsylvania,PA,42.1153771,-80.1121465,42049,Harris,Campaign,Harris event,3,3,43,2,2,37,80,5,5,10/31/24,9/29/24,Both,Erie County,"174,073",April 23
+10/14/24,Eau Claire,Eau Claire,Wisconsin,WI,44.8197654,-91.5224738,55035,Walz,Campaign,Walz event,2,2,29,2,2,21,50,4,4,10/14/24,9/17/24,Both,Eau Claire County,"61,148",August 13
+10/14/24,Green Bay,Brown,Wisconsin,WI,44.515,-87.9896,55009,Walz,Campaign,Walz event,2,2,29,2,3,21,50,5,4,10/17/24,10/30/24,Both,Brown County,"148,476",August 13
+10/14/24,Oaks,Montgomery,Pennsylvania,PA,40.1313535,-75.4744367,42091,Trump,Campaign,Trump event,0,1,43,1,1,37,80,2,1,,10/14/24,Trump,Montgomery County,"607,674",April 23
+10/15/24,Detroit,Wayne,Michigan,MI,42.3266374,-83.0503179,26163,Harris,Campaign,Harris event,9,11,30,6,8,33,63,19,15,11/4/24,10/18/24,Both,Wayne County,"1,447,552",August 6
+10/15/24,Volant,Lawrence,Pennsylvania,PA,41.1131075,-80.2617663,42073,Walz,Campaign,Walz event,1,1,43,0,0,37,80,1,1,10/15/24,,Walz,Lawrence County,"55,866",April 23
+10/15/24,Pittsburgh,Allegheny,Pennsylvania,PA,40.4396,-79.9763,42003,Walz,Campaign,Walz rally ,8,8,43,2,3,37,80,11,10,11/4/24,11/4/24,Both,Allegheny County,"904,410",April 23
+10/15/24,Chicago,Cook,Illinois,IL,41.8336152,-87.896768,17031,Trump,Campaign,Trump speaks to Economic Club of Chicago,1,1,1,2,2,2,3,3,3,8/19/24,10/15/24,Both,Cook County,"3,452,398",March 19
+10/15/24,Atlanta,Fulton,Georgia,GA,33.7473456,-84.4159076,13121,Trump,Campaign,Trump event,5,5,14,5,5,12,26,10,10,11/3/24,11/4/24,Both,Fulton County,"868,981",June 18
+10/15/24,Washington Township,Westmoreland,Pennsylvania,PA,40.509943,-79.6971702,42129,Walz,Campaign,Walz campaign stop at the Telesz Family Farm in Washington Township,1,1,43,0,3,37,80,4,1,10/15/24,,Walz,Westmoreland County,"245,751",April 23
+10/15/24,Valencia,Butler,Pennsylvania,PA,40.6958269,-79.9701117,42019,Walz,Campaign,Walz event,1,1,43,0,2,37,80,3,1,10/15/24,,Walz,Butler County,"138,232",April 23
+10/16/24,Williamsport,Lycoming,Pennsylvania,PA,41.2411753,-77.059198,42081,Vance,Campaign,Vance event,0,0,43,1,1,37,80,1,1,,10/16/24,Vance,Lycoming County,"70,481",April 23
+10/16/24,Wilmington,New Hanover,North Carolina,NC,34.2157586,-77.9538195,37129,Vance,Campaign,Vance event,2,2,21,2,2,24,45,4,4,10/24/24,10/16/24,Both,New Hanover County,"181,321",May 14
+10/16/24,Washington Crossing,Bucks,Pennsylvania,PA,40.2855091,-74.9180199,42017,Harris,Campaign,Harris event,1,2,43,0,2,37,80,4,1,10/16/24,,Harris,Bucks County,"474,535",April 23
+10/16/24,Miami,Miami-Dade,Florida,FL,25.7823843,-80.3118595,12025,Trump,Campaign,Trump Univision town hall,0,0,1,1,3,6,7,3,1,,10/16/24,Trump,Miami-Dade County,"1,442,196",March 19
+10/17/24,Milwaukee,Milwaukee,Wisconsin,WI,43.0642,-87.9673,55079,Harris,Campaign,Harris event,5,7,29,4,4,21,50,11,9,11/4/24,11/1/24,Both,Milwaukee County,"489,950",August 13
+10/17/24,La Crosse,La Crosse,Wisconsin,WI,43.8223729,-91.2993139,55063,Harris,Campaign,Harris event,2,2,29,2,2,21,50,4,4,11/4/24,11/4/24,Both,La Crosse County,"68,571",August 13
+10/17/24,Green Bay,Brown,Wisconsin,WI,44.515,-87.9896,55009,Harris,Campaign,Harris event,2,2,29,2,3,21,50,5,4,10/17/24,10/30/24,Both,Brown County,"148,476",August 13
+10/17/24,Durham,Durham,North Carolina,NC,36.0019915,-79.0500608,37063,Walz,Campaign,Walz event,2,2,21,0,0,24,45,2,2,10/24/24,,Walz,Durham County,"236,153",May 14
+10/17/24,Winston-Salem,Forsyth,North Carolina,NC,36.1046824,-80.3260299,37067,Walz,Campaign,Walz event,1,1,21,0,0,24,45,1,1,10/17/24,,Walz,Forsyth County,"265,158",May 14
+10/17/24,Pittsburgh,Allegheny,Pennsylvania,PA,40.4396,-79.9763,42003,Vance,Campaign,Vance event,8,8,43,2,3,37,80,11,10,11/4/24,11/4/24,Both,Allegheny County,"904,410",April 23
+10/18/24,Grand Rapids,Kent,Michigan,MI,42.9615,-85.6557,26081,Harris,Campaign,Harris event,2,2,30,3,6,33,63,8,5,10/18/24,11/4/24,Both ,Kent County,"518,797",August 6
+10/18/24,Lansing,Ingham,Michigan,MI,42.708778,-84.6419993,26065,Harris,Campaign,Harris event,1,3,30,0,0,33,63,3,1,10/18/24,,Harris,Ingham County,"213,952",August 6
+10/18/24,Detroit,Wayne,Michigan,MI,42.3266374,-83.0503179,26163,Trump,Campaign,Trump event,9,11,30,6,8,33,63,19,15,11/4/24,10/18/24,Both,Wayne County,"1,447,552",August 6
+10/18/24,Waterford Township,Oakland,Michigan,MI,42.6586696,-83.4269664,26125,Harris,Campaign,Harris event,1,4,30,1,4,33,63,8,2,10/18/24,10/24/24,Both,Oakland County,"1,055,158",August 6
+10/18/24,Auburn Hills,Oakland,Michigan,MI,42.664726,-83.3103683,26125,Trump,Campaign,Trump roundtable event,0,4,30,2,4,33,63,8,2,,10/18/24,Trump,Oakland County,"1,055,158",August 6
+10/18/24,Hamtramck,Wayne,Michigan,MI,42.3942875,-83.0687617,26163,Trump,Campaign,Trump visits campaign office,0,11,30,1,8,33,63,19,1,,10/18/24,Trump,Wayne County,"1,447,552",August 6
+10/19/24,Detroit,Wayne,Michigan,MI,42.3266374,-83.0503179,26163,Harris,Campaign,Harris event,9,11,30,6,8,33,63,19,15,11/4/24,10/18/24,Both,Wayne County,"1,447,552",August 6
+10/19/24,Omaha,Douglas,Nebraska,NE,41.2482047,-95.97078,31055,Walz,Campaign,Walz rally ,2,2,2,0,0,0,2,2,2,10/19/24,,Walz,Douglas County,"355,604",May 14
+10/19/24,Latrobe,Westmoreland,Pennsylvania,PA,40.3103626,-79.4053816,42129,Trump,Campaign,Trump event,0,1,43,1,3,37,80,4,1,,10/19/24,Trump,Westmoreland County,"245,751",April 23
+10/20/24,Saginaw,Saginaw,Michigan,MI,43.4199,-83.9501,26145,Walz,Campaign,Walz event,3,3,30,2,3,33,63,6,5,10/28/24,10/29/24,Both,Saginaw County,"159,329",August 6
+10/20/24,Lancaster,Lancaster,Pennsylvania,PA,40.0399681,-76.3416343,42071,Trump,Campaign,Trump town hall,1,1,43,1,2,37,80,3,2,9/4/24,10/20/24,Both,Lancaster County,"348,110",April 23
+10/20/24,Waukesha,Waukesha,Wisconsin,WI,42.9987326,-88.3217568,55133,Vance,Campaign,Vance event,1,2,29,2,2,21,50,4,3,10/28/24,10/20/24,Both,Waukesha County,"278,069",August 13
+10/20/24,Stonecrest,DeKalb,Georgia,GA,33.6863526,-84.2204474,13089,Harris,Campaign,Souls to the polls event at New Birth Missionary Baptist Church,1,2,14,0,0,12,26,2,1,10/20/24,,Harris,DeKalb County,"535,240",May 21
+10/20/24,Jonesboro,Clayton,Georgia,GA,33.5225666,-84.376306,13063,Harris,Campaign,Souls to the polls event at Divine Faith Ministries International,1,1,14,0,0,12,26,1,1,10/20/24,,Harris,Clayton County,"192,981",May 21
+10/21/24,Malvern,Chester,Pennsylvania,PA,40.0327535,-75.5254402,42029,Harris,Campaign,Harris event,1,1,43,0,0,37,80,1,1,10/21/24,,Harris,Chester County,"380,804",April 23
+10/21/24,Royal Oak,Oakland,Michigan,MI,42.5073003,-83.1987576,26125,Harris,Campaign,Harris event,1,4,30,0,4,33,63,8,1,10/21/24,,Harris,Oakland County,"1,055,158",August 6
+10/21/24,Brookfield,Waukesha,Wisconsin,WI,43.0612582,-88.1672083,55133,Harris,Campaign,Harris event,1,2,29,0,2,21,50,4,1,10/21/24,,Harris,Waukesha County,"278,069",August 13
+10/21/24,Greenville,Pitt,North Carolina,NC,35.6030443,-77.459927,37147,Trump,Campaign,Trump event,2,2,21,1,1,24,45,3,3,10/24/24,10/21/24,Both,Pitt County,"122,432",May 14
+10/21/24,Concord,Cabarrus,North Carolina,NC,35.3940755,-80.7110507,37025,Trump,Campaign,Trump meets with faith leaders,0,0,21,1,1,24,45,1,1,,10/21/24,Trump,Cabarrus County,"155,719",May 14
+10/22/24,Madison,Dane,Wisconsin,WI,43.0827,-89.3923,55025,Walz,Campaign,Walz rally with former President Barack Obama,5,5,29,0,1,21,50,6,5,10/30/24,,Walz,Dane County,"375,054",April 2
+10/22/24,Racine,Racine,Wisconsin,WI,42.7083839,-87.9164651,55101,Walz,Campaign,Walz event,2,2,29,2,2,21,50,4,4,10/22/24,10/28/24,Both,Racine County,"109,137",August 13
+10/22/24,Doral,Miami-Dade,Florida,FL,25.809793,-80.3460198,12025,Trump,Campaign,Roundtable with Latino voters,0,0,1,2,3,6,7,3,2,,10/22/24,Trump,Miami-Dade County,"1,442,196",March 19
+10/22/24,Greensboro,Guilford,North Carolina,NC,36.1002311,-79.9159503,37081,Trump,Campaign,Trump event,2,2,21,3,4,24,45,6,5,10/30/24,11/2/24,Both,Guilford County,"377,994",May 14
+10/22/24,Peoria,Maricopa,Arizona,AZ,33.7531779,-112.4898657,04013,Vance,Campaign,Vance event,0,10,15,1,8,12,27,18,1,,10/22/24,Vance,Maricopa County,"2,934,306",July 30
+10/22/24,Tucson,Pima,Arizona,AZ,32.1558028,-111.0489548,04019,Vance,Campaign,Vance rally,2,2,15,2,2,12,27,4,4,11/2/24,10/22/24,Both,Pima County,"708,092",July 30
+10/23/24,Zebulon,Pike,Georgia,GA,33.0918367,-84.362817,13231,Trump,Campaign,Trump event,0,0,14,1,1,12,26,1,1,,10/23/24,Trump,Pike County,"15,249",May 21
+10/23/24,Duluth,Gwinnett,Georgia,GA,34.0002042,-84.1796651,13135,Trump,Campaign,Trump Turning Point PAC event,0,0,14,1,1,12,26,1,1,,10/23/24,Trump,Gwinnett County,"593,502",May 21
+10/23/24,Las Vegas,Clark,Nevada,NV,36.2333,-115.2654,32003,Vance,Campaign,Vance event,8,9,13,6,9,12,25,18,14,11/2/24,11/2/24,Both,Clark County,"1,676,870",June 11
+10/23/24,Reno,Washoe,Nevada,NV,39.5497,-119.8483,32031,Vance,Campaign,Vance rally,4,4,13,3,3,12,25,7,7,10/31/24,10/23/24,Both,Washoe County,"378,608",June 11
+10/23/24,Aston,Delaware,Pennsylvania,PA,39.8623275,-75.4324382,42045,Harris,Campaign,Harris CNN town hall,1,1,43,1,2,37,80,3,2,10/23/24,11/3/24,Both,Delaware County,"407,742",April 23
+10/24/24,Durham,Durham,North Carolina,NC,36.0019915,-79.0500608,37063,Walz,Campaign,Walz event,2,2,21,0,0,24,45,2,2,10/24/24,,Walz,Durham County,"236,153",May 14
+10/24/24,Greenville,Pitt,North Carolina,NC,35.6030443,-77.459927,37147,Walz,Campaign,Walz event,2,2,21,1,1,24,45,3,3,10/24/24,10/21/24,Both,Pitt County,"122,432",May 14
+10/24/24,Wilmington,New Hanover,North Carolina,NC,34.2157586,-77.9538195,37129,Walz,Campaign,Walz event,2,2,21,2,2,24,45,4,4,10/24/24,10/16/24,Both,New Hanover County,"181,321",May 14
+10/24/24,Las Vegas,Clark,Nevada,NV,36.2333,-115.2654,32003,Trump,Campaign,Trump Turning Point event,8,9,13,6,9,12,25,18,14,11/2/24,11/2/24,Both,Clark County,"1,676,870",June 11
+10/24/24,Waterford Township,Oakland,Michigan,MI,42.6586696,-83.4269664,26125,Vance,Campaign,Vance event,1,4,30,1,4,33,63,8,2,10/18/24,10/24/24,Both,Oakland County,"1,055,158",August 6
+10/25/24,Houston,Harris,Texas,TX,29.7879096,-95.4658565,48201,Harris,Campaign,Harris event,3,3,3,0,0,2,5,3,3,10/25/24,,Harris,Harris County,"2,604,124",March 5
+10/25/24,Philadelphia,Philadelphia,Pennsylvania,PA,40.0077,-75.1339,42101,Walz,Campaign,Walz event,8,8,43,3,3,37,80,11,11,11/4/24,9/10/24,Both,Philadelphia County,"1,035,648",April 23
+10/25/24,Allentown,Lehigh,Pennsylvania,PA,40.5930701,-75.5250195,42077,Walz,Campaign,Walz event,2,3,43,1,2,37,80,5,3,11/4/24,10/29/24,Both,Lehigh County,"244,035",April 23
+10/25/24,Scranton,Lackawanna,Pennsylvania,PA,41.4044,-75.6649,42069,Walz,Campaign,Walz event,3,3,43,1,1,37,80,4,4,11/4/24,10/9/24,Both,Lackawanna County,"143,638",April 23
+10/25/24,Traverse City,Grand Traverse,Michigan,MI,44.748911,-85.646207,26055,Trump,Campaign,Trump rally,1,1,30,2,2,33,63,3,3,11/1/24,10/25/24,Both,Grand Traverse County,"83,150",August 6
+10/25/24,Raeford,Hoke,North Carolina,NC,34.9803757,-79.2503676,37093,Vance,Campaign,Vance event,0,0,21,1,1,24,45,1,1,,10/25/24,Vance,Hoke County,"33,841",May 14
+10/25/24,Austin,Travis,Texas,TX,30.3076572,-97.9208946,48453,Trump,Campaign,Trump event,0,0,3,1,1,2,5,1,1,,10/25/24,Trump,Travis County,"887,597",May 5
+10/24/24,Clarkston,DeKalb,Georgia,GA,33.8105284,-84.2510492,13089,Harris,Campaign,"Harris get-out-the-vote rally with Barack Obama, Bruce Springsteen",1,2,14,0,0,12,26,2,1,10/24/24,,Harris,DeKalb County,"535,240",May 21
+10/24/24,Tempe,Maricopa,Arizona,AZ,33.3919156,-111.9693863,04013,Trump,Campaign,Trump rally,1,10,15,1,8,12,27,18,2,9/10/24,10/24/24,Both,Maricopa County,"2,934,306",July 30
+10/25/24,Monroe,Union,North Carolina,NC,35.0156127,-80.6441684,37179,Vance,Campaign,Vance town hall,0,0,21,1,1,24,45,1,1,,10/25/24,Vance,Union County,"178,657",May 14
+10/26/24,Kalamazoo,Kalamazoo,Michigan,MI,42.2741505,-85.6384337,26077,Harris,Campaign,Harris get-out-the-vote rally with Michelle Obama,1,1,30,0,1,33,63,2,1,10/26/24,,Harris,Kalamazoo County,"212,944",August 6
+10/26/24,Window Rock,Apache,Arizona,AZ,35.6668151,-109.0852684,04001,Walz,Campaign,Walz event,1,1,15,0,0,12,27,1,1,10/26/24,,Walz,Apache County,"53,911",July 30
+10/26/24,Phoenix,Maricopa,Arizona,AZ,33.5722,-112.0891,04013,Walz,Campaign,Walz event,4,10,15,2,8,12,27,18,6,10/31/24,9/5/24,Both,Maricopa County,"2,934,306",July 30
+10/26/24,State College,Centre,Pennsylvania,PA,40.7880126,-77.8732139,42027,Trump,Campaign,Trump event,0,0,43,1,1,37,80,1,1,,10/26/24,Trump,Centre County,"100,967",April 23
+10/26/24,Novi,Oakland,Michigan,MI,42.4811325,-83.5357262,26125,Trump,Campaign,Trump event,0,4,30,1,4,33,63,8,1,,10/26/24,Trump,Oakland County,"1,055,158",August 6
+10/26/24,Harrisburg,Dauphin,Pennsylvania,PA,40.2745727,-76.8994227,42043,Vance,Campaign,Vance event,3,3,43,3,3,37,80,6,6,10/30/24,10/26/24,Both,Dauphin County,"193,452",April 23
+10/27/24,Philadelphia,Philadelphia,Pennsylvania,PA,40.0077,-75.1339,42101,Harris,Campaign,Harris event,8,8,43,3,3,37,80,11,11,11/4/24,9/10/24,Both,Philadelphia County,"1,035,648",April 23
+10/27/24,Henderson,Clark,Nevada,NV,36.0376783,-115.0139534,32003,Walz,Campaign,Walz event on reproductive freedom,1,9,13,3,9,12,25,18,4,10/27/24,10/31/24,Both,Clark County,"1,676,870",June 11
+10/27/24,New York,New York,New York,NY,40.6943,-73.9249,36061,Trump,Campaign,Rally at Madison Square Garden,1,1,3,5,5,6,9,6,6,10/1/24,10/27/24,Both,New York County,"1,113,601",June 25
+10/28/24,Saginaw,Saginaw,Michigan,MI,43.4199,-83.9501,26145,Harris,Campaign,Harris meets workers and touris Corning Incorporated’s Hemlock Semiconductor facility,3,3,30,2,3,33,63,6,5,10/28/24,10/29/24,Both,Saginaw County,"159,329",August 6
+10/28/24,Ann Arbor,Washtenaw,Michigan,MI,42.273313,-83.7789746,26161,Harris,Campaign,Harris/Walz rally,1,1,30,0,0,33,63,1,1,10/28/24,,Harris/Walz,Washtenaw County,"324,196",August 6
+10/28/24,Manitowoc,Manitowoc,Wisconsin,WI,44.1023865,-87.7687959,55071,Walz,Campaign,Walz event at Wisconsin Aluminum Foundry Co.,1,1,29,0,0,21,50,1,1,10/28/24,,Walz,Manitowoc County,"46,742",August 13
+10/28/24,Waukesha,Waukesha,Wisconsin,WI,42.9987326,-88.3217568,55133,Walz,Campaign,Walz event at Copilot Coffee Co.,1,2,29,2,2,21,50,4,3,10/28/24,10/20/24,Both,Waukesha County,"278,069",August 13
+10/28/24,Powder Springs,Cobb,Georgia,GA,33.8650872,-84.7039814,13067,Trump,Campaign,Trump attends faith summit,0,1,14,1,1,12,26,2,1,,10/28/24,Trump,Cobb County,"531,588",May 21
+10/28/24,Atlanta,Fulton,Georgia,GA,33.7473456,-84.4159076,13121,Trump,Campaign,Trump rally,5,5,14,5,5,12,26,10,10,11/3/24,11/4/24,Both,Fulton County,"868,981",June 18
+10/28/24,Wausau,Marathon,Wisconsin,WI,44.9623911,-89.7020596,55073,Vance,Campaign,Vance event,1,1,29,1,2,21,50,3,2,9/13/24,10/28/24,Both,Marathon County,"78,640",August 13
+10/28/24,Racine,Racine,Wisconsin,WI,42.7083839,-87.9164651,55101,Vance,Campaign,Vance event,2,2,29,2,2,21,50,4,4,10/22/24,10/28/24,Both,Racine County,"109,137",August 13
+10/28/24,Macomb,Macomb,Michigan,MI,42.6730276,-82.9578042,26099,Harris,Campaign,Harris tours an International Union of Painters and Allied Trades training facility,1,2,30,0,2,33,63,4,1,10/28/24,,Harris,Macomb County,"724,203",August 6
+10/29/24,Washington,District of Columbia,District of Columbia,DC,38.893859,-77.0971485,11001,Harris,Campaign,Remarks on the Ellipse,4,4,4,4,4,4,8,8,8,10/29/24,9/19/24,Both,,"378,821",June 4
+10/29/24,Savannah,Chatham,Georgia,GA,32.0919945,-81.1460978,13051,Walz,Campaign,Walz attends Get-Out-the-Early-Vote rally,2,2,14,1,1,12,26,3,3,10/29/24,9/24/24,Both,Chatham County,"208,387",May 21
+10/29/24,Columbus,Muscogee,Georgia,GA,32.4909786,-84.9565242,13215,Walz,Campaign,Walz rally,1,1,14,0,0,12,26,1,1,10/29/24,,Walz,Muscogee County,"129,928",May 21
+10/29/24,Allentown,Lehigh,Pennsylvania,PA,40.5930701,-75.5250195,42077,Trump,Campaign,Trump rally,2,3,43,1,2,37,80,5,3,11/4/24,10/29/24,Both,Lehigh County,"244,035",April 23
+10/29/24,Drexel Hill,Delaware,Pennsylvania,PA,39.9503061,-75.3274821,42045,Trump,Campaign,Trump roundtable event with Building America's Future,0,1,43,1,2,37,80,3,1,,10/29/24,Trump,Delaware County,"407,742",April 23
+10/29/24,Saginaw,Saginaw,Michigan,MI,43.4199,-83.9501,26145,Vance,Campaign,Vance event,3,3,30,2,3,33,63,6,5,10/28/24,10/29/24,Both,Saginaw County,"159,329",August 6
+10/29/24,Holland,Ottawa,Michigan,MI,42.765947,-86.1482053,26139,Vance,Campaign,Vance event,0,0,30,1,2,33,63,2,1,,10/29/24,Vance,Ottawa County,"233,443",August 6
+10/30/24,Madison,Dane,Wisconsin,WI,43.0827,-89.3923,55025,Harris,Campaign,Harris rally,5,5,29,0,1,21,50,6,5,10/30/24,,Harris,Dane County,"377,076",August 13
+10/30/24,Harrisburg,Dauphin,Pennsylvania,PA,40.2745727,-76.8994227,42043,Harris,Campaign,Harris event,3,3,43,3,3,37,80,6,6,10/30/24,10/26/24,Both,Dauphin County,"193,452",April 23
+10/30/24,Raleigh,Wake,North Carolina,NC,35.8324,-78.6438,37183,Harris,Campaign,Harris rally,5,5,21,3,3,24,45,8,8,10/30/24,11/4/24,Both,Wake County,"823,509",May 14
+10/30/24,Rocky Mount,Nash and Edgecombe,North Carolina,NC,35.9844564,-77.9022986,37127,Trump,Campaign,Trump rally ,0,0,21,1,1,24,45,1,1,,10/30/24,Trump,Nash and Edgecombe Counties,"101,972",May 14
+10/30/24,Green Bay,Brown,Wisconsin,WI,44.515,-87.9896,55009,Trump,Campaign,Trump rally,2,2,29,2,3,21,50,5,4,10/17/24,10/30/24,Both,Brown County,"148,476",August 13
+10/30/24,Bedford,Bedford,Pennsylvania,PA,40.014441,-78.5117047,42009,Vance,Campaign,Vance town hall,0,0,43,1,1,37,80,1,1,,10/30/24,Vance,Bedford County,"32,501",April 23
+10/30/24,Charlotte,Mecklenburg,North Carolina,NC,35.2030383,-80.9482419,37119,Walz,Campaign,Walz event,4,4,21,3,4,24,45,8,7,11/3/24,9/23/24,Both,Mecklenburg County,"790,579",May 14
+10/30/24,Greensboro,Guilford,North Carolina,NC,36.1002311,-79.9159503,37081,Walz,Campaign,Walz events,2,2,21,3,4,24,45,6,5,10/30/24,11/2/24,Both,Guilford County,"377,994",May 14
+10/30/24,Asheville,Buncombe,North Carolina,NC,35.5949541,-82.5997781,37021,Walz,Campaign,Walz event,2,2,21,1,1,24,45,3,3,10/30/24,8/14/24,Both,Buncombe County,"208,652",May 14
+10/31/24,Reno,Washoe,Nevada,NV,39.5497,-119.8483,32031,Harris,Campaign,Harris rally,4,4,13,3,3,12,25,7,7,10/31/24,10/23/24,Both,Washoe County,"378,608",June 11
+10/31/24,Phoenix,Maricopa,Arizona,AZ,33.5722,-112.0891,04013,Harris,Campaign,Harris rally at Talking Stick Amphitheatre,4,10,15,2,8,12,27,18,6,10/31/24,9/5/24,Both,Maricopa County,"2,934,306",July 30
+10/31/24,Las Vegas,Clark,Nevada,NV,36.2333,-115.2654,32003,Harris,Campaign,Harris rally,8,9,13,6,9,12,25,18,14,11/2/24,11/2/24,Both,Clark County,"1,676,870",June 11
+10/31/24,Henderson,Clark,Nevada,NV,36.0376783,-115.0139534,32003,Trump,Campaign,Trump rally,1,9,13,3,9,12,25,18,4,10/27/24,10/31/24,Both,Clark County,"1,676,870",June 11
+10/31/24,Albuquerque,Bernalillo,New Mexico,NM,35.082298,-106.8416291,35001,Trump,Campaign,Trump rally,0,0,0,1,1,1,1,1,1,,10/31/24,Trump,Bernalillo County,"428,466",June 4
+10/31/24,Bristol Township,Bucks,Pennsylvania,PA,40.1226906,-74.9071587,42017,Walz,Campaign,Walz event at Boilermakers Local 13 Union Hall,1,2,43,0,2,37,80,4,1,10/31/24,,Walz,Bucks County,"474,535",April 23
+10/31/24,Erie,Erie,Pennsylvania,PA,42.1153771,-80.1121465,42049,Walz,Campaign,Walz event,3,3,43,2,2,37,80,5,5,10/31/24,9/29/24,Both,Erie County,"174,073",April 23
+10/31/24,Chalfont,Montgomery,Pennsylvania,PA,40.2904629,-75.2178848,42091,Walz,Campaign,Walz visits Bharatiya Temple for Diwali celebration,1,1,43,0,1,37,80,2,1,10/31/24,,Walz,Montgomery County,"607,674",April 23
+10/31/24,High Point,Guilford,North Carolina,NC,35.9994631,-80.0662409,37081,Vance,Campaign,Vance town hall at High Point University with Turning Point Action,0,2,21,1,4,24,45,6,1,,10/31/24,Vance,Guilford County,"377,994",May 14
+11/1/24,Milwaukee,Milwaukee,Wisconsin,WI,43.0642,-87.9673,55079,Trump,Campaign,Trump rally,5,7,29,4,4,21,50,11,9,11/4/24,11/1/24,Both,Milwaukee County,"489,950",August 13
+11/1/24,Dearborn,Wayne,Michigan,MI,42.3146565,-83.2546089,26163,Trump,Campaign,Trump event,0,11,30,1,8,33,63,19,1,,11/1/24,Trump,Wayne County,"1,447,552",August 6
+11/1/24,Janesville,Rock,Wisconsin,WI,42.6822887,-89.0920945,55105,Harris,Campaign,Harris visit to local union,1,1,29,0,0,21,50,1,1,11/1/24,,Harris,Rock County,"90,009",August 13
+11/1/24,West Allis,Milwaukee,Wisconsin,WI,43.0023312,-88.0481001,55079,Harris,Campaign,Harris rally and concert,2,7,29,0,4,21,50,11,2,11/1/24,,Harris,Milwaukee County,"489,950",August 13
+11/1/24,Little Chute,Outagamie,Wisconsin,WI,44.2903179,-88.340688,55087,Harris,Campaign,Harris event,1,1,29,0,0,21,50,1,1,11/1/24,,Harris,Outagamie County,"111,351",August 13
+11/1/24,Detroit,Wayne,Michigan,MI,42.3266374,-83.0503179,26163,Walz,Campaign,Walz event,9,11,30,6,8,33,63,19,15,11/4/24,10/18/24,Both,Wayne County,"1,447,552",August 6
+11/1/24,Flint,Genesee,Michigan,MI,43.0124563,-83.7789869,26049,Walz,Campaign,Walz event,2,2,30,2,2,33,63,4,4,11/1/24,11/4/24,Both,Genesee County,"353,671",August 6
+11/1/24,Traverse City,Grand Traverse,Michigan,MI,44.748911,-85.646207,26055,Walz,Campaign,Walz event,1,1,30,2,2,33,63,3,3,11/1/24,10/25/24,Both,Grand Traverse County,"83,150",August 6
+11/1/24,Warren,Macomb,Michigan,MI,42.4927979,-83.0682988,26099,Trump,Campaign,Trump event,1,2,30,2,2,33,63,4,3,10/11/24,11/1/24,Both,Macomb County,"724,203",August 6
+11/1/24,Portage,Kalamazoo,Michigan,MI,42.201337,-85.6297171,26077,Vance,Campaign,Vance event,0,1,30,1,1,33,63,2,1,,11/1/24,Vance,Kalamazoo County,"212,944",August 6
+11/1/24,Selma,Johnston,North Carolina,NC,35.5462052,-78.3144339,37101,Vance,Campaign,Vance event,0,0,21,1,1,24,45,1,1,,11/1/24,Vance,Johnston County,"156,056",May 14
+11/2/24,Atlanta,Fulton,Georgia,GA,33.7473456,-84.4159076,13121,Harris,Campaign,Harris rally ,5,5,14,5,5,12,26,10,10,11/3/24,11/4/24,Both,Fulton County,"868,981",June 18
+11/2/24,Charlotte,Mecklenburg,North Carolina,NC,35.2030383,-80.9482419,37119,Harris,Campaign,Harris rally,4,4,21,3,4,24,45,8,7,11/3/24,9/23/24,Both,Mecklenburg County,"790,579",May 14
+11/2/24,Las Vegas,Clark,Nevada,NV,36.2333,-115.2654,32003,Walz,Campaign,Walz remarks at canvass lunch,8,9,13,6,9,12,25,18,14,11/2/24,11/2/24,Both,Clark County,"1,676,870",June 11
+11/2/24,Flagstaff,Coconino,Arizona,AZ,35.18132,-111.6903598,04005,Walz,Campaign,Walz attends get-out-the-vote event,1,1,15,0,0,12,27,1,1,11/2/24,,Walz,Coconino County,"103,118",July 30
+11/2/24,Tucson,Pima,Arizona,AZ,32.1558028,-111.0489548,04019,Walz,Campaign,Walz rally,2,2,15,2,2,12,27,4,4,11/2/24,10/22/24,Both,Pima County,"708,092",July 30
+11/2/24,Salem,Salem independent city,Virginia,VA,37.2885251,-80.108126,51775,Trump,Campaign,Trump rally,0,0,1,1,1,5,6,1,1,,11/2/24,Trump,Salem independent city,"17,879",June 18
+11/2/24,Greensboro,Guilford,North Carolina,NC,36.1002311,-79.9159503,37081,Trump,Campaign,Trump event,2,2,21,3,4,24,45,6,5,10/30/24,11/2/24,Both,Guilford County,"377,994",May 14
+11/2/24,Gastonia,Gaston,North Carolina,NC,35.2593154,-81.2845395,37071,Trump,Campaign,Trump event,1,1,21,1,1,24,45,2,2,11/3/24,11/2/24,Both,Gaston County,"156,857",May 14
+11/2/24,Scottsdale,Maricopa,Arizona,AZ,33.6743869,-112.0236042,04013,Vance,Campaign,Harris event,1,10,15,1,8,12,27,18,2,10/11/24,11/2/24,Both,Maricopa County,"2,934,306",July 30
+11/2/24,Las Vegas,Clark,Nevada,NV,36.2333,-115.2654,32003,Vance,Campaign,Walz event,8,9,13,6,9,12,25,18,14,11/2/24,11/2/24,Both,Clark County,"1,676,870",June 11
+11/3/24,Detroit,Wayne,Michigan,MI,42.3266374,-83.0503179,26163,Harris,Campaign,Harris remarks at Greater Emmanuel Institutional Church of God in Christ;  Kuzzo’s Chicken and Waffles in the Livernois district ,9,11,30,6,8,33,63,19,15,11/4/24,10/18/24,Both,Wayne County,"1,447,552",August 6
+11/3/24,Pontiac,Oakland,Michigan,MI,42.6518772,-83.3327499,26125,Harris,Campaign,Harris visit to Elam barber shop in Pontiac,1,4,30,0,4,33,63,8,1,11/3/24,,Harris,Oakland County,"1,055,158",August 6
+11/3/24,East Lansing,Ingham,Michigan,MI,42.7490016,-84.5174747,26065,Harris,Campaign,Harris event at Michigan State University’s Jamison Field House,2,3,30,0,0,33,63,3,2,11/3/24,,Harris,Ingham County,"213,952",August 6
+11/3/24,Gastonia,Gaston,North Carolina,NC,35.2593154,-81.2845395,37071,Walz,Campaign,Walz event at barbecue restaurant RayNathan's,1,1,21,1,1,24,45,2,2,11/3/24,11/2/24,Both,Gaston County,"156,857",May 14
+11/3/24,Smyrna,Cobb,Georgia,GA,33.8543468,-84.5570564,13067,Walz,Campaign,Walz rally with musical guests said to include Bon Jovi and Michael Stipe,1,1,14,0,1,12,26,2,1,11/3/24,,Walz,Cobb County,"531,588",May 21
+11/3/24,Lititz,Lancaster,Pennsylvania,PA,40.1527339,-76.3242309,42071,Trump,Campaign,Trump rally,0,1,43,1,2,37,80,3,1,,11/3/24,Trump,Lancaster County,"348,110",April 23
+11/3/24,Kinston,Lenoir,North Carolina,NC,35.2742757,-77.6216069,37107,Trump,Campaign,Trump rally,0,0,21,1,1,24,45,1,1,,11/3/24,Trump,Lenoir County,"38,094",May 14
+11/3/24,Macon,Bibb,Georgia,GA,32.8326909,-83.7267418,13021,Trump,Campaign,Trump rally,1,1,14,1,1,12,26,2,2,9/17/24,11/3/24,Both,Bibb County,"109,546",May 21
+11/3/24,Raleigh,Wake,North Carolina,NC,35.8324,-78.6438,37183,Vance,Campaign,Vance rally with Donald Trump Jr. ,5,5,21,3,3,24,45,8,8,10/30/24,11/4/24,Both,Wake County,"823,509",May 14
+11/3/24,Aston,Delaware,Pennsylvania,PA,39.8623275,-75.4324382,42045,Vance,Campaign,Vance rally with Donald Trump Jr. ,1,1,43,1,2,37,80,3,2,10/23/24,11/3/24,Both,Delaware County,"407,742",April 23
+11/3/24,Derry,Rockingham,New Hampshire,NH,42.8915409,-71.3186088,33015,Vance,Campaign,Vance rally,0,1,2,1,1,1,3,2,1,,11/4/24,Vance,Rockingham County,"15,611",January 23
+11/4/24,Scranton,Lackawanna,Pennsylvania,PA,41.4044,-75.6649,42069,Harris,Campaign,Harris rally,3,3,43,1,1,37,80,4,4,11/4/24,10/9/24,Both,Lackawanna County,"143,638",April 23
+11/4/24,Allentown,Lehigh,Pennsylvania,PA,40.5930701,-75.5250195,42077,Harris,Campaign,Harris rally,2,3,43,1,2,37,80,5,3,11/4/24,10/29/24,Both,Lehigh County,"244,035",April 23
+11/4/24,Reading,Berks,Pennsylvania,PA,40.3337602,-75.9665859,42011,Harris,Campaign,Harris event,2,2,43,2,3,37,80,5,4,11/4/24,11/4/24,Both,Berks County,"262,594",April 23
+11/4/24,Pittsburgh,Allegheny,Pennsylvania,PA,40.4396,-79.9763,42003,Harris,Campaign,Harris rally,8,8,43,2,3,37,80,11,10,11/4/24,11/4/24,Both,Allegheny County,"904,410",April 23
+11/4/24,Philadelphia,Philadelphia,Pennsylvania,PA,40.0077,-75.1339,42101,Harris,Campaign,Harris rally,8,8,43,3,3,37,80,11,11,11/4/24,9/10/24,Both,Philadelphia County,"1,035,648",April 23
+11/4/24,La Crosse,La Crosse,Wisconsin,WI,43.8223729,-91.2993139,55063,Walz,Campaign,Walz attends get-out-the-vote event,2,2,29,2,2,21,50,4,4,11/4/24,11/4/24,Both,La Crosse County,"68,571",August 13
+11/4/24,Stevens Point,Portage,Wisconsin,WI,44.5307997,-89.5922689,55097,Walz,Campaign,Walz attends get-out-the-vote event,1,1,29,0,0,21,50,1,1,11/4/24,,Walz,Portage County,"43,710",August 13
+11/4/24,Milwaukee,Milwaukee,Wisconsin,WI,43.0642,-87.9673,55079,Walz,Campaign,Walz attends get-out-the-vote rally,5,7,29,4,4,21,50,11,9,11/4/24,11/1/24,Both,Milwaukee County,"489,950",August 13
+11/4/24,Detroit,Wayne,Michigan,MI,42.3266374,-83.0503179,26163,Walz,Campaign,Walz rally,9,11,30,6,8,33,63,19,15,11/4/24,10/18/24,Both,Wayne County,"1,447,552",August 6
+11/4/24,Raleigh,Wake,North Carolina,NC,35.8324,-78.6438,37183,Trump,Campaign,Trump rally,5,5,21,3,3,24,45,8,8,10/30/24,11/4/24,Both,Wake County,"823,509",May 14
+11/4/24,Reading,Berks,Pennsylvania,PA,40.3337602,-75.9665859,42011,Trump,Campaign,Trump rally ,2,2,43,2,3,37,80,5,4,11/4/24,11/4/24,Both,Berks County,"262,594",April 23
+11/4/24,Pittsburgh,Allegheny,Pennsylvania,PA,40.4396,-79.9763,42003,Trump,Campaign,Trump rally,8,8,43,2,3,37,80,11,10,11/4/24,11/4/24,Both,Allegheny County,"904,410",April 23
+11/4/24,Grand Rapids,Kent,Michigan,MI,42.9615,-85.6557,26081,Trump,Campaign,Trump rally,2,2,30,3,6,33,63,8,5,10/18/24,11/4/24,Both ,Kent County,"518,797",August 6
+11/4/24,La Crosse,La Crosse,Wisconsin,WI,43.8223729,-91.2993139,55063,Vance,Campaign,Vance rally,2,2,29,2,2,21,50,4,4,11/4/24,11/4/24,Both,La Crosse County,"68,571",August 13
+11/4/24,Flint,Genesee,Michigan,MI,43.0124563,-83.7789869,26049,Vance,Campaign,Vance rally,2,2,30,2,2,33,63,4,4,11/1/24,11/4/24,Both,Genesee County,"353,671",August 6
+11/4/24,Atlanta,Fulton,Georgia,GA,33.7473456,-84.4159076,13121,Vance,Campaign,Vance rally,5,5,14,5,5,12,26,10,10,11/3/24,11/4/24,Both,Fulton County,"868,981",June 18
+11/4/24,Newtown,Bucks,Pennsylvania,PA,40.2294174,-74.9421847,42017,Vance,Campaign,Vance rally,0,2,43,2,2,37,80,4,2,,11/4/24,Vance,Bucks County,"474,535",April 23
