@@ -64,6 +64,21 @@ mwcs <- find_mwcs(
     quota = quota
 )
 
+find_mwcs_detailed(blotto_weights, quota)
+
+
+
+
+# Display all minimum winning coalitions in a table
+knitr::kable(
+    mwcs,
+    format = "simple",
+    align = "c",
+    caption = "All Minimum Winning Combinations",
+    row.names = FALSE
+)
+
+
 
 # ========== 3. 2024 Election ===========
 data2024 <- read.csv('/Users/cervas/Downloads/dataset.csv')
