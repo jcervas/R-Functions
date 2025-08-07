@@ -64,14 +64,12 @@ mwcs <- find_mwcs(
     quota = quota
 )
 
-find_mwcs_detailed(blotto_weights, quota)
-
-
+mwc_table <- find_mwcs_detailed(blotto_weights, quota)
 
 
 # Display all minimum winning coalitions in a table
 knitr::kable(
-    mwcs,
+    mwc_table,
     format = "simple",
     align = "c",
     caption = "All Minimum Winning Combinations",
@@ -81,7 +79,7 @@ knitr::kable(
 
 
 # ========== 3. 2024 Election ===========
-data2024 <- read.csv('/Users/cervas/Downloads/dataset.csv')
+data2024 <- read.csv('/Users/cervas/Library/CloudStorage/GoogleDrive-jcervas@andrew.cmu.edu/My Drive/GitHub/R-Functions/EC_Game/election24_campaign_stops.csv')
 trump24 <- data2024[data2024$candidate %in% c("Trump","Vance"),]
 harris24 <- data2024[data2024$candidate %in% c("Biden", "Harris","Walz"),]
 
@@ -170,6 +168,37 @@ knitr::kable(
     caption = "Participant Average and Median Allocations, by State"
 )
 
+# Hypothesis 1ai: Do participants allocate equally to the three smallest states (A, B, C)?
+
+abc_alloc <- participant_matrix_adj[, 1:3]
+abc_means <- colMeans(abc_alloc)
+abc_test <- t.test(abc_alloc[, 1], abc_alloc[, 2], paired = TRUE)
+abc_test2 <- t.test(abc_alloc[, 1], abc_alloc[, 3], paired = TRUE)
+abc_test3 <- t.test(abc_alloc[, 2], abc_alloc[, 3], paired = TRUE)
+
+cat("Mean allocations to A, B, C:", round(abc_means, 2), "\n")
+cat("A vs B p-value:", round(abc_test$p.value, 4), "\n")
+cat("A vs C p-value:", round(abc_test2$p.value, 4), "\n")
+cat("B vs C p-value:", round(abc_test3$p.value, 4), "\n")
+
+# Conclusion: If all p-values are > 0.05, participants allocate similarly to A, B, and C.
+# If any p-value is < 0.05, there is evidence of unequal allocation among the smallest states.
+
+# However, the median pattern does have A and B with identical allocations. 
+cat("Median allocations to A, B, C:", round(user_medians[1:3], 2), "\n")
+cat("A vs B median difference:", round(user_medians[1] - user_medians[2], 2), "\n")
+cat("A vs C median difference:", round(user_medians[1] - user_medians[3], 2), "\n")
+cat("B vs C median difference:", round(user_medians[2] - user_medians[3], 2), "\n")
+
+# Hypothesis 1aii: Are mean allocations to states E and F statistically identical?
+
+EF_alloc <- participant_matrix_adj[, 5:6]
+EF_means <- colMeans(EF_alloc)
+EF_test <- t.test(EF_alloc[, 1], EF_alloc[, 2], paired = TRUE)
+
+cat("Mean allocations to E and F:", round(EF_means, 2), "\n")
+cat("E vs F p-value:", round(EF_test$p.value, 4), "\n")
+
 # Plot: Stripchart of participant allocations by state
 pdf(paste0(figure_directory, "mean-alloc-strip.pdf"), width = 8, height = 5)
 par(family = "Palatino", mar = c(3, 4, 2, 1), xpd = NA)
@@ -187,6 +216,212 @@ points(1:7, medians, col = "red", pch = 19)
 legend("topleft", legend = "Median", col = "red", pch = 19, bty = "n")
 dev.off()
 # Note: Gray dots = individual allocations; red dots = median per state.
+
+
+# ========== 8. Hypothesis 2a: Are user strategies clustered around MWCs? ==========
+
+strict_assignments <- assign_strict_mwc(participant_matrix_adj, mwcs)
+mwc_labels <- sapply(mwcs, function(coal) paste(state_names[coal], collapse = ","))
+mwc_sums <- sapply(mwcs, function(coal) sum(blotto_weights[coal]))
+
+# Count how many strategies are strictly clustered on a single MWC
+counts <- table(factor(strict_assignments, levels = c(1:10, NA)), useNA = "ifany")
+names(counts) <- c(mwc_labels, "Other")
+clustered <- sum(counts[!is.na(names(counts)) & names(counts) != "Other"])
+total <- sum(counts)
+percent_clustered <- round(clustered / total * 100, 1)
+percent_non_clustered <- round(counts["Other"] / total * 100, 1)
+cat("We find that", percent_clustered, "% of all simulated strategies allocate resources exclusively to the members of a single minimal winning coalition (MWC), with no allocation to any other states. This provides moderate support for Hypothesis 2. While a minority of strategies exhibit strict clustering around MWCs, the majority (", percent_non_clustered, "%) distribute resources more broadly—suggesting that while MWCs influence behavior, strategic diversity remains high.")
+
+# Table 3B: Count MWCs per participant, after subtracting 1 from each nonzero allocation
+participant_matrix_adj_minus1 <- participant_matrix_adj
+participant_matrix_adj_minus1[participant_matrix_adj_minus1 > 0] <- participant_matrix_adj_minus1[participant_matrix_adj_minus1 > 0] - 1
+
+less_strict_assignments <- assign_strict_mwc(participant_matrix_adj_minus1, mwcs)
+counts_less_strict <- table(factor(less_strict_assignments, levels = c(1:10, NA)), useNA = "ifany")
+names(counts_less_strict) <- c(mwc_labels, "Other")
+
+# Output: Table of MWCs and participant counts
+mwc_counts_minus1_df <- as.data.frame(counts_less_strict)
+
+
+# Output: Table of MWCs and participant counts
+df <- as.data.frame(counts)
+mwc_table <- cbind(
+    `MWC` = c(mwc_labels, "Other"),
+    `Coverage` = c(mwc_sums, "NA"),
+    `n` = df$Freq,
+    `n (less strict)` = mwc_counts_minus1_df$Freq
+)
+knitr::kable(
+    mwc_table,
+    format = "simple",
+    caption = "Minimum Winning Coalitions and Participant Counts"
+)
+
+
+mwc_minus1_table <- cbind(
+    `MWC` = c(mwc_labels, "Other"),
+    `Coverage` = c(mwc_sums, "NA"),
+    `n` = mwc_counts_minus1_df$Freq
+)
+
+cat("Table 3B: Number of MWCs covered per participant (after subtracting 1 from each allocation):\n")
+knitr::kable(
+    mwc_minus1_table,
+    format = "simple",
+    caption = "Minimum Winning Coalitions and Participant Counts"
+)
+
+# ========== 9. Hypothesis 2b: Do users favor small coalitions (few states)? ==========
+
+active_states <- rowSums(participant_matrix_adj > 0)
+active_states_table <- table(active_states)
+freq <- as.vector(active_states_table)
+percent <- round(100 * freq / sum(freq), 1)
+df <- rbind(Number_of_Participants = freq, Percentage = percent)
+colnames(df) <- 1:7
+knitr::kable(
+    df,
+    format = "simple",
+    caption = "Number and Percentage of Strategies Allocating to Each Number of States (A–G)"
+)
+var_active <- var(active_states)
+p <- table(active_states) / length(active_states)
+entropy <- -sum(p * log2(p)) / log2(length(p))
+cat("• Variance of active state count: ", round(var_active, 2), "\n• Shannon entropy: ", round(entropy, 2), " (normalized)")
+
+# ========== 10. Hypothesis 3a: Preference for State F over E ==========
+
+F_mean <- mean(participant_matrix_adj[, 6]) # State F
+E_mean <- mean(participant_matrix_adj[, 5]) # State E
+wtest <- wilcox.test(
+    participant_matrix_adj[, 6], 
+    participant_matrix_adj[, 5], 
+    paired = TRUE)
+ttest <- t.test(
+    participant_matrix_adj[, 6], 
+    participant_matrix_adj[, 5])
+cat("• Mean allocation to State F: ", round(F_mean, 2), "\n• Mean allocation to State E: ", round(E_mean, 2))
+cat(sprintf("V = %.1f, p = %.5f\n", wtest$statistic, wtest$p.value))
+cat(sprintf("p-value = %.3f\n", ttest$p.value))
+
+# ========== 11. Hypothesis 2c: Expanded MWCs ==========
+
+expanded_matches <- generate_expanded_mwcs(mwcs, blotto_weights, quota)
+get_expanded_mwc_match <- function(
+    strategy_row,
+    mwcs,
+    blotto_weights,
+    quota = 70,
+    tol = 1e-6) {
+    supported <- which(strategy_row > tol)
+    for (i in seq_along(mwcs)) {
+        coal <- mwcs[[i]]
+        if (!all(coal %in% supported)) next
+        extra <- setdiff(supported, coal)
+        if (length(extra) != 1) next
+        extra_state <- extra[1]
+        w_extra <- blotto_weights[extra_state]
+        w_mwc <- blotto_weights[coal]
+        pair_sums <- outer(w_mwc, w_mwc, "+")[upper.tri(matrix(0, length(w_mwc), length(w_mwc)))]
+        if (w_extra >= min(w_mwc) && all(w_extra < pair_sums)) {
+            if (sum(blotto_weights[supported]) >= quota) {
+                return(list(mwc_index = i, extra_state = extra_state))
+            }
+        }
+    }
+    return(NULL)
+}
+expanded_matches <- apply(
+    participant_matrix_adj, 1,
+    get_expanded_mwc_match,
+    mwcs = mwcs,
+    blotto_weights = blotto_weights
+)
+matched_flags <- sapply(expanded_matches, function(x) !is.null(x))
+table(matched_flags)
+
+# ========== 12. Hypothesis 2d: MWC Support Counts and Performance ==========
+
+support_counts <- rowSums(sapply(mwcs, function(coal) rowSums(participant_matrix_adj[, coal, drop = FALSE] > 0) == length(coal)))
+table(support_counts)
+support_levels <- sort(unique(support_counts))
+groups <- lapply(support_levels, function(k) participant_matrix_adj[support_counts == k, , drop = FALSE])
+names(groups) <- as.character(support_levels)
+win_matrix <- matrix(NA,
+    nrow = length(groups), ncol = length(groups),
+    dimnames = list(names(groups), names(groups))
+)
+for (i in seq_along(groups)) {
+    for (j in seq_along(groups)) {
+        wins <- blotto_compare(
+            strategy_set_A = groups[[i]],
+            strategy_set_B = groups[[j]],
+            weights = blotto_weights,
+            tie_method = "winhalf"
+        )
+        win_matrix[i, j] <- 100 * (sum(wins[, "Win_Count"]) / sum(wins[, "Opponents_Faced"]))
+    }
+}
+knitr::kable(
+    round(win_matrix, 1),
+    format = "simple",
+    caption = "Percent Win by Number of MWCs"
+)
+win_matrix_all <- rep(NA, length(groups))
+names(win_matrix_all) <- names(groups)
+for (i in seq_along(groups)) {
+    wins <- blotto_compare(
+        strategy_set_A = groups[[i]],
+        strategy_set_B = participant_matrix_adj,
+        weights = blotto_weights,
+        tie_method = "winhalf"
+    )
+    win_matrix_all[i] <- 100 * (sum(wins[, "Win_Count"]) / sum(wins[, "Opponents_Faced"]))
+}
+knitr::kable(
+    t(round(win_matrix_all, 1)),
+    format = "simple",
+    caption = "Overall Win Rate by Number of MWCs"
+)
+
+wins <- blotto_compare(strategy_set_A = groups[[2]], strategy_set_B = participant_matrix_adj, weights = blotto_weights, tie_method = "winhalf")
+100 * (sum(wins[, "Win_Count"]) / sum(wins[, "Opponents_Faced"]))
+
+wins <- blotto_compare(strategy_set_A = groups[[8]], strategy_set_B = participant_matrix_adj, weights = blotto_weights, tie_method = "winhalf")
+100 * (sum(wins[, "Win_Count"]) / sum(wins[, "Opponents_Faced"]))
+
+# Median allocation by mwc # group
+medians <- lapply(groups, function(mat) apply(mat, 2, median))
+
+
+# Label each strategy according to all their MWC
+# Step 1: Build MWC labels
+state_names <- c("A", "B", "C", "D", "E", "F", "G") # adjust as needed
+mwc_labels <- sapply(mwcs, function(coal) paste(sort(state_names[coal]), collapse = ","))
+
+# Step 2: Get MWC support per participant
+mwc_support_matrix <- sapply(mwcs, function(coal) {
+    rowSums(participant_matrix_adj[, coal, drop = FALSE] > 0) == length(coal)
+})
+
+# Step 3: Assign labels per participant
+participant_mwc_labels <- apply(mwc_support_matrix, 1, function(row) {
+    supported <- which(row)
+    if (length(supported) == 0) {
+        return("None")
+    }
+    paste(mwc_labels[supported], collapse = " | ")
+})
+
+
+
+
+
+
+
+
 
 # ========== 5. Compare User Allocations to Theoretical Benchmarks ==========
 
@@ -396,175 +631,6 @@ N <- sum(freq_table)
 cat("As a complementary categorical test, we classified each participant based on which benchmark their strategy more closely resembled. A chi-squared test showed the result was not statistically significant:")
 cat(sprintf("χ²(%d, N = %d) = %.2f, p %s.", df, N, chi_sq, p_str))
 
-# ========== 8. Hypothesis 2a: Are user strategies clustered around MWCs? ==========
-
-strict_assignments <- assign_strict_mwc(participant_matrix_adj, mwcs)
-mwc_labels <- sapply(mwcs, function(coal) paste(state_names[coal], collapse = ","))
-mwc_sums <- sapply(mwcs, function(coal) sum(blotto_weights[coal]))
-
-# Count how many strategies are strictly clustered on a single MWC
-counts <- table(factor(strict_assignments, levels = c(1:10, NA)), useNA = "ifany")
-names(counts) <- c(mwc_labels, "Other")
-clustered <- sum(counts[!is.na(names(counts)) & names(counts) != "Other"])
-total <- sum(counts)
-percent_clustered <- round(clustered / total * 100, 1)
-percent_non_clustered <- round(counts[is.na(names(counts))] / total * 100, 1)
-cat("We find that", percent_clustered, "% of all simulated strategies allocate resources exclusively to the members of a single minimal winning coalition (MWC), with no allocation to any other states. This provides moderate support for Hypothesis 2. While a minority of strategies exhibit strict clustering around MWCs, the majority (", percent_non_clustered, "%) distribute resources more broadly—suggesting that while MWCs influence behavior, strategic diversity remains high.")
-
-# Output: Table of MWCs and participant counts
-df <- as.data.frame(counts)
-mwc_table <- cbind(
-    `MWC` = c(mwc_labels, "Other"),
-    `Coverage` = c(mwc_sums, "NA"),
-    `n` = df$Participants
-)
-knitr::kable(
-    mwc_table,
-    format = "simple",
-    caption = "Minimum Winning Coalitions and Participant Counts"
-)
-
-# ========== 9. Hypothesis 2b: Do users favor small coalitions (few states)? ==========
-
-active_states <- rowSums(participant_matrix_adj > 0)
-active_states_table <- table(active_states)
-freq <- as.vector(active_states_table)
-percent <- round(100 * freq / sum(freq), 1)
-df <- rbind(Number_of_Participants = freq, Percentage = percent)
-colnames(df) <- 1:7
-knitr::kable(
-    df,
-    format = "simple",
-    caption = "Number and Percentage of Strategies Allocating to Each Number of States (A–G)"
-)
-var_active <- var(active_states)
-p <- table(active_states) / length(active_states)
-entropy <- -sum(p * log2(p)) / log2(length(p))
-cat("• Variance of active state count: ", round(var_active, 2), "\n• Shannon entropy: ", round(entropy, 2), " (normalized)")
-
-# ========== 10. Hypothesis 3a: Preference for State F over E ==========
-
-F_mean <- mean(participant_matrix_adj[, 6]) # State F
-E_mean <- mean(participant_matrix_adj[, 5]) # State E
-wtest <- wilcox.test(
-    participant_matrix_adj[, 6], 
-    participant_matrix_adj[, 5], 
-    paired = TRUE)
-ttest <- t.test(
-    participant_matrix_adj[, 6], 
-    participant_matrix_adj[, 5])
-cat("• Mean allocation to State F: ", round(F_mean, 2), "\n• Mean allocation to State E: ", round(E_mean, 2))
-cat(sprintf("V = %.1f, p = %.5f\n", wtest$statistic, wtest$p.value))
-cat(sprintf("p-value = %.3f\n", ttest$p.value))
-
-# ========== 11. Hypothesis 2c: Expanded MWCs ==========
-
-expanded_matches <- generate_expanded_mwcs(mwcs, blotto_weights, quota)
-get_expanded_mwc_match <- function(
-    strategy_row,
-    mwcs,
-    blotto_weights,
-    quota = 70,
-    tol = 1e-6) {
-    supported <- which(strategy_row > tol)
-    for (i in seq_along(mwcs)) {
-        coal <- mwcs[[i]]
-        if (!all(coal %in% supported)) next
-        extra <- setdiff(supported, coal)
-        if (length(extra) != 1) next
-        extra_state <- extra[1]
-        w_extra <- blotto_weights[extra_state]
-        w_mwc <- blotto_weights[coal]
-        pair_sums <- outer(w_mwc, w_mwc, "+")[upper.tri(matrix(0, length(w_mwc), length(w_mwc)))]
-        if (w_extra >= min(w_mwc) && all(w_extra < pair_sums)) {
-            if (sum(blotto_weights[supported]) >= quota) {
-                return(list(mwc_index = i, extra_state = extra_state))
-            }
-        }
-    }
-    return(NULL)
-}
-expanded_matches <- apply(
-    participant_matrix_adj, 1,
-    get_expanded_mwc_match,
-    mwcs = mwcs,
-    blotto_weights = blotto_weights
-)
-matched_flags <- sapply(expanded_matches, function(x) !is.null(x))
-table(matched_flags)
-
-# ========== 12. Hypothesis 2d: MWC Support Counts and Performance ==========
-
-support_counts <- rowSums(sapply(mwcs, function(coal) rowSums(participant_matrix_adj[, coal, drop = FALSE] > 0) == length(coal)))
-table(support_counts)
-support_levels <- sort(unique(support_counts))
-groups <- lapply(support_levels, function(k) participant_matrix_adj[support_counts == k, , drop = FALSE])
-names(groups) <- as.character(support_levels)
-win_matrix <- matrix(NA,
-    nrow = length(groups), ncol = length(groups),
-    dimnames = list(names(groups), names(groups))
-)
-for (i in seq_along(groups)) {
-    for (j in seq_along(groups)) {
-        wins <- blotto_compare(
-            strategy_set_A = groups[[i]],
-            strategy_set_B = groups[[j]],
-            weights = blotto_weights,
-            tie_method = "winhalf"
-        )
-        win_matrix[i, j] <- 100 * (sum(wins[, "Win_Count"]) / sum(wins[, "Opponents_Faced"]))
-    }
-}
-knitr::kable(
-    round(win_matrix, 1),
-    format = "simple",
-    caption = "Percent Win by Number of MWCs"
-)
-win_matrix_all <- rep(NA, length(groups))
-names(win_matrix_all) <- names(groups)
-for (i in seq_along(groups)) {
-    wins <- blotto_compare(
-        strategy_set_A = groups[[i]],
-        strategy_set_B = participant_matrix_adj,
-        weights = blotto_weights,
-        tie_method = "winhalf"
-    )
-    win_matrix_all[i] <- 100 * (sum(wins[, "Win_Count"]) / sum(wins[, "Opponents_Faced"]))
-}
-knitr::kable(
-    t(round(win_matrix_all, 1)),
-    format = "simple",
-    caption = "Overall Win Rate by Number of MWCs"
-)
-
-wins <- blotto_compare(strategy_set_A = groups[[2]], strategy_set_B = participant_matrix_adj, weights = blotto_weights, tie_method = "winhalf")
-100 * (sum(wins[, "Win_Count"]) / sum(wins[, "Opponents_Faced"]))
-
-wins <- blotto_compare(strategy_set_A = groups[[8]], strategy_set_B = participant_matrix_adj, weights = blotto_weights, tie_method = "winhalf")
-100 * (sum(wins[, "Win_Count"]) / sum(wins[, "Opponents_Faced"]))
-
-# Median allocation by mwc # group
-medians <- lapply(groups, function(mat) apply(mat, 2, median))
-
-
-# Label each strategy according to all their MWC
-# Step 1: Build MWC labels
-state_names <- c("A", "B", "C", "D", "E", "F", "G") # adjust as needed
-mwc_labels <- sapply(mwcs, function(coal) paste(sort(state_names[coal]), collapse = ","))
-
-# Step 2: Get MWC support per participant
-mwc_support_matrix <- sapply(mwcs, function(coal) {
-    rowSums(participant_matrix_adj[, coal, drop = FALSE] > 0) == length(coal)
-})
-
-# Step 3: Assign labels per participant
-participant_mwc_labels <- apply(mwc_support_matrix, 1, function(row) {
-    supported <- which(row)
-    if (length(supported) == 0) {
-        return("None")
-    }
-    paste(mwc_labels[supported], collapse = " | ")
-})
 
 
 # ===========================================================
