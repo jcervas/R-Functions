@@ -20,7 +20,7 @@ library(jsonlite)
   return(fips)
 }
 
-  get_county_fips <- read.csv("https://raw.githubusercontent.com/jcervas/R-Functions/main/decennialAPI/county_fips.csv")
+  get_county_fips <- read.csv("https://raw.githubusercontent.com/jcervas/R-Functions/main/census-scripts/decennialAPI/county_fips.csv")
   fips <- data.frame(state=sprintf("%02s", get_county_fips$state), county=sprintf("%03s", get_county_fips$county))
 
   state_fips <- data.frame(
