@@ -13,14 +13,14 @@ assignPolys <- function(district_shp=NA, block_point=NA, districtID=NA, blockID=
 	# 		stop("Error: District file not acceptable")
 	# 	}
 	#  if (class(block_point)[1] %in% c("sf")) {
-	# 		block_shp <- block_point
+	# 		block_point <- block_point
 	# 	} else if (class(block_point) == "character") {
-	# 		block_shp <- as(sf::st_read(block_point), "Spatial")
+	# 		block_point <- as(sf::st_read(block_point), "Spatial")
 	# 	} else {
 	# 		stop("Error: Block file not acceptable")
 	# 	}
 
-		block_shp <- sf::st_transform(block_shp, crs = sf::st_crs(district_shp))
+		block_point <- sf::st_transform(block_point, crs = sf::st_crs(district_shp))
 
 		master <- list()
 		# Extract the NAME20 column as a character vector
@@ -29,7 +29,7 @@ assignPolys <- function(district_shp=NA, block_point=NA, districtID=NA, blockID=
 		
 		for (j in 1:length(ID)) {
 			poly.tmp <- district_shp[district_shp[[districtID]] %in% ID[j],]
-			blocks.subset <- block_shp[poly.tmp,] #subset in base R
+			blocks.subset <- block_point[poly.tmp,] #subset in base R
 			
 			cat(ID[j], "\n")
 
