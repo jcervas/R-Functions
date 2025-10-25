@@ -20,7 +20,7 @@ assignPolys <- function(district_shp=NA, block_point=NA, districtID=NA, blockID=
 	# 		stop("Error: Block file not acceptable")
 	# 	}
 
-		block_point <- sf::st_transform(block_point, crs = sf::st_crs(district_shp))
+		# block_point <- sf::st_transform(block_point, crs = sf::st_crs(district_shp))
 
 		master <- list()
 		# Extract the NAME20 column as a character vector
