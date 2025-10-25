@@ -6,30 +6,30 @@ library(raster)
 assignPolys <- function(district_shp=NA, block_point=NA, districtID=NA, blockID=NA) {
 	
 	if (class(district_shp)[1] %in% c("sf")) {
-			district.shp <- district_shp
+			district_shp <- district_shp
 		}  else if (class(district_shp) == "character") {
-			district.shp <- as(sf::st_read(district_shp), "Spatial")
+			district_shp <- as(sf::st_read(district_shp), "Spatial")
 		} else {
 			stop("Error: District file not acceptable")
 		}
 	 if (class(block_point)[1] %in% c("sf")) {
-			block.shp <- block_point
+			block_shp <- block_point
 		} else if (class(block_point) == "character") {
-			block.shp <- as(sf::st_read(block_point), "Spatial")
+			block_shp <- as(sf::st_read(block_point), "Spatial")
 		} else {
 			stop("Error: Block file not acceptable")
 		}
 
-		block.shp <- sf::st_transform(block.shp, crs = sf::st_crs(district.shp))
+		block_shp <- sf::st_transform(block_shp, crs = sf::st_crs(district_shp))
 
 		master <- list()
 		# Extract the NAME20 column as a character vector
 
-		ID <- unique(district.shp[[districtID]])
+		ID <- unique(district_shp[[districtID]])
 		
 		for (j in 1:length(ID)) {
-			poly.tmp <- district.shp[district.shp[[districtID]] %in% ID[j],]
-			blocks.subset <- block.shp[poly.tmp,] #subset in base R
+			poly.tmp <- district_shp[district_shp[[districtID]] %in% ID[j],]
+			blocks.subset <- block_shp[poly.tmp,] #subset in base R
 			
 			cat(ID[j], "\n")
 
