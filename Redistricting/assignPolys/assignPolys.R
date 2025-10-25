@@ -36,7 +36,7 @@ assignPolys <- function(district_shp=NA, block_point=NA, districtID=NA, blockID=
 			if (length(blocks.subset) == 0) {
 				master[[j]] <- data.frame(ID=NA, District=ID[j])
 				} else {
-				master[[j]] <- data.frame(ID=blocks.subset[,blockID], District=ID[j])
+				master[[j]] <- data.frame(ID=blocks.subset[["GEOID20"]], District=ID[j])
 				}
 
 		}
