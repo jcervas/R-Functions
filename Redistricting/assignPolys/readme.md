@@ -9,7 +9,7 @@
 ###### Export to shapefile, and use this new point-based file for "block_point". We can use the block_poly to read in the original polygon shapefile for mapping.
 - Example - Minnesota 116th Congress, Census Blocks (Function uses package "sp" to read in shapefiles)
 ```
-source("https://raw.githubusercontent.com/jcervas/R-Functions/main/Redistricting/assignBlocks/assignBlocks.R")
+source("https://raw.githubusercontent.com/jcervas/R-Functions/main/Redistricting/assignPolys/assignPolys.R")
 district <- "/Users/cervas/Library/CloudStorage/GoogleDrive-jcervas@uci.edu/My Drive/Projects/Redistricting/2022/PA/data/Plans/2022 LRC Senate Final.geojson"
 
 blocks <- "/Users/cervas/Library/CloudStorage/GoogleDrive-jcervas@uci.edu/My Drive/GitHub/Data Files/Census/PA2020.pl/GIS/blocks_simplified/WP_Blocks.json"
