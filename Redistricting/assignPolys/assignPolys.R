@@ -5,20 +5,20 @@ library(raster)
 
 assignPolys <- function(district_shp=NA, block_point=NA, districtID=NA, blockID=NA) {
 	
-	if (class(district_shp)[1] %in% c("sf")) {
-			district_shp <- district_shp
-		}  else if (class(district_shp) == "character") {
-			district_shp <- as(sf::st_read(district_shp), "Spatial")
-		} else {
-			stop("Error: District file not acceptable")
-		}
-	 if (class(block_point)[1] %in% c("sf")) {
-			block_shp <- block_point
-		} else if (class(block_point) == "character") {
-			block_shp <- as(sf::st_read(block_point), "Spatial")
-		} else {
-			stop("Error: Block file not acceptable")
-		}
+	# if (class(district_shp)[1] %in% c("sf")) {
+	# 		district_shp <- district_shp
+	# 	}  else if (class(district_shp) == "character") {
+	# 		district_shp <- as(sf::st_read(district_shp), "Spatial")
+	# 	} else {
+	# 		stop("Error: District file not acceptable")
+	# 	}
+	#  if (class(block_point)[1] %in% c("sf")) {
+	# 		block_shp <- block_point
+	# 	} else if (class(block_point) == "character") {
+	# 		block_shp <- as(sf::st_read(block_point), "Spatial")
+	# 	} else {
+	# 		stop("Error: Block file not acceptable")
+	# 	}
 
 		block_shp <- sf::st_transform(block_shp, crs = sf::st_crs(district_shp))
 
