@@ -146,14 +146,14 @@ sv2 <- sv.hyp(r = 3, b = -0.5)
 sv3 <- sv.hyp(r = 2.5, b = 0)
 
 # Light theme (default)
-plot_majoritarian(sv1, sv2, sv3,
+sv_plot(sv1, sv2, sv3,
                   colors = c("blue", "red", "darkgreen"),
                   labels = c("b = 0.5", "b = -0.5", "b = 0"),
                   legend = TRUE,
                   main = "Seat-Vote Curves — Light Theme")
 
 # Dark theme for slides
-plot_majoritarian(sv1, sv2, sv3,
+sv_plot(sv1, sv2, sv3,
                   colors = c("skyblue", "tomato", "limegreen"),
                   labels = c("b = 0.5", "b = -0.5", "b = 0"),
                   legend = TRUE,
@@ -169,7 +169,7 @@ negative.dv.dta     <- sv.hyp(r = 0.50, b = 0)
 winner.sv.dta       <- sv.hyp(r = 10000, b = 0)
 
 # Use the new plotting function
-plot_majoritarian(
+sv_plot(
   majoritarian.sv.dta,
   negative.dv.dta,
   winner.sv.dta,
