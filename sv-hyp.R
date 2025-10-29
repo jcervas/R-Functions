@@ -120,18 +120,18 @@ sv_hyp_plot <- function(r, b, n = 1000){
                   majoritarian.sv.dta <- sv.hyp(r = 3, b = 0.5)
                   majoritarian.sv.dta2 <- sv.hyp(r = 3, b = -0.5)
                          
-                       par(pty="s", mar=c(3.5,2.5,2,1))
-                       plot(0,0, ylim=c(0,1), xlim=c(0,1), type="p", pch=19, col="#FFFFFF", main="Asymmetry", xlab="", ylab="", bty="n", axes=F)
-                            axis(side=1, las=2, at=seq(0,1,0.1), labels=F, lwd.ticks=0.4)
+                                            par(pty="s", mar=c(3.5,2.5,2,1))
+                       plot(0,0, ylim=c(0,1), xlim=c(0,1), type="p", pch=19, col="#FFFFFF", main="", xlab="", ylab="", bty="n", axes=F)
+                            axis(side=1, las=2, at=seq(0,1,0.1), labels=F, lwd.ticks=0.4, tck=-0.01)
                             axis(side=1, las=2, at=seq(0,1,0.01), labels=F, lwd.ticks=0.2, tck=-0.01)
-                            axis(side=1, at=seq(0, 1, 0.2), labels=c("0%", "20%", "40%", "60%", "80%", "100%"), cex.axis=0.65)
+                            axis(side=1, at=seq(0, 1, 0.25), labels=c("0%", "25%", "50%", "75%", "100%"), cex.axis=0.65)
 
-                            axis(side=2, las=2, at=seq(0,1,0.1), labels=F, lwd.ticks=0.4)
+                            axis(side=2, las=2, at=seq(0,1,0.1), labels=F, lwd.ticks=0.4, tck=-0.01)
                             axis(side=2, las=2, at=seq(0,1,0.01), labels=F, lwd.ticks=0.2, tck=-0.01)
-                            axis(side=2, las=2, at=seq(0,1, 0.2), labels=c("0%", "20%", "40%", "60%", "80%", "100%"), cex.axis=0.65)
+                            axis(side=2, las=2, at=seq(0, 1, 0.25), labels=c("0%", "25%", "50%", "75%", "100%"), cex.axis=0.65)
 
-                                 abline(v=seq(0,1,0.2), lty=3, col="gray80")
-                                 abline(h=seq(0,1,0.2), lty=3, col="gray80")
+                                 abline(v=seq(0, 1, 0.25), lty=3, col="gray80")
+                                 abline(h=seq(0, 1, 0.25), lty=3, col="gray80")
                                  abline(v=0.5, lty=2, col="gray40")
                                  abline(h=0.5, lty=2, col="gray40")
 
@@ -141,11 +141,11 @@ sv_hyp_plot <- function(r, b, n = 1000){
                                  rect(0,1,1,1.05, col = rgb(0.1,0.1,0.1,1/2), density=40, border = "transparent") #top
 
                               mtext(side=1, line=2, "% of Two-Party Votes", cex=1)
-                              mtext(side=2, line=3, "% of Two-Party Seats", cex=1)
+                              mtext(side=2, line=2.5, "% of Two-Party Seats", cex=1)
 
                                  lines(majoritarian.sv.dta, lwd=1.5, col="blue", lty=2)
                                  lines(majoritarian.sv.dta2, lwd=1.5, col="red", lty=2)
-                                 text(x =  0.71, y = 0.61, "Asymmetric\nMajoritarian", srt=0, cex=1, col="purple")
+                                 # text(x =  0.71, y = 0.61, "Asymmetric\nMajoritarian", srt=0, cex=0.65, col="purple")
 
 
 # dev.off() 
