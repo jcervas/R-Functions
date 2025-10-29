@@ -120,7 +120,7 @@ sv_hyp_plot <- function(r, b, n = 1000){
                   majoritarian.sv.dta <- sv.hyp(r = 3, b = 0.5)
                   majoritarian.sv.dta2 <- sv.hyp(r = 3, b = -0.5)
                          
-                                            par(pty="s", mar=c(3.5,2.5,2,1))
+                                                               par(pty="s", mar=c(3.5,2.5,2,1))
                        plot(0,0, ylim=c(0,1), xlim=c(0,1), type="p", pch=19, col="#FFFFFF", main="", xlab="", ylab="", bty="n", axes=F)
                             axis(side=1, las=2, at=seq(0,1,0.1), labels=F, lwd.ticks=0.4, tck=-0.01)
                             axis(side=1, las=2, at=seq(0,1,0.01), labels=F, lwd.ticks=0.2, tck=-0.01)
