@@ -101,6 +101,15 @@ sv.hyp <- function(r, b, n = 1000){
   return(dta)
 }
 
+sv_curve <- function(s,v, lwd=2, col="gray40") {
+  sv <- function(x) (x / (1 - x))
+	reg <- summary(lm(log(sv(s)) ~ log(sv(v))))
+	VOTES.tmp <- seq(0,1, by=.01)
+	seatvotes <- reg$coefficients[2]*log(VOTES.tmp/(1 - VOTES.tmp)) + reg$coefficients[1]
+	funct2 <- function (x) exp(seatvotes) / (1 + exp(seatvotes)) 
+	plot(funct2, from=0.0, to=1, add=TRUE, lwd=lwd, col=col)	
+}
+
 
 # Example usage
 # Generate data
