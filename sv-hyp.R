@@ -130,9 +130,8 @@ abline(v = 0.5, col = "gray40", lty = 3)
 text(0.75, 0.5, "Custom annotation", col = "gray40", cex = 0.7)
 
 
-
 # A wrapper for one-shot plotting
-sv_plot <- function(..., main = "", theme = "light", labels = NULL, colors = NULL, ltys = NULL, ...) {
+sv_plot <- function(..., main = "", theme = "light", labels = NULL, colors = NULL, ltys = NULL) {
   curves <- list(...)
   n <- length(curves)
   sv_plot_base(main = main, theme = theme)
@@ -144,3 +143,25 @@ sv_plot <- function(..., main = "", theme = "light", labels = NULL, colors = NUL
                  label = if (!is.null(labels)) labels[i] else NULL)
   }
 }
+
+
+# --- Toy Example for sv_plot() ---
+
+# Generate some hypothetical seat-vote relationships
+sv1 <- sv.hyp(r = 3, b = 0.5)
+sv2 <- sv.hyp(r = 3, b = -0.5)
+sv3 <- sv.hyp(r = 2.5, b = 0)
+
+# Draw all three in one go using the wrapper
+sv_plot(sv1, sv2, sv3,
+        main   = "Seat–Vote Curves: Toy Example",
+        theme  = "light",
+        labels = c("Bias = +0.5", "Bias = -0.5", "Bias = 0"),
+        colors = c("blue", "red", "darkgreen"),
+        ltys   = c(1, 2, 3))
+
+# You can toggle to a dark mode easily				 
+sv_plot(sv1, sv2, sv3,
+        main = "Dark Theme Example",
+        theme = "dark",
+        labels = c("b=0.5", "b=-0.5", "b=0"))
