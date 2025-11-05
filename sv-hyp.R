@@ -91,6 +91,16 @@ sv_add_curve <- function(curve,
   }
 }
 
+sv.hyp <- function(r, b, n = 1000){
+  V  <- seq(from = 0.001,to = 0.999, length = n )
+  LV <- log(V/(1-V))
+  S  <- (1+exp(-b - r*LV))^-1
+
+  dta <- cbind.data.frame(V,S)
+
+  return(dta)
+}
+
 
 # Example usage
 # Generate data
