@@ -42,7 +42,7 @@ sv_plot_base <- function(main = "",
   if (yaxis) {
     axis(side = 2, las = 2, at = seq(0, 1, 0.1), labels = FALSE, lwd.ticks = 0.4, col = axis_col)
     axis(side = 2, las = 2, at = seq(0, 1, 0.01), labels = FALSE, lwd.ticks = 0.2, tck = -0.01, col = axis_col)
-    axis(side = 2, at = seq(0, 1, 0.1),
+    axis(side = 2, las = 2, at = seq(0, 1, 0.1),
          labels = paste0(seq(0, 100, 10), "%"), cex.axis = 0.5, col.axis = axis_col)
   }
 
