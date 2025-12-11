@@ -1,10 +1,12 @@
-## Batch Geocoding Function
-
-# This function sends the cleaned addresses to the Census batch geocoding API in chunks (≤ 7,500 records each), retries on errors, and combines all outputs into a single result.
-
-# Batch Geocoding Script in Base R (using curl system call)
-# Input: CSV file with required format (Unique ID, Street address, City, State, ZIP)
-# Output: A CSV file with Census geographies (state, county, tract, block)
+# --------------------------------------------------------------
+# batch_geocode()
+#
+# Sends address records to the Census Batch Geocoding API.
+# - Splits into ≤ 7,500-row chunks
+# - Retries failed chunks
+# - Pads chunk outputs to same width
+# - Returns combined dataframe of all results
+# --------------------------------------------------------------
 
 batch_geocode <- function(input_csv,
                           output_csv = "geocoderesult.csv",
@@ -14,117 +16,119 @@ batch_geocode <- function(input_csv,
                           outdir = "geocode_results",
                           tag = "run1") {
   
-  # if (!file.exists(input_csv)) stop("Input file not found: ", input_csv)
+  # Ensure output directory exists
   if (!dir.exists(outdir)) dir.create(outdir, recursive = TRUE)
   
-  # Read input with headers
+  # Validate required fields
   df <- input_csv
   names(df) <- tolower(names(df))
   required <- c("id","street","city","state","zip")
   missing <- setdiff(required, names(df))
   if (length(missing)) stop("Missing required columns: ", paste(missing, collapse=", "))
-  df_clean <- df[, required]
   
-  # ----------------------
-  # Process one chunk with retry
-  process_chunk <- function(chunk, chunk_id, tag, max_attempts=3, wait_seconds=5) {
+  df_clean <- df[, required]
+
+  # ---------- helper that handles a single chunk ----------
+  process_chunk <- function(chunk, chunk_id, max_attempts=3, wait_seconds=5) {
+
     tmp_in  <- tempfile(fileext = ".csv")
     tmp_out <- file.path(outdir, paste0(tag, "_chunk_", chunk_id, "_out.csv"))
-    fail_out <- file.path(outdir, "failed_chunks",
-                          paste0(tag, "_chunk_", chunk_id, "_failed.csv"))
+    fail_out <- file.path(outdir, "failed_chunks")
     
+    if (!dir.exists(fail_out)) dir.create(fail_out)
+
+    fail_file <- file.path(fail_out, paste0(tag, "_chunk_", chunk_id, "_failed.csv"))
+
+    # Write chunk to temp file
     write.table(chunk, tmp_in, sep = ",", row.names = FALSE,
                 col.names = FALSE, quote = TRUE)
-    
-    if (!dir.exists(file.path(outdir, "failed_chunks"))) {
-      dir.create(file.path(outdir, "failed_chunks"))
-    }
-    
+
+    # Choose correct API endpoint
     if (returntype == "geographies") {
       url <- "https://geocoding.geo.census.gov/geocoder/geographies/addressbatch"
-      args <- c("--form", paste0('addressFile=@"', normalizePath(tmp_in), '"'),
+      args <- c("--form", paste0('addressFile=@"', tmp_in, '"'),
                 "--form", paste0("benchmark=", benchmark),
                 "--form", paste0("vintage=", vintage),
                 url, "--output", tmp_out)
     } else {
       url <- "https://geocoding.geo.census.gov/geocoder/locations/addressbatch"
-      args <- c("--form", paste0('addressFile=@"', normalizePath(tmp_in), '"'),
+      args <- c("--form", paste0('addressFile=@"', tmp_in, '"'),
                 "--form", paste0("benchmark=", benchmark),
                 url, "--output", tmp_out)
     }
-    
+
     # Retry loop
-    status <- 1L
-    for (attempt in 1:max_attempts) {
-      message("  Attempt ", attempt, " for chunk ", chunk_id)
+    for (attempt in seq_len(max_attempts)) {
+      message("Attempt ", attempt, " for chunk ", chunk_id)
       status <- system2("curl", args = args)
-      good <- (status == 0L &&
-               file.exists(tmp_out) &&
-               file.info(tmp_out)$size > 0)
-      if (good) break
+      ok <- status == 0L && file.exists(tmp_out) && file.info(tmp_out)$size > 0
+      
+      if (ok) return(read.csv(tmp_out, header = FALSE, stringsAsFactors = FALSE, fill = TRUE))
       Sys.sleep(wait_seconds)
     }
-    
-    if (status != 0L || !file.exists(tmp_out) || file.info(tmp_out)$size == 0) {
-      warning("Chunk ", chunk_id, " failed after ", max_attempts, " attempts. Writing to failed_chunks.")
-      write.table(chunk, fail_out, sep = ",", row.names = FALSE,
-                  col.names = FALSE, quote = TRUE)
-      return(NULL)
-    }
-    
-    read.csv(tmp_out, header = FALSE, stringsAsFactors = FALSE, fill = TRUE)
+
+    # Final fallback if all retries fail
+    warning("Chunk ", chunk_id, " failed; saved to failed_chunks/")
+    write.table(chunk, fail_file, sep = ",", row.names = FALSE, col.names = FALSE, quote = TRUE)
+    return(NULL)
   }
-  
-  # ----------------------
-  # Run all chunks
+
+  # ---------- Split into ≤7500-row chunks ----------
   n <- nrow(df_clean)
-  idx <- split(seq_len(n), ceiling(seq_len(n)/7500))  # ≤7500 rows each
+  idx <- split(seq_len(n), ceiling(seq_len(n)/7500))
+
+  # Run each chunk
   dfs <- lapply(seq_along(idx), function(i) {
-    message("Processing ", tag, " chunk ", i, "/", length(idx),
-            " (", length(idx[[i]]), " rows)")
-    process_chunk(df_clean[idx[[i]], ], i, tag)
+    message("Processing chunk ", i, "/", length(idx))
+    process_chunk(df_clean[idx[[i]], ], i)
   })
-  
-  # Remove NULLs from failed chunks
+
+  # Drop failed chunks
   dfs <- Filter(Negate(is.null), dfs)
-  
-  if (!length(dfs)) stop("All chunks failed — check input file or service availability.")
-  
-  # Pad to max columns before combine
-  ncols <- vapply(dfs, ncol, integer(1))
-  maxc  <- max(ncols)
-  pad_to <- function(d, k) {
-    if (ncol(d) == k) return(d)
-    for (j in seq_len(k - ncol(d))) d[[ncol(d)+1]] <- NA_character_
-    names(d) <- paste0("V", seq_len(k)); d
+  if (!length(dfs)) stop("All chunks failed.")
+
+  # ---------- Ensure all chunk dataframes have same number of columns ----------
+  max_cols <- max(vapply(dfs, ncol, integer(1)))
+
+  pad_to <- function(x, k) {
+    if (ncol(x) == k) return(x)
+    x[, (ncol(x)+1):k] <- NA
+    names(x) <- paste0("V", seq_len(k))
+    x
   }
-  dfs <- lapply(dfs, pad_to, k=maxc)
-  
+
+  dfs <- lapply(dfs, pad_to, k = max_cols)
+
+  # ---------- Combine all chunks ----------
   all_results <- do.call(rbind, dfs)
-  
-  # Save combined
+
   final_out <- file.path(outdir, output_csv)
-  write.table(all_results, file = final_out,
-              sep = ",", row.names = FALSE, col.names = FALSE, quote = TRUE)
-  message("Done. Combined results in ", final_out)
-  
+  write.table(all_results, final_out, sep = ",", row.names = FALSE,
+              col.names = FALSE, quote = TRUE)
+
+  message("Completed batch geocoding → ", final_out)
   invisible(all_results)
 }
 
 
-
-## Tie Resolution
-
-# These functions handle "Tie" results by calling the onelineaddress geocoding endpoint and taking the first returned match for each tied address. 
+# --------------------------------------------------------------
+# resolve_tie_first_match_fast()
+#
+# Takes a single address string and queries the Census 
+# "onelineaddress" endpoint. Pulls out:
+#   - matched address
+#   - lon/lat
+#   - state, county, tract, block
+# --------------------------------------------------------------
 
 resolve_tie_first_match_fast <- function(address,
                                          benchmark = 4,
                                          vintage = 4) {
 
-  # Clean batch CSV quotes
   address <- gsub('^"|"$', "", address)
   addr_enc <- URLencode(address, reserved = TRUE)
 
+  # Census onelineaddress endpoint
   url <- paste0(
     "https://geocoding.geo.census.gov/geocoder/geographies/onelineaddress?",
     "address=", addr_enc,
@@ -133,28 +137,22 @@ resolve_tie_first_match_fast <- function(address,
     "&format=json"
   )
 
-  # Read raw JSON
   json <- tryCatch(readChar(url, nchars = 300000), error = function(e) NULL)
   if (is.null(json)) return(NULL)
 
   if (!grepl('"matchedAddress"', json, fixed = TRUE))
     return(NULL)
 
-  # Use [[:space:]] instead of \s
-  matched <- sub('.*"matchedAddress"[[:space:]]*:[[:space:]]*"([^"]+)".*', '\\1', json)
-  lon     <- sub('.*"x"[[:space:]]*:[[:space:]]*([-0-9\\.]+).*', '\\1', json)
-  lat     <- sub('.*"y"[[:space:]]*:[[:space:]]*([-0-9\\.]+).*', '\\1', json)
+  # Extract using [[:space:]] (safe in base R)
+  extract <- function(pattern) sub(pattern, "\\1", json)
 
-  tract  <- sub('.*"TRACT"[[:space:]]*:[[:space:]]*"([^"]+)".*', '\\1', json)
-  block  <- sub('.*"BLOCK"[[:space:]]*:[[:space:]]*"([^"]+)".*', '\\1', json)
-  county <- sub('.*"COUNTY"[[:space:]]*:[[:space:]]*"([^"]+)".*', '\\1', json)
-  state  <- sub('.*"STATE"[[:space:]]*:[[:space:]]*"([^"]+)".*', '\\1', json)
-
-  # Clean failures
-  tract[tract == json]  <- NA
-  block[block == json]  <- NA
-  county[county == json] <- NA
-  state[state == json] <- NA
+  matched <- extract('.*"matchedAddress"[[:space:]]*:[[:space:]]*"([^"]+)".*')
+  lon     <- extract('.*"x"[[:space:]]*:[[:space:]]*([-0-9\\.]+).*')
+  lat     <- extract('.*"y"[[:space:]]*:[[:space:]]*([-0-9\\.]+).*')
+  state   <- extract('.*"STATE"[[:space:]]*:[[:space:]]*"([^"]+)".*')
+  county  <- extract('.*"COUNTY"[[:space:]]*:[[:space:]]*"([^"]+)".*')
+  tract   <- extract('.*"TRACT"[[:space:]]*:[[:space:]]*"([^"]+)".*')
+  block   <- extract('.*"BLOCK"[[:space:]]*:[[:space:]]*"([^"]+)".*')
 
   list(
     matched_address = matched,
@@ -167,19 +165,29 @@ resolve_tie_first_match_fast <- function(address,
   )
 }
 
+
+# --------------------------------------------------------------
+# resolve_all_ties_fast()
+#
+# Extracts all rows marked "Tie" from batch output,
+# resolves each using resolve_tie_first_match_fast(),
+# returns a dataframe of fixed entries.
+# --------------------------------------------------------------
+
 resolve_all_ties_fast <- function(batch_results, mc.cores = 4) {
 
   tie_idx <- which(batch_results[,3] == "Tie")
   if (!length(tie_idx)) {
-    message("No Ties found.")
+    message("No ties to resolve.")
     return(NULL)
   }
 
-  message("Found ", length(tie_idx), " ties — resolving via onelineaddress...")
+  message("Resolving ", length(tie_idx), " ties via onelineaddress...")
 
   addresses <- batch_results[tie_idx, 2]
   ids       <- batch_results[tie_idx, 1]
 
+  # Parallelize where available
   if (.Platform$OS.type == "unix" && mc.cores > 1) {
     fixes <- parallel::mclapply(addresses, resolve_tie_first_match_fast,
                                 mc.cores = mc.cores)
@@ -187,6 +195,7 @@ resolve_all_ties_fast <- function(batch_results, mc.cores = 4) {
     fixes <- lapply(addresses, resolve_tie_first_match_fast)
   }
 
+  # Assemble cleaned results
   out <- do.call(rbind, lapply(seq_along(fixes), function(i) {
     fx <- fixes[[i]]
     if (is.null(fx)) return(NULL)
@@ -196,70 +205,42 @@ resolve_all_ties_fast <- function(batch_results, mc.cores = 4) {
   out
 }
 
-# Build a clean data frame
-
-out <- do.call(rbind, lapply(seq_along(fixes), function(i) {
-fx <- fixes[[i]]
-if (is.null(fx)) return(NULL)
-cbind(id = ids[i], as.data.frame(fx, stringsAsFactors = FALSE))
-}))
-
-out
-}
+# --------------------------------------------------------------
+# merge_tie_fixes()
+#
+# Replaces original tie rows in batch output with corrected
+# rows produced by resolve_all_ties_fast().
+# --------------------------------------------------------------
 
 merge_tie_fixes <- function(batch_results, tie_fixes_df) {
-if (is.null(tie_fixes_df) || nrow(tie_fixes_df) == 0) {
-message("No fixes to merge.")
-return(batch_results)
-}
 
-# Remove original Tie rows
+  if (is.null(tie_fixes_df) || nrow(tie_fixes_df) == 0) {
+    message("No fixes to merge.")
+    return(batch_results)
+  }
 
-cleaned <- batch_results[!(batch_results[,1] %in% tie_fixes_df$id), ]
+  # Drop old Tie rows
+  cleaned <- batch_results[!(batch_results[,1] %in% tie_fixes_df$id), ]
 
-# Start with empty matrix
+  # Insert corrected rows
+  fixed_rows <- cbind(
+    tie_fixes_df$id,
+    tie_fixes_df$matched_address,
+    "Match",
+    tie_fixes_df$lon,
+    tie_fixes_df$lat,
+    NA,       # TIGERLINE placeholder
+    NA,       # Side placeholder
+    tie_fixes_df$state,
+    tie_fixes_df$county,
+    tie_fixes_df$tract,
+    tie_fixes_df$block
+  )
 
-fixed_rows <- matrix(NA, nrow = nrow(tie_fixes_df), ncol = ncol(batch_results))
+  fixed_rows <- as.data.frame(fixed_rows, stringsAsFactors = FALSE)
 
-# ID
+  # merge into final dataset
+  final <- rbind(cleaned, fixed_rows)
 
-fixed_rows[,1] <- tie_fixes_df$id
-
-# Address (use matched address from fix)
-
-fixed_rows[,2] <- tie_fixes_df$matched_address
-
-# Match status
-
-fixed_rows[,3] <- "Match"
-
-# Coordinates (Census format: lon, lat after fields 1–3)
-
-fixed_rows[,4] <- tie_fixes_df$lon
-fixed_rows[,5] <- tie_fixes_df$lat
-
-# Tigerline placeholder
-
-fixed_rows[,6] <- NA
-
-# Side placeholder
-
-fixed_rows[,7] <- NA
-
-# Geography
-
-fixed_rows[,8]  <- tie_fixes_df$state
-fixed_rows[,9]  <- tie_fixes_df$county
-fixed_rows[,10] <- tie_fixes_df$tract
-fixed_rows[,11] <- tie_fixes_df$block
-
-# Convert to data.frame
-
-fixed_rows <- as.data.frame(fixed_rows, stringsAsFactors = FALSE)
-
-# Combine with cleaned original rows
-
-final <- rbind(cleaned, fixed_rows)
-
-final
+  final
 }
