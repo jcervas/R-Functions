@@ -118,84 +118,82 @@ batch_geocode <- function(input_csv,
 # These functions handle "Tie" results by calling the onelineaddress geocoding endpoint and taking the first returned match for each tied address. 
 
 resolve_tie_first_match_fast <- function(address,
-benchmark = 4,
-vintage = 4) {
+                                         benchmark = 4,
+                                         vintage = 4) {
 
-# Clean batch CSV quotes
+  # Clean batch CSV quotes
+  address <- gsub('^"|"$', "", address)
+  addr_enc <- URLencode(address, reserved = TRUE)
 
-address <- gsub('^"|"$', "", address)
-addr_enc <- URLencode(address, reserved = TRUE)
+  url <- paste0(
+    "https://geocoding.geo.census.gov/geocoder/geographies/onelineaddress?",
+    "address=", addr_enc,
+    "&benchmark=", benchmark,
+    "&vintage=", vintage,
+    "&format=json"
+  )
 
-url <- paste0(
-"[https://geocoding.geo.census.gov/geocoder/geographies/onelineaddress](https://geocoding.geo.census.gov/geocoder/geographies/onelineaddress)?",
-"address=", addr_enc,
-"&benchmark=", benchmark,
-"&vintage=", vintage,
-"&format=json"
-)
+  # Read raw JSON
+  json <- tryCatch(readChar(url, nchars = 300000), error = function(e) NULL)
+  if (is.null(json)) return(NULL)
 
-# Read raw JSON as a single string
+  if (!grepl('"matchedAddress"', json, fixed = TRUE))
+    return(NULL)
 
-json <- tryCatch(readChar(url, nchars = 300000), error = function(e) NULL)
-if (is.null(json)) return(NULL)
+  # Use [[:space:]] instead of \s
+  matched <- sub('.*"matchedAddress"[[:space:]]*:[[:space:]]*"([^"]+)".*', '\\1', json)
+  lon     <- sub('.*"x"[[:space:]]*:[[:space:]]*([-0-9\\.]+).*', '\\1', json)
+  lat     <- sub('.*"y"[[:space:]]*:[[:space:]]*([-0-9\\.]+).*', '\\1', json)
 
-# If no matches exist
+  tract  <- sub('.*"TRACT"[[:space:]]*:[[:space:]]*"([^"]+)".*', '\\1', json)
+  block  <- sub('.*"BLOCK"[[:space:]]*:[[:space:]]*"([^"]+)".*', '\\1', json)
+  county <- sub('.*"COUNTY"[[:space:]]*:[[:space:]]*"([^"]+)".*', '\\1', json)
+  state  <- sub('.*"STATE"[[:space:]]*:[[:space:]]*"([^"]+)".*', '\\1', json)
 
-if (!grepl('"matchedAddress"', json, fixed = TRUE))
-return(NULL)
+  # Clean failures
+  tract[tract == json]  <- NA
+  block[block == json]  <- NA
+  county[county == json] <- NA
+  state[state == json] <- NA
 
-# Extract first match components
-
-matched <- sub('.*"matchedAddress"\s*:\s*"([^"]+)".*','\1',json)
-lon     <- sub('.*"x"\s*:\s*([-0-9\.]+).*', '\1', json)
-lat     <- sub('.*"y"\s*:\s*([-0-9\.]+).*', '\1', json)
-
-tract  <- sub('.*"TRACT"\s*:\s*"([^"]+)".*',  '\1', json)
-block  <- sub('.*"BLOCK"\s*:\s*"([^"]+)".*',  '\1', json)
-county <- sub('.*"COUNTY"\s*:\s*"([^"]+)".*', '\1', json)
-state  <- sub('.*"STATE"\s*:\s*"([^"]+)".*',  '\1', json)
-
-# Clean extraction failures
-
-tract[tract == json]   <- NA
-block[block == json]   <- NA
-county[county == json] <- NA
-state[state == json]   <- NA
-
-list(
-matched_address = matched,
-lon   = as.numeric(lon),
-lat   = as.numeric(lat),
-state = state,
-county = county,
-tract = tract,
-block = block
-)
+  list(
+    matched_address = matched,
+    lon   = as.numeric(lon),
+    lat   = as.numeric(lat),
+    state = state,
+    county = county,
+    tract = tract,
+    block = block
+  )
 }
 
 resolve_all_ties_fast <- function(batch_results, mc.cores = 4) {
 
-# Column 3 of batch output = match status
+  tie_idx <- which(batch_results[,3] == "Tie")
+  if (!length(tie_idx)) {
+    message("No Ties found.")
+    return(NULL)
+  }
 
-tie_idx <- which(batch_results[,3] == "Tie")
-if (!length(tie_idx)) {
-message("No Ties found.")
-return(NULL)
-}
+  message("Found ", length(tie_idx), " ties — resolving via onelineaddress...")
 
-message("Found ", length(tie_idx), " ties — resolving via onelineaddress...")
+  addresses <- batch_results[tie_idx, 2]
+  ids       <- batch_results[tie_idx, 1]
 
-addresses <- batch_results[tie_idx, 2]
-ids       <- batch_results[tie_idx, 1]
+  if (.Platform$OS.type == "unix" && mc.cores > 1) {
+    fixes <- parallel::mclapply(addresses, resolve_tie_first_match_fast,
+                                mc.cores = mc.cores)
+  } else {
+    fixes <- lapply(addresses, resolve_tie_first_match_fast)
+  }
 
-# Parallel where available (Mac/Linux)
+  out <- do.call(rbind, lapply(seq_along(fixes), function(i) {
+    fx <- fixes[[i]]
+    if (is.null(fx)) return(NULL)
+    cbind(id = ids[i], as.data.frame(fx, stringsAsFactors = FALSE))
+  }))
 
-if (.Platform$OS.type == "unix" && mc.cores > 1) {
-fixes <- parallel::mclapply(addresses, resolve_tie_first_match_fast,
-mc.cores = mc.cores)
-} else {
-# Windows fallback: sequential
-fixes <- lapply(addresses, resolve_tie_first_match_fast)
+  out
 }
 
 # Build a clean data frame
