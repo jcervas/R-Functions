@@ -4,7 +4,7 @@ countSplits <- function(plan = NULL, census_blocks = NULL, geo = "COUNTY", custo
     read.csv(x, colClasses = c("character"))
   }
 
-  # Check if 'plan' is a data frame
+# Check if 'plan' is a data frame
 if (!inherits(plan, "data.frame")) {
   plan.read <- read.equiv(plan)
 } else {
