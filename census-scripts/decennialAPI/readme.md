@@ -4,7 +4,7 @@
 Use this function to get 2020 decennial census data from the Census API in R.
 
 ```
-source('https://raw.githubusercontent.com/jcervas/R-Functions/refs/heads/main/decennialAPI/decennialAPI.R')
+source('https://raw.githubusercontent.com/jcervas/R-Functions/refs/heads/main/census-scripts/decennialAPI/decennialAPI.R')
 ```
 
 ```
