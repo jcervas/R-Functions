@@ -77,6 +77,7 @@ countSplits <- function(plan = NULL,
 
   cntysplits <- 0
   totalsplits <- c()
+  nonzero_splits <- 0
 
   list_splits <- data.frame(
     Split = character(),
@@ -136,6 +137,13 @@ countSplits <- function(plan = NULL,
       colnames(tmp)[3] <- "Population"
       tmp$Share <- tmp$Population / sum(tmp$Population)
 
+      # count non-zero populated splits
+      nz_parts <- sum(tmp$Share < 1)
+
+      if (nz_parts > 1) {
+        nonzero_splits <- nonzero_splits + (nz_parts - 1)
+      }
+
       pop_splits <- rbind(pop_splits, tmp)
     }
   }
@@ -153,17 +161,17 @@ countSplits <- function(plan = NULL,
   #-----------------------------
   # Summary table
   #-----------------------------
-  splits.table <- rbind(
-    cntysplits,
-    sum(totalsplits) - length(totalsplits)
-  )
+splits.table <- rbind(
+  cntysplits,
+  sum(totalsplits) - length(totalsplits),
+  nonzero_splits
+)
 
-  if (splits.table[2, ] == -1) splits.table[2, ] <- 0
-
-  row.names(splits.table) <- c(
-    "Geos Splits",
-    "Total Splits"
-  )
+row.names(splits.table) <- c(
+  "Geos Splits",
+  "Total Splits",
+  "Non-Zero Population Splits"
+)
 
   #-----------------------------
   # Save outputs
