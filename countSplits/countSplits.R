@@ -7,7 +7,7 @@ countSplits <- function(plan = NULL,
                         custom_geo_id = "GEOID20",
                         pop_var = "pop",
                         min_split_pop = 0,
-                        min_fragment_pop = 0,
+                        # min_fragment_pop = 0,
                         save = NULL,
                         save_pop = NULL) {
 
@@ -114,7 +114,7 @@ countSplits <- function(plan = NULL,
     colnames(tmp)[3] <- "Population"
 
     # Drop low-pop fragments
-    tmp <- tmp[tmp$Population > min_fragment_pop, , drop = FALSE]
+    # tmp <- tmp[tmp$Population > min_fragment_pop, , drop = FALSE]
 
     # Must have at least two populated districts
     if (nrow(tmp) < 2) next
