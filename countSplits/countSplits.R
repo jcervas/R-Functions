@@ -7,6 +7,7 @@ countSplits <- function(plan = NULL,
                         custom_geo_id = "GEOID20",
                         pop_var = "pop",
                         min_split_pop = 0,
+                        min_fragment_pop = 0,
                         save = NULL,
                         save_pop = NULL) {
 
@@ -39,7 +40,6 @@ countSplits <- function(plan = NULL,
 
   #-----------------------------
   # Merge plan with blocks
-  # (population already lives here)
   #-----------------------------
   plan_tmp <- merge(
     plan.read,
@@ -48,12 +48,11 @@ countSplits <- function(plan = NULL,
     by.y = block_id
   )
 
-  # Coerce population to numeric
-  if (pop_var %in% colnames(plan_tmp)) {
-    plan_tmp[[pop_var]] <- as.numeric(plan_tmp[[pop_var]])
-  } else {
+  # Ensure population column exists
+  if (!(pop_var %in% colnames(plan_tmp))) {
     stop(paste("Population column", pop_var, "not found in census_blocks"))
   }
+  plan_tmp[[pop_var]] <- as.numeric(plan_tmp[[pop_var]])
 
   #-----------------------------
   # Handle geography
@@ -72,12 +71,12 @@ countSplits <- function(plan = NULL,
   }
 
   #-----------------------------
-  # Prep for split counting
+  # Split by geography
   #-----------------------------
-  a <- split(plan_tmp, plan_tmp$geo)
+  geolist <- split(plan_tmp, plan_tmp$geo)
 
   cntysplits <- 0
-  totalsplits <- c()
+  totalsplits <- integer(0)
 
   list_splits <- data.frame(
     Split = character(),
@@ -95,53 +94,54 @@ countSplits <- function(plan = NULL,
   )
 
   #-----------------------------
-  # Main loop
+  # Main loop (correct ordering)
   #-----------------------------
-  for (i in seq_along(a)) {
+  for (i in seq_along(geolist)) {
 
-    districts <- unique(a[[i]]$District)
+    g <- geolist[[i]]
 
-    if (length(districts) > 1) {
+    # Aggregate population by (geo x district)
+    tmp <- aggregate(
+      g[[pop_var]],
+      by = list(
+        geo = g$geo,
+        District = g$District
+      ),
+      FUN = sum,
+      na.rm = TRUE
+    )
 
-      # total population in this geography
-      geo_pop <- sum(a[[i]][[pop_var]], na.rm = TRUE)
+    colnames(tmp)[3] <- "Population"
 
-      # skip if population does not exceed threshold
-      if (geo_pop <= min_split_pop) next
+    # Drop low-pop fragments
+    tmp <- tmp[tmp$Population > min_fragment_pop, , drop = FALSE]
 
-      cntysplits <- cntysplits + 1
-      totalsplits <- c(totalsplits, length(districts))
+    # Must have at least two populated districts
+    if (nrow(tmp) < 2) next
 
-      districts_string <- paste0("[", paste(districts, collapse = ", "), "]")
+    # Total population threshold (applied after fragment filter)
+    geo_pop <- sum(tmp$Population)
+    if (geo_pop < min_split_pop) next
 
-      list_splits <- rbind(
-        list_splits,
-        data.frame(
-          Split = a[[i]]$geo[1],
-          Districts = districts_string,
-          Total_Splits = length(districts) - 1,
-          stringsAsFactors = FALSE
-        )
+    # NOW count the split
+    cntysplits <- cntysplits + 1
+    totalsplits <- c(totalsplits, nrow(tmp))
+
+    districts_string <- paste0("[", paste(tmp$District, collapse = ", "), "]")
+
+    list_splits <- rbind(
+      list_splits,
+      data.frame(
+        Split = tmp$geo[1],
+        Districts = districts_string,
+        Total_Splits = nrow(tmp) - 1,
+        stringsAsFactors = FALSE
       )
+    )
 
-      #-------------------------
-      # Population by split part
-      #-------------------------
-      tmp <- aggregate(
-        a[[i]][[pop_var]],
-        by = list(
-          geo = a[[i]]$geo,
-          District = a[[i]]$District
-        ),
-        FUN = sum,
-        na.rm = TRUE
-      )
-
-      colnames(tmp)[3] <- "Population"
-      tmp$Share <- tmp$Population / sum(tmp$Population)
-
-      pop_splits <- rbind(pop_splits, tmp)
-    }
+    # Shares
+    tmp$Share <- tmp$Population / geo_pop
+    pop_splits <- rbind(pop_splits, tmp)
   }
 
   #-----------------------------
@@ -151,7 +151,7 @@ countSplits <- function(plan = NULL,
     list_splits <- data.frame(Split = NA)
     cntysplits <- 0
     totalsplits <- 0
-    message("There are no splits of this type in the plan.")
+    message("There are no splits of this type in the plan after population filtering.")
   }
 
   #-----------------------------
@@ -162,7 +162,7 @@ countSplits <- function(plan = NULL,
     sum(totalsplits) - length(totalsplits)
   )
 
-  if (splits.table[2, ] == -1) splits.table[2, ] <- 0
+  if (splits.table[2, ] < 0) splits.table[2, ] <- 0
 
   row.names(splits.table) <- c(
     "Geos Splits",
@@ -185,6 +185,7 @@ countSplits <- function(plan = NULL,
   #-----------------------------
   return(list(
     summary = splits.table,
-    population = pop_splits
+    population = pop_splits,
+    splits = list_splits
   ))
 }
