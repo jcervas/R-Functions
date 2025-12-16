@@ -46,16 +46,3 @@ district_core <- function(df, base_plan, plan, pop_col = NULL) {
       sum(w[idx], na.rm = TRUE)
   })
 }
-
-
-
-result_pop <- core_retention(
-  df = plan_data,
-  base_plan = "mo2025",
-  pop_col = "pop"
-)
-
-print(result_pop)
-
-
-district_core(plan_data, "mo2025", "mo2021", pop_col = "pop")
