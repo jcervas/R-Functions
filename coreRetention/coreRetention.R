@@ -1,6 +1,3 @@
-plans <- read.csv('/Users/cervas/Library/CloudStorage/GoogleDrive-jcervas@andrew.cmu.edu/My Drive/Redistricting/2025/MO/data/all_plans.csv', colClasses="character", check.names=F)
-
-plan_data <- merge(mo_blocks_simp[,c(1:2)], plans, by="GEOID20", all=T)
 
 core_retention <- function(df, base_plan, plans = NULL, pop_col = NULL) {
 
