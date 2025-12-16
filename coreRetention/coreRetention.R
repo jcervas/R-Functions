@@ -1,0 +1,64 @@
+plans <- read.csv('/Users/cervas/Library/CloudStorage/GoogleDrive-jcervas@andrew.cmu.edu/My Drive/Redistricting/2025/MO/data/all_plans.csv', colClasses="character", check.names=F)
+
+plan_data <- merge(mo_blocks_simp[,c(1:2)], plans, by="GEOID20", all=T)
+
+core_retention <- function(df, base_plan, plans = NULL, pop_col = NULL) {
+
+  if (is.null(plans)) {
+    plans <- setdiff(names(df), c("GEOID20", pop_col))
+  }
+
+  base <- df[[base_plan]]
+
+  # weights
+  if (is.null(pop_col)) {
+    w <- rep(1, nrow(df))
+  } else {
+    w <- df[[pop_col]]
+  }
+
+  total_w <- sum(w, na.rm = TRUE)
+
+  retention <- sapply(plans, function(p) {
+    same <- df[[p]] == base
+    sum(w[same], na.rm = TRUE) / total_w
+  })
+
+  data.frame(
+    plan = plans,
+    core_retention = retention
+  )
+}
+
+district_core <- function(df, base_plan, plan, pop_col = NULL) {
+
+  base <- df[[base_plan]]
+  other <- df[[plan]]
+
+  if (is.null(pop_col)) {
+    w <- rep(1, nrow(df))
+  } else {
+    w <- df[[pop_col]]
+  }
+
+  districts <- sort(unique(base))
+
+  sapply(districts, function(d) {
+    idx <- base == d
+    sum(w[idx & other == d], na.rm = TRUE) /
+      sum(w[idx], na.rm = TRUE)
+  })
+}
+
+
+
+result_pop <- core_retention(
+  df = plan_data,
+  base_plan = "mo2025",
+  pop_col = "pop"
+)
+
+print(result_pop)
+
+
+district_core(plan_data, "mo2025", "mo2021", pop_col = "pop")
