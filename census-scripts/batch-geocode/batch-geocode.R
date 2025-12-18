@@ -219,27 +219,34 @@ merge_tie_fixes <- function(batch_results, tie_fixes_df) {
     return(batch_results)
   }
 
-  # Drop old Tie rows
+  ## ensure IDs are comparable
+  batch_results[,1] <- as.character(batch_results[,1])
+  tie_fixes_df$id    <- as.character(tie_fixes_df$id)
+
+  ## drop rows being fixed
   cleaned <- batch_results[!(batch_results[,1] %in% tie_fixes_df$id), ]
 
-  # Insert corrected rows
-  fixed_rows <- cbind(
-    tie_fixes_df$id,
-    tie_fixes_df$matched_address,
-    "Match",
-    tie_fixes_df$lon,
-    tie_fixes_df$lat,
-    NA,       # TIGERLINE placeholder
-    NA,       # Side placeholder
-    tie_fixes_df$state,
-    tie_fixes_df$county,
-    tie_fixes_df$tract,
-    tie_fixes_df$block
+  ## build replacement rows to EXACTLY match `results`
+  fixed_rows <- data.frame(
+    V1  = tie_fixes_df$id,
+    V2  = tie_fixes_df$matched_address,
+    V3  = "Match Exact",
+    V4  = NA,
+    V5  = tie_fixes_df$matched_address,
+    V6  = paste(tie_fixes_df$lon, tie_fixes_df$lat, sep = ","),
+    V7  = NA,
+    V8  = NA,
+    V9  = tie_fixes_df$state,
+    V10 = tie_fixes_df$county,
+    V11 = as.character(tie_fixes_df$tract),
+    V12 = as.character(tie_fixes_df$block),
+    stringsAsFactors = FALSE
   )
 
-  fixed_rows <- as.data.frame(fixed_rows, stringsAsFactors = FALSE)
+  ## enforce column order explicitly
+  fixed_rows <- fixed_rows[, colnames(batch_results)]
 
-  # merge into final dataset
+  ## merge back together
   final <- rbind(cleaned, fixed_rows)
 
   final
