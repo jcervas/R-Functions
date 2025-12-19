@@ -78,11 +78,19 @@ decennialAPI <- function(
 
       for (chunk in variable_chunks) {
 
-        api_url <- paste0(
-          base_url,
-          "?get=", paste(chunk, collapse = ","),
-          "&ucgid=", ucgid_param
-        )
+      for_clause <- if (geo == "county" && county != "*") {
+        paste0("county:", county)
+      } else {
+        paste0(geo, ":*")
+      }
+      
+      api_url <- paste0(
+        base_url,
+        "?get=", paste(chunk, collapse = ","),
+        "&for=", for_clause,
+        "&in=", in_clause
+      )
+
 
         response <- httr::GET(
           api_url,
