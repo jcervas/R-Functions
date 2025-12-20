@@ -51,7 +51,7 @@ censusAPI <- decennialAPI <- function(
 
   for (chunk in variable_chunks) {
 
-    ## ---- CORRECT GEOGRAPHY LOGIC ----
+    ## ---- GEOGRAPHY LOGIC (PL-CORRECT) ----
     if (geo == "county") {
 
       for_clause <- if (county != "*") {
@@ -62,20 +62,37 @@ censusAPI <- decennialAPI <- function(
 
       in_clause <- paste0("state:", lookup_fips(state))
 
-    } else if (geo %in% c("tract", "block")) {
+    } else if (geo == "tract") {
 
-      if (county == "*") stop("Tract/block requests require a specific county FIPS.")
+      if (county == "*") stop("Tract requests require a specific county FIPS.")
 
-      for_clause <- paste0(geo, ":*")
+      for_clause <- "tract:*"
       in_clause  <- paste0(
         "state:", lookup_fips(state),
         "+county:", county
       )
 
+    } else if (geo == "block") {
+
+      for_clause <- "block:*"
+
+      if (county == "*") {
+        ## PL allows all counties for blocks
+        in_clause <- paste0("state:", lookup_fips(state))
+        extra_in  <- "&in=county:*"
+      } else {
+        in_clause <- paste0(
+          "state:", lookup_fips(state),
+          "+county:", county
+        )
+        extra_in <- ""
+      }
+
     } else if (geo == "state") {
 
       for_clause <- "state:*"
       in_clause  <- NULL
+      extra_in  <- ""
 
     } else {
       stop("Unsupported geography.")
@@ -85,7 +102,8 @@ censusAPI <- decennialAPI <- function(
       base_url,
       "?get=", paste(chunk, collapse = ","),
       "&for=", for_clause,
-      if (!is.null(in_clause)) paste0("&in=", in_clause) else ""
+      if (!is.null(in_clause)) paste0("&in=", in_clause) else "",
+      if (exists("extra_in")) extra_in else ""
     )
 
     response <- httr::GET(
@@ -101,6 +119,7 @@ censusAPI <- decennialAPI <- function(
     chunk_data <- as.data.frame(chunk_data, stringsAsFactors = FALSE)
     rownames(chunk_data) <- NULL
 
+    ## drop annotation variables
     chunk_data <- chunk_data[, !grepl("NA$", names(chunk_data)), drop = FALSE]
 
     for (col in grep("^P", names(chunk_data), value = TRUE)) {
