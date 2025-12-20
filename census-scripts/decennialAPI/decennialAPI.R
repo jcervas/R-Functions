@@ -55,15 +55,16 @@ censusAPI <- decennialAPI <- function(
 
       for_clause <- if (county != "*") paste0("county:", county) else "county:*"
       in_clause  <- paste0("state:", lookup_fips(state))
+} else if (geo == "tract") {
 
-    } else if (geo == "tract") {
+  for_clause <- "tract:*"
 
-      if (county == "*") stop("Tract requests require a specific county FIPS.")
-
-      for_clause <- "tract:*"
-      in_clause  <- paste0("state:", lookup_fips(state), "+county:", county)
-
-    } else if (geo == "block") {
+  in_clause <- if (county == "*") {
+    paste0("state:", lookup_fips(state))
+  } else {
+    paste0("state:", lookup_fips(state), "+county:", county)
+  }
+} else if (geo == "block") {
 
       for_clause <- "block:*"
 
