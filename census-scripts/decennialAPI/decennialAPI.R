@@ -12,7 +12,7 @@ censusAPI <- decennialAPI <- function(
   library(jsonlite)
 
   if (missing(state) || is.null(state) || state == "") {
-    stop("State is not defined. Please provide a valid state or 'all'.")
+    stop("State is not defined. Please provide a valid state.")
   }
 
   state_fips <- data.frame(
@@ -36,7 +36,6 @@ censusAPI <- decennialAPI <- function(
   }
 
   base_url <- paste0("https://api.census.gov/data/", year, "/dec/", dataset)
-  api_key  <- "7865f31139b09e17c5865a59c240bdf07f9f44fd"
 
   if (!is.null(variables)) {
     get_vars <- variables
@@ -51,48 +50,34 @@ censusAPI <- decennialAPI <- function(
 
   for (chunk in variable_chunks) {
 
-    ## ---- GEOGRAPHY LOGIC (PL-CORRECT) ----
+    ## ---- GEOGRAPHY LOGIC (2020 PL–CORRECT) ----
     if (geo == "county") {
 
-      for_clause <- if (county != "*") {
-        paste0("county:", county)
-      } else {
-        "county:*"
-      }
-
-      in_clause <- paste0("state:", lookup_fips(state))
+      for_clause <- if (county != "*") paste0("county:", county) else "county:*"
+      in_clause  <- paste0("state:", lookup_fips(state))
 
     } else if (geo == "tract") {
 
       if (county == "*") stop("Tract requests require a specific county FIPS.")
 
       for_clause <- "tract:*"
-      in_clause  <- paste0(
-        "state:", lookup_fips(state),
-        "+county:", county
-      )
+      in_clause  <- paste0("state:", lookup_fips(state), "+county:", county)
 
     } else if (geo == "block") {
 
       for_clause <- "block:*"
 
       if (county == "*") {
-        ## PL allows all counties for blocks
-        in_clause <- paste0("state:", lookup_fips(state))
-        extra_in  <- "&in=county:*"
+        ## IMPORTANT: county wildcard must be in SAME in= clause
+        in_clause <- paste0("state:", lookup_fips(state), "+county:*")
       } else {
-        in_clause <- paste0(
-          "state:", lookup_fips(state),
-          "+county:", county
-        )
-        extra_in <- ""
+        in_clause <- paste0("state:", lookup_fips(state), "+county:", county)
       }
 
     } else if (geo == "state") {
 
       for_clause <- "state:*"
       in_clause  <- NULL
-      extra_in  <- ""
 
     } else {
       stop("Unsupported geography.")
@@ -102,16 +87,11 @@ censusAPI <- decennialAPI <- function(
       base_url,
       "?get=", paste(chunk, collapse = ","),
       "&for=", for_clause,
-      if (!is.null(in_clause)) paste0("&in=", in_clause) else "",
-      if (exists("extra_in")) extra_in else ""
+      if (!is.null(in_clause)) paste0("&in=", in_clause) else ""
     )
 
-    response <- httr::GET(
-      api_url,
-      httr::add_headers(Authorization = paste0("Bearer ", api_key))
-    )
-
-    content <- httr::content(response, as = "text")
+    response <- httr::GET(api_url)
+    content  <- httr::content(response, as = "text")
     chunk_data <- jsonlite::fromJSON(content, simplifyDataFrame = TRUE)
 
     colnames(chunk_data) <- chunk_data[1, ]
@@ -119,7 +99,7 @@ censusAPI <- decennialAPI <- function(
     chunk_data <- as.data.frame(chunk_data, stringsAsFactors = FALSE)
     rownames(chunk_data) <- NULL
 
-    ## drop annotation variables
+    ## drop Census annotation variables
     chunk_data <- chunk_data[, !grepl("NA$", names(chunk_data)), drop = FALSE]
 
     for (col in grep("^P", names(chunk_data), value = TRUE)) {
@@ -133,11 +113,11 @@ censusAPI <- decennialAPI <- function(
     geo_cols <- names(data_list[[1]])[
       grep("^(state|county|tract|block|NAME|GEO_ID)$", names(data_list[[1]]))
     ]
-    combined <- data_list[[1]]
+    out <- data_list[[1]]
     for (i in 2:length(data_list)) {
-      combined <- merge(combined, data_list[[i]], by = geo_cols, all = TRUE)
+      out <- merge(out, data_list[[i]], by = geo_cols, all = TRUE)
     }
-    combined
+    out
   } else {
     data_list[[1]]
   }
