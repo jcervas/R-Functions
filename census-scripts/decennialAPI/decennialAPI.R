@@ -1,3 +1,6 @@
+  any_part_black_p1 <- c("P1_004N","P1_011N","P1_016N","P1_017N","P1_018N","P1_019N","P1_027N","P1_028N","P1_029N","P1_030N","P1_037N","P1_038N","P1_039N","P1_040N","P1_041N","P1_042N","P1_048N","P1_049N","P1_050N","P1_051N","P1_052N","P1_053N","P1_058N","P1_059N","P1_060N","P1_061N","P1_064N","P1_065N","P1_066N","P1_067N","P1_069N","P1_071N")
+  any_part_black_p2 <- c("P2_006N","P2_013N","P2_018N","P2_019N","P2_020N","P2_021N","P2_029N","P2_030N","P2_031N","P2_032N","P2_039N","P2_040N","P2_041N","P2_042N","P2_043N","P2_044N","P2_050N","P2_051N","P2_052N","P2_053N","P2_054N","P2_055N","P2_060N","P2_061N","P2_062N","P2_063N","P2_066N","P2_067N","P2_068N","P2_069N","P2_071N","P2_073N")
+
 censusAPI <- decennialAPI <- function(
   state = NULL,
   geo = "tract",
@@ -10,6 +13,7 @@ censusAPI <- decennialAPI <- function(
 
   library(httr)
   library(jsonlite)
+
 
   if (missing(state) || is.null(state) || state == "") {
     stop("State is not defined. Please provide a valid state.")
