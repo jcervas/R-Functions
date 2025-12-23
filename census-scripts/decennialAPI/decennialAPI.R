@@ -1,6 +1,103 @@
   any_part_black_p1 <- c("P1_004N","P1_011N","P1_016N","P1_017N","P1_018N","P1_019N","P1_027N","P1_028N","P1_029N","P1_030N","P1_037N","P1_038N","P1_039N","P1_040N","P1_041N","P1_042N","P1_048N","P1_049N","P1_050N","P1_051N","P1_052N","P1_053N","P1_058N","P1_059N","P1_060N","P1_061N","P1_064N","P1_065N","P1_066N","P1_067N","P1_069N","P1_071N")
   any_part_black_p2 <- c("P2_006N","P2_013N","P2_018N","P2_019N","P2_020N","P2_021N","P2_029N","P2_030N","P2_031N","P2_032N","P2_039N","P2_040N","P2_041N","P2_042N","P2_043N","P2_044N","P2_050N","P2_051N","P2_052N","P2_053N","P2_054N","P2_055N","P2_060N","P2_061N","P2_062N","P2_063N","P2_066N","P2_067N","P2_068N","P2_069N","P2_071N","P2_073N")
 
+p1_rename <- c(
+  P1_001N = "pop_total",
+
+# Hispanic / Non-Hispanic totals
+  P1_003N = "pop_white",
+  
+# Black any part
+  P1_004N = "pop_black",
+  P1_011N = "pop_black_white",
+  P1_016N = "pop_black_aian",
+  P1_017N = "pop_black_asian",
+  P1_018N = "pop_black_nhpi",
+  P1_019N = "pop_black_other",
+  P1_027N = "pop_black_white_aian",
+  P1_028N = "pop_black_white_asian",
+  P1_029N = "pop_black_white_nhpi",
+  P1_030N = "pop_black_white_other",
+  P1_037N = "pop_black_aian_asian",
+  P1_038N = "pop_black_aian_nhpi",
+  P1_039N = "pop_black_aian_other",
+  P1_040N = "pop_black_asian_nhpi",
+  P1_041N = "pop_black_asian_other",
+  P1_042N = "pop_black_nhpi_other",
+  P1_048N = "pop_black_white_aian_asian",
+  P1_049N = "pop_black_white_aian_nhpi",
+  P1_050N = "pop_black_white_aian_other",
+  P1_051N = "pop_black_white_asian_nhpi",
+  P1_052N = "pop_black_white_asian_other",
+  P1_053N = "pop_black_white_nhpi_other",
+  P1_058N = "pop_black_aian_asian_nhpi",
+  P1_059N = "pop_black_aian_asian_other",
+  P1_060N = "pop_black_aian_nhpi_other",
+  P1_061N = "pop_black_asian_nhpi_other",
+  P1_064N = "pop_black_white_aian_asian_nhpi",
+  P1_065N = "pop_black_white_aian_asian_other",
+  P1_066N = "pop_black_white_aian_nhpi_other",
+  P1_067N = "pop_black_white_asian_nhpi_other",
+  P1_069N = "pop_black_aian_asian_nhpi_other",
+  P1_071N = "pop_black_white_aian_asian_nhpi_other",
+
+# Other Single Race Demographics
+  P1_005N = "pop_aian",
+  P1_006N = "pop_asian",
+  P1_007N = "pop_nhpi",
+  P1_008N = "pop_other"
+)
+
+
+p2_rename <- c(
+  P2_001N = "pop_total",
+
+# Hispanic / Non-Hispanic totals
+  P2_002N = "pop_hispanic",
+  P2_003N = "pop_non_hispanic",
+  P2_005N = "pop_white_nh",
+
+# Black any part
+  P2_006N = "pop_black_nh",
+  P2_013N = "pop_black_white",
+  P2_018N = "pop_black_aian",
+  P2_019N = "pop_black_asian",
+  P2_020N = "pop_black_nhpi",
+  P2_021N = "pop_black_other",
+  P2_029N = "pop_black_white_aian",
+  P2_030N = "pop_black_white_asian",
+  P2_031N = "pop_black_white_nhpi",
+  P2_032N = "pop_black_white_other",
+  P2_039N = "pop_black_aian_asian",
+  P2_040N = "pop_black_aian_nhpi",
+  P2_041N = "pop_black_aian_other",
+  P2_042N = "pop_black_asian_nhpi",
+  P2_043N = "pop_black_asian_other",
+  P2_044N = "pop_black_nhpi_other",
+  P2_050N = "pop_black_white_aian_asian",
+  P2_051N = "pop_black_white_aian_nhpi",
+  P2_052N = "pop_black_white_aian_other",
+  P2_053N = "pop_black_white_asian_nhpi",
+  P2_054N = "pop_black_white_asian_other",
+  P2_055N = "pop_black_white_nhpi_other",
+  P2_060N = "pop_black_aian_asian_nhpi",
+  P2_061N = "pop_black_aian_asian_other",
+  P2_062N = "pop_black_aian_nhpi_other",
+  P2_063N = "pop_black_asian_nhpi_other",
+  P2_066N = "pop_black_white_aian_asian_nhpi",
+  P2_067N = "pop_black_white_aian_asian_other",
+  P2_068N = "pop_black_white_aian_nhpi_other",
+  P2_069N = "pop_black_white_asian_nhpi_other",
+  P2_071N = "pop_black_aian_asian_nhpi_other",
+  P2_073N = "pop_black_white_aian_asian_nhpi_other",
+
+# Other Single Race Demographics
+  P2_007N = "pop_aian_nh",
+  P2_008N = "pop_asian_nh",
+  P2_009N = "pop_nhpi_nh",
+  P2_010N = "pop_other_nh"
+)
+
 censusAPI <- decennialAPI <- function(
   state = NULL,
   geo = "tract",
