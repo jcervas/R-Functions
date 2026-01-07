@@ -108,7 +108,8 @@ censusAPI <- decennialAPI <- function(
   table = NULL,
   year = "2020",
   variables = NULL,
-  dataset = "pl"
+  dataset = "pl",
+  ucgid = NULL
 ) {
 
   library(httr)
@@ -154,45 +155,53 @@ censusAPI <- decennialAPI <- function(
 
   for (chunk in variable_chunks) {
 
-    ## ---- GEOGRAPHY LOGIC (2020 PL–CORRECT) ----
-    if (geo == "county") {
+    use_ucgid <- !is.null(ucgid)
 
-      for_clause <- if (county != "*") paste0("county:", county) else "county:*"
-      in_clause  <- paste0("state:", lookup_fips(state))
+## ---- GEOGRAPHY LOGIC (2020 PL–CORRECT) ----
+if (use_ucgid) {
+
+  for_clause <- NULL
+  in_clause  <- paste0("ucgid=", ucgid)
+
+} else if (geo == "county") {
+
+  for_clause <- if (county != "*") paste0("county:", county) else "county:*"
+  in_clause  <- paste0("state:", lookup_fips(state))
+
 } else if (geo == "tract") {
 
   for_clause <- "tract:*"
-
   in_clause <- if (county == "*") {
     paste0("state:", lookup_fips(state))
   } else {
     paste0("state:", lookup_fips(state), "+county:", county)
   }
+
 } else if (geo == "block") {
 
-      for_clause <- "block:*"
+  for_clause <- "block:*"
+  in_clause <- if (county == "*") {
+    paste0("state:", lookup_fips(state), "+county:*")
+  } else {
+    paste0("state:", lookup_fips(state), "+county:", county)
+  }
 
-      if (county == "*") {
-        ## IMPORTANT: county wildcard must be in SAME in= clause
-        in_clause <- paste0("state:", lookup_fips(state), "+county:*")
-      } else {
-        in_clause <- paste0("state:", lookup_fips(state), "+county:", county)
-      }
+} else if (geo == "state") {
 
-    } else if (geo == "state") {
+  for_clause <- "state:*"
+  in_clause  <- NULL
 
-      for_clause <- "state:*"
-      in_clause  <- NULL
+} else {
+  stop("Unsupported geography.")
+}
 
-    } else {
-      stop("Unsupported geography.")
-    }
 
     api_url <- paste0(
       base_url,
       "?get=", paste(chunk, collapse = ","),
-      "&for=", for_clause,
-      if (!is.null(in_clause)) paste0("&in=", in_clause) else ""
+      if (!is.null(for_clause)) paste0("&for=", for_clause) else "",
+      if (!is.null(in_clause)) paste0("&", in_clause) else ""
+
     )
 
     response <- httr::GET(api_url)
