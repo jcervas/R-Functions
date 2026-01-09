@@ -1,31 +1,30 @@
 
-core_retention <- function(df, base_plan, plans = NULL, pop_col = NULL) {
+district_core <- function(df, base_plan, plan, pop_col = NULL) {
 
-  if (is.null(plans)) {
-    plans <- setdiff(names(df), c("GEOID20", pop_col))
-  }
+  base  <- df[[base_plan]]
+  other <- df[[plan]]
 
-  base <- df[[base_plan]]
-
-  # weights
   if (is.null(pop_col)) {
     w <- rep(1, nrow(df))
   } else {
     w <- df[[pop_col]]
   }
 
-  total_w <- sum(w, na.rm = TRUE)
+  base_districts  <- sort(unique(base))
+  other_districts <- sort(unique(other))
 
-  retention <- sapply(plans, function(p) {
-    same <- df[[p]] == base
-    sum(w[same], na.rm = TRUE) / total_w
+  sapply(base_districts, function(d) {
+    idx_base <- base == d
+    base_pop <- sum(w[idx_base], na.rm = TRUE)
+
+    overlaps <- sapply(other_districts, function(o) {
+      sum(w[idx_base & other == o], na.rm = TRUE)
+    })
+
+    max(overlaps, na.rm = TRUE) / base_pop
   })
-
-  data.frame(
-    plan = plans,
-    core_retention = retention
-  )
 }
+
 
 district_core <- function(df, base_plan, plan, pop_col = NULL) {
 
