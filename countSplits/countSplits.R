@@ -85,9 +85,14 @@ countSplits <- function(plan = NULL,
       )
 
       colnames(tmp)[3] <- "Population"
-      tmp$Share <- tmp$Population / sum(tmp$Population)
 
-      pop_splits <- rbind(pop_splits, tmp)
+      # drop zero-population district pieces
+      tmp <- tmp[tmp$Population > 0, ]
+
+      if (nrow(tmp) > 0) {
+        tmp$Share <- tmp$Population / sum(tmp$Population)
+        pop_splits <- rbind(pop_splits, tmp)
+      }
     }
   }
 
@@ -99,20 +104,24 @@ countSplits <- function(plan = NULL,
   # Population-aware split counts
   # -----------------------------
 
-  # geographies that are trivially unsplit (Share == 1)
-  unsplit_geos <- unique(pop_splits$geo[pop_splits$Share == 1])
+  geo_nonzero_splits <- length(
+    unique(
+      pop_splits$geo[
+        ave(pop_splits$District, pop_splits$geo,
+            FUN = function(x) length(unique(x))) > 1
+      ]
+    )
+  )
 
-  pop_nonzero <- pop_splits[!(pop_splits$geo %in% unsplit_geos), ]
-
-  geo_nonzero_splits <- length(unique(pop_nonzero$geo))
-
-  total_nonzero_splits <- if (nrow(pop_nonzero) == 0) {
+  total_nonzero_splits <- if (nrow(pop_splits) == 0) {
     0
   } else {
     sum(
-      tapply(pop_nonzero$District, pop_nonzero$geo, function(x) {
-        length(unique(x)) - 1
-      })
+      tapply(
+        pop_splits$District,
+        pop_splits$geo,
+        function(x) max(length(unique(x)) - 1, 0)
+      )
     )
   }
 
@@ -120,21 +129,21 @@ countSplits <- function(plan = NULL,
   # Summary table
   # -----------------------------
 
-splits.table <- cbind(
-  Raw = c(
-    cntysplits,
-    sum(totalsplits) - length(totalsplits)
-  ),
-  `Pop > 0` = c(
-    geo_nonzero_splits,
-    total_nonzero_splits
+  splits.table <- cbind(
+    Raw = c(
+      cntysplits,
+      sum(totalsplits) - length(totalsplits)
+    ),
+    `Pop > 0` = c(
+      geo_nonzero_splits,
+      total_nonzero_splits
+    )
   )
-)
 
-row.names(splits.table) <- c(
-  "Geos Split",
-  "Total Splits"
-)
+  row.names(splits.table) <- c(
+    "Geos Split",
+    "Total Splits"
+  )
 
   # -----------------------------
   # Save outputs
