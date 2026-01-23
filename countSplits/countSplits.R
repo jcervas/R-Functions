@@ -6,8 +6,7 @@ countSplits <- function(plan = NULL,
                         block_id = "GEOID20",
                         custom_geo_id = "GEOID20",
                         pop_var = "pop",
-                        save = NULL,
-                        save_pop = NULL) {
+                        save = NULL) {
 
   read.equiv <- function(x) {
     read.csv(x, colClasses = "character")
@@ -141,10 +140,6 @@ row.names(splits.table) <- c(
   # -----------------------------
   # Save outputs
   # -----------------------------
-
-  if (!is.null(save_pop)) {
-    write.csv(pop_splits, save_pop, row.names = FALSE)
-  }
 
   return(list(
     summary = splits.table,
