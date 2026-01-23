@@ -5,8 +5,7 @@ countSplits <- function(plan = NULL,
                         plan_id = "GEOID20",
                         block_id = "GEOID20",
                         custom_geo_id = "GEOID20",
-                        pop_var = "pop",
-                        save = NULL) {
+                        pop_var = "pop") {
 
   read.equiv <- function(x) {
     read.csv(x, colClasses = "character")
