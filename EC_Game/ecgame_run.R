@@ -64,6 +64,7 @@ mwcs <- find_mwcs(
     quota = quota
 )
 
+table(unlist(mwcs)) # Total number of times a state is in a MWC
 mwc_table <- find_mwcs_detailed(blotto_weights, quota)
 
 
