@@ -58,13 +58,17 @@ ec_banzhaf <- banzhaf(
 banzhaf_apportion <- apportion_values(ec_banzhaf, target_sum = 100)
 proportional_apportion <- apportion_values(blotto_weights, target_sum = 100)
 
+
 # Identify minimal winning coalitions (MWCs)
 mwcs <- find_mwcs(
     vector_weights = blotto_weights,
     quota = quota
 )
 
-table(unlist(mwcs)) # Total number of times a state is in a MWC
+mwc_freq <- table(unlist(mwcs)) # Total number of times a state is in a MWC
+names(mwc_freq) <- members # Replace numeric names with letters
+mwc_freq
+
 mwc_table <- find_mwcs_detailed(blotto_weights, quota)
 
 
@@ -157,19 +161,52 @@ user_means <- apply(participant_matrix_adj, 2, mean)
 user_medians <- apply(participant_matrix_adj, 2, median)
 
 user_table <- t(rbind(
-    Participant_Average = round(user_means, 1),
-    Participant_Median = user_medians
+    `Banzhaf Baseline` = banzhaf_apportion,
+    `Weight Baseline` = proportional_apportion,
+    `Participant Average` = round(user_means, 1),
+    `Participant Median` = user_medians
 ))
 rownames(user_table) <- state_labels
 
-# Output: Table of participant average and median allocations
+# Output: Table of participant average and median allocations compared to Baseline predictions
 knitr::kable(
     user_table,
     format = "simple",
     caption = "Participant Average and Median Allocations, by State"
 )
 
-# Hypothesis 1ai: Do participants allocate equally to the three smallest states (A, B, C)?
+
+# loosemore_hanby <- function(votes, seats) {
+#   if(length(votes) != length(seats)) {
+#     stop("votes and seats must have the same length")
+#   }
+
+#   sum(abs(votes - seats)) / 2
+# }
+
+
+# lh_banzhaf_scores <- apply(
+#   participant_matrix_adj,
+#   1,
+#   function(x) loosemore_hanby(x, (ec_banzhaf / sum(ec_banzhaf) * 100))
+# )
+
+# lh_weight_scores <- apply(
+#   participant_matrix_adj,
+#   1,
+#   function(x) loosemore_hanby(x, (blotto_weights/ sum(blotto_weights) * 100))
+# )
+
+# lh_mwc_scores <- apply(
+#   participant_matrix_adj,
+#   1,
+#   function(x) loosemore_hanby(x, (mwc_freq / sum(mwc_freq) * 100))
+# )
+
+
+
+
+# Hypothesis: Do participants allocate equally to the three smallest states (A, B, C)?
 
 abc_alloc <- participant_matrix_adj[, 1:3]
 abc_means <- colMeans(abc_alloc)
@@ -219,7 +256,7 @@ dev.off()
 # Note: Gray dots = individual allocations; red dots = median per state.
 
 
-# ========== 8. Hypothesis 2a: Are user strategies clustered around MWCs? ==========
+# ========== Hypothesis: Are user strategies clustered around MWCs? ==========
 
 strict_assignments <- assign_strict_mwc(participant_matrix_adj, mwcs)
 mwc_labels <- sapply(mwcs, function(coal) paste(state_names[coal], collapse = ","))
@@ -234,7 +271,7 @@ percent_clustered <- round(clustered / total * 100, 1)
 percent_non_clustered <- round(counts["Other"] / total * 100, 1)
 cat("We find that", percent_clustered, "% of all simulated strategies allocate resources exclusively to the members of a single minimal winning coalition (MWC), with no allocation to any other states. This provides moderate support for Hypothesis 2. While a minority of strategies exhibit strict clustering around MWCs, the majority (", percent_non_clustered, "%) distribute resources more broadly—suggesting that while MWCs influence behavior, strategic diversity remains high.")
 
-# Table 3B: Count MWCs per participant, after subtracting 1 from each nonzero allocation
+# Table: Count MWCs per participant, after subtracting 1 from each nonzero allocation
 participant_matrix_adj_minus1 <- participant_matrix_adj
 participant_matrix_adj_minus1[participant_matrix_adj_minus1 > 0] <- participant_matrix_adj_minus1[participant_matrix_adj_minus1 > 0] - 1
 
@@ -260,21 +297,7 @@ knitr::kable(
     caption = "Minimum Winning Coalitions and Participant Counts"
 )
 
-
-mwc_minus1_table <- cbind(
-    `MWC` = c(mwc_labels, "Other"),
-    `Coverage` = c(mwc_sums, "NA"),
-    `n` = mwc_counts_minus1_df$Freq
-)
-
-cat("Table 3B: Number of MWCs covered per participant (after subtracting 1 from each allocation):\n")
-knitr::kable(
-    mwc_minus1_table,
-    format = "simple",
-    caption = "Minimum Winning Coalitions and Participant Counts"
-)
-
-# ========== 9. Hypothesis 2b: Do users favor small coalitions (few states)? ==========
+# ========== 9. Hypothesis: Do users favor small coalitions (few states)? ==========
 
 active_states <- rowSums(participant_matrix_adj > 0)
 active_states_table <- table(active_states)
@@ -287,12 +310,146 @@ knitr::kable(
     format = "simple",
     caption = "Number and Percentage of Strategies Allocating to Each Number of States (A–G)"
 )
+
+
+active_states_1 <- rowSums(participant_matrix_adj > 1)
+active_states_1_table <- table(active_states_1)
+freq_1 <- as.vector(active_states_1_table)
+percent_1 <- round(100 * freq_1 / sum(freq_1), 1)
+df_1 <- rbind(Number_of_Participants = freq_1, Percentage = percent_1)
+colnames(df_1) <- 1:7
+knitr::kable(
+    df_1,
+    format = "simple",
+    caption = "Number and Percentage of Strategies Allocating to Each Number of States (A–G)"
+)
+
+###
+
 var_active <- var(active_states)
 p <- table(active_states) / length(active_states)
 entropy <- -sum(p * log2(p)) / log2(length(p))
 cat("• Variance of active state count: ", round(var_active, 2), "\n• Shannon entropy: ", round(entropy, 2), " (normalized)")
 
-# ========== 10. Hypothesis 3a: Preference for State F over E ==========
+
+
+## Fibonacci sequence 
+
+colnames(participant_matrix_adj) <- names(blotto_weights)
+
+subs <- list(
+  c("A","B","C"),
+  c("B","C","D"),
+  c("C","D","E"),
+  c("D","E","F"),
+  c("E","F","G")
+)
+
+results <- data.frame(
+  pair = character(),
+  single = character(),
+  n_pair = integer(),
+  n_single = integer(),
+  mean_pair = numeric(),
+  mean_single = numeric(),
+  p_value = numeric(),
+  stringsAsFactors = FALSE
+)
+
+for (s in subs) {
+
+  s1 <- s[1]
+  s2 <- s[2]
+  big <- s[3]
+
+  played_strategy <- participant_matrix_adj[,s1] > 1 &
+                     participant_matrix_adj[,s2] > 1 &
+                     participant_matrix_adj[,big] < 2
+
+  not_played_strategy <- participant_matrix_adj[,s1] < 2 &
+                     participant_matrix_adj[,s2] < 2 &
+                     participant_matrix_adj[,big] > 1
+
+  pair_alloc <- rowSums(participant_matrix_adj[played_strategy, c(s1,s2), drop=FALSE])
+  single_alloc <- participant_matrix_adj[not_played_strategy, big]
+
+  if(length(pair_alloc) > 1 & length(single_alloc) > 1) {
+
+    test <- t.test(pair_alloc, single_alloc)
+
+    results <- rbind(results, data.frame(
+      pair = paste(s1,s2,sep="+"),
+      single = big,
+      n_pair = length(pair_alloc),
+      n_single = length(single_alloc),
+      mean_pair = mean(pair_alloc),
+      mean_single = mean(single_alloc),
+      p_value = test$p.value
+    ))
+  }
+}
+
+results
+
+
+## Coalition Counts
+
+states <- colnames(participant_matrix_adj)
+
+match_coalition <- function(mat, states) {
+
+  include <- apply(mat[, states, drop = FALSE] > 1, 1, all)
+
+  exclude_states <- setdiff(colnames(mat), states)
+  exclude <- apply(mat[, exclude_states, drop = FALSE] <= 1, 1, all)
+
+  include & exclude
+}
+
+weights <- sort(unique(winning_combos$Total_Weight))
+
+rows_list <- list()
+
+for (w in weights) {
+
+  subset_rows <- winning_combos[winning_combos$Total_Weight == w, ]
+
+  for (i in seq_len(nrow(subset_rows))) {
+
+    coalition <- subset_rows$Members[i]
+    s <- strsplit(coalition, ", ")[[1]]
+
+    count <- sum(match_coalition(participant_matrix_adj, s))
+
+    rows_list[[length(rows_list) + 1]] <- data.frame(
+      Weight = w,
+      Coalition = coalition,
+      Size = subset_rows$Coalition_Size[i],
+      Players = count,
+      stringsAsFactors = FALSE
+    )
+
+  }
+}
+
+coalition_table <- do.call(rbind, rows_list)
+
+coalition_table <- coalition_table[order(coalition_table$Weight,
+                                         coalition_table$Players,
+                                         decreasing = c(FALSE, TRUE)), ]
+
+coalition_table
+
+
+knitr::kable(
+  coalition_table,
+  format = "simple",
+  align = c("c","l","c","c"),
+  col.names = c("Weight", "Coalition", "Size", "Players"),
+  caption = "Frequency of Coalition Strategies by Equal Electoral Weight (N = 214)"
+)
+
+# ========== Preference for State F over E ==========
 
 F_mean <- mean(participant_matrix_adj[, 6]) # State F
 E_mean <- mean(participant_matrix_adj[, 5]) # State E
@@ -307,41 +464,41 @@ cat("• Mean allocation to State F: ", round(F_mean, 2), "\n• Mean allocation
 cat(sprintf("V = %.1f, p = %.5f\n", wtest$statistic, wtest$p.value))
 cat(sprintf("p-value = %.3f\n", ttest$p.value))
 
-# ========== 11. Hypothesis 2c: Expanded MWCs ==========
+# ========== 11. Hypothesis: Expanded MWCs ==========
 
-expanded_matches <- generate_expanded_mwcs(mwcs, blotto_weights, quota)
-get_expanded_mwc_match <- function(
-    strategy_row,
-    mwcs,
-    blotto_weights,
-    quota = 70,
-    tol = 1e-6) {
-    supported <- which(strategy_row > tol)
-    for (i in seq_along(mwcs)) {
-        coal <- mwcs[[i]]
-        if (!all(coal %in% supported)) next
-        extra <- setdiff(supported, coal)
-        if (length(extra) != 1) next
-        extra_state <- extra[1]
-        w_extra <- blotto_weights[extra_state]
-        w_mwc <- blotto_weights[coal]
-        pair_sums <- outer(w_mwc, w_mwc, "+")[upper.tri(matrix(0, length(w_mwc), length(w_mwc)))]
-        if (w_extra >= min(w_mwc) && all(w_extra < pair_sums)) {
-            if (sum(blotto_weights[supported]) >= quota) {
-                return(list(mwc_index = i, extra_state = extra_state))
-            }
-        }
-    }
-    return(NULL)
-}
-expanded_matches <- apply(
-    participant_matrix_adj, 1,
-    get_expanded_mwc_match,
-    mwcs = mwcs,
-    blotto_weights = blotto_weights
-)
-matched_flags <- sapply(expanded_matches, function(x) !is.null(x))
-table(matched_flags)
+# expanded_matches <- generate_expanded_mwcs(mwcs, blotto_weights, quota)
+# get_expanded_mwc_match <- function(
+#     strategy_row,
+#     mwcs,
+#     blotto_weights,
+#     quota = 70,
+#     tol = 1e-6) {
+#     supported <- which(strategy_row > tol)
+#     for (i in seq_along(mwcs)) {
+#         coal <- mwcs[[i]]
+#         if (!all(coal %in% supported)) next
+#         extra <- setdiff(supported, coal)
+#         if (length(extra) != 1) next
+#         extra_state <- extra[1]
+#         w_extra <- blotto_weights[extra_state]
+#         w_mwc <- blotto_weights[coal]
+#         pair_sums <- outer(w_mwc, w_mwc, "+")[upper.tri(matrix(0, length(w_mwc), length(w_mwc)))]
+#         if (w_extra >= min(w_mwc) && all(w_extra < pair_sums)) {
+#             if (sum(blotto_weights[supported]) >= quota) {
+#                 return(list(mwc_index = i, extra_state = extra_state))
+#             }
+#         }
+#     }
+#     return(NULL)
+# }
+# expanded_matches <- apply(
+#     participant_matrix_adj, 1,
+#     get_expanded_mwc_match,
+#     mwcs = mwcs,
+#     blotto_weights = blotto_weights
+# )
+# matched_flags <- sapply(expanded_matches, function(x) !is.null(x))
+# table(matched_flags)
 
 # ========== 12. Hypothesis 2d: MWC Support Counts and Performance ==========
 
@@ -1172,14 +1329,14 @@ stargazer::stargazer(logit_dyadic,
 
 # ========== Count MWC by Participants ==========
 
-counts
-sum(1 * !is.na(strict_assignments))
+# counts
+# sum(1 * !is.na(strict_assignments))
 
-mwc_strict_performance <- t.test(
-    compare_winhalf_df[is.na(strict_assignments), "Win_Percentage"],
-    compare_winhalf_df[!is.na(strict_assignments), "Win_Percentage"]
-)
-mwc_strict_performance
+# mwc_strict_performance <- t.test(
+#     compare_winhalf_df[is.na(strict_assignments), "Win_Percentage"],
+#     compare_winhalf_df[!is.na(strict_assignments), "Win_Percentage"]
+# )
+# mwc_strict_performance
 
 # # ========== Count MWC and Expanded Coalitions by Participants ==========
 
