@@ -200,9 +200,10 @@ if (use_ucgid) {
       base_url,
       "?get=", paste(chunk, collapse = ","),
       if (!is.null(for_clause)) paste0("&for=", for_clause) else "",
-      if (!is.null(in_clause)) paste0("&", in_clause) else ""
+      if (!is.null(in_clause)) paste0("&in=", in_clause) else ""
 
     )
+    cat(api_url)
 
     response <- httr::GET(api_url)
     content  <- httr::content(response, as = "text")
