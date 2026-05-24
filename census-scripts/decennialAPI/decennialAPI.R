@@ -1,107 +1,4 @@
-  any_part_black_p1 <- c("P1_004N","P1_011N","P1_016N","P1_017N","P1_018N","P1_019N","P1_027N","P1_028N","P1_029N","P1_030N","P1_037N","P1_038N","P1_039N","P1_040N","P1_041N","P1_042N","P1_048N","P1_049N","P1_050N","P1_051N","P1_052N","P1_053N","P1_058N","P1_059N","P1_060N","P1_061N","P1_064N","P1_065N","P1_066N","P1_067N","P1_069N","P1_071N")
-  any_part_black_p2 <- c("P2_006N","P2_013N","P2_018N","P2_019N","P2_020N","P2_021N","P2_029N","P2_030N","P2_031N","P2_032N","P2_039N","P2_040N","P2_041N","P2_042N","P2_043N","P2_044N","P2_050N","P2_051N","P2_052N","P2_053N","P2_054N","P2_055N","P2_060N","P2_061N","P2_062N","P2_063N","P2_066N","P2_067N","P2_068N","P2_069N","P2_071N","P2_073N")
-  any_part_black_p3 <- c("P3_004N","P3_011N","P3_016N","P3_017N","P3_018N","P3_019N","P3_027N","P3_028N","P3_029N","P3_030N","P3_037N","P3_038N","P3_039N","P3_040N","P3_041N","P3_042N","P3_048N","P3_049N","P3_050N","P3_051N","P3_052N","P3_053N","P3_058N","P3_059N","P3_060N","P3_061N","P3_064N","P3_065N","P3_066N","P3_067N","P3_069N","P3_071N")
-  any_part_black_P4 <- any_part_black_p4 <- c("P4_006N","P4_013N","P4_018N","P4_019N","P4_020N","P4_021N","P4_029N","P4_030N","P4_031N","P4_032N","P4_039N","P4_040N","P4_041N","P4_042N","P4_043N","P4_044N","P4_050N","P4_051N","P4_052N","P4_053N","P4_054N","P4_055N","P4_060N","P4_061N","P4_062N","P4_063N","P4_066N","P4_067N","P4_068N","P4_069N","P4_071N","P4_073N")
-
-
-p1_rename <- c(
-  P1_001N = "pop_total",
-
-# Hispanic / Non-Hispanic totals
-  P1_003N = "pop_white",
-  
-# Black any part
-  P1_004N = "pop_black",
-  P1_011N = "pop_black_white",
-  P1_016N = "pop_black_aian",
-  P1_017N = "pop_black_asian",
-  P1_018N = "pop_black_nhpi",
-  P1_019N = "pop_black_other",
-  P1_027N = "pop_black_white_aian",
-  P1_028N = "pop_black_white_asian",
-  P1_029N = "pop_black_white_nhpi",
-  P1_030N = "pop_black_white_other",
-  P1_037N = "pop_black_aian_asian",
-  P1_038N = "pop_black_aian_nhpi",
-  P1_039N = "pop_black_aian_other",
-  P1_040N = "pop_black_asian_nhpi",
-  P1_041N = "pop_black_asian_other",
-  P1_042N = "pop_black_nhpi_other",
-  P1_048N = "pop_black_white_aian_asian",
-  P1_049N = "pop_black_white_aian_nhpi",
-  P1_050N = "pop_black_white_aian_other",
-  P1_051N = "pop_black_white_asian_nhpi",
-  P1_052N = "pop_black_white_asian_other",
-  P1_053N = "pop_black_white_nhpi_other",
-  P1_058N = "pop_black_aian_asian_nhpi",
-  P1_059N = "pop_black_aian_asian_other",
-  P1_060N = "pop_black_aian_nhpi_other",
-  P1_061N = "pop_black_asian_nhpi_other",
-  P1_064N = "pop_black_white_aian_asian_nhpi",
-  P1_065N = "pop_black_white_aian_asian_other",
-  P1_066N = "pop_black_white_aian_nhpi_other",
-  P1_067N = "pop_black_white_asian_nhpi_other",
-  P1_069N = "pop_black_aian_asian_nhpi_other",
-  P1_071N = "pop_black_white_aian_asian_nhpi_other",
-
-# Other Single Race Demographics
-  P1_005N = "pop_aian",
-  P1_006N = "pop_asian",
-  P1_007N = "pop_nhpi",
-  P1_008N = "pop_other"
-)
-
-
-p2_rename <- c(
-  P2_001N = "pop_total",
-
-# Hispanic / Non-Hispanic totals
-  P2_002N = "pop_hispanic",
-  P2_003N = "pop_non_hispanic",
-  P2_005N = "pop_white_nh",
-
-# Black any part
-  P2_006N = "pop_black_nh",
-  P2_013N = "pop_black_white",
-  P2_018N = "pop_black_aian",
-  P2_019N = "pop_black_asian",
-  P2_020N = "pop_black_nhpi",
-  P2_021N = "pop_black_other",
-  P2_029N = "pop_black_white_aian",
-  P2_030N = "pop_black_white_asian",
-  P2_031N = "pop_black_white_nhpi",
-  P2_032N = "pop_black_white_other",
-  P2_039N = "pop_black_aian_asian",
-  P2_040N = "pop_black_aian_nhpi",
-  P2_041N = "pop_black_aian_other",
-  P2_042N = "pop_black_asian_nhpi",
-  P2_043N = "pop_black_asian_other",
-  P2_044N = "pop_black_nhpi_other",
-  P2_050N = "pop_black_white_aian_asian",
-  P2_051N = "pop_black_white_aian_nhpi",
-  P2_052N = "pop_black_white_aian_other",
-  P2_053N = "pop_black_white_asian_nhpi",
-  P2_054N = "pop_black_white_asian_other",
-  P2_055N = "pop_black_white_nhpi_other",
-  P2_060N = "pop_black_aian_asian_nhpi",
-  P2_061N = "pop_black_aian_asian_other",
-  P2_062N = "pop_black_aian_nhpi_other",
-  P2_063N = "pop_black_asian_nhpi_other",
-  P2_066N = "pop_black_white_aian_asian_nhpi",
-  P2_067N = "pop_black_white_aian_asian_other",
-  P2_068N = "pop_black_white_aian_nhpi_other",
-  P2_069N = "pop_black_white_asian_nhpi_other",
-  P2_071N = "pop_black_aian_asian_nhpi_other",
-  P2_073N = "pop_black_white_aian_asian_nhpi_other",
-
-# Other Single Race Demographics
-  P2_007N = "pop_aian_nh",
-  P2_008N = "pop_asian_nh",
-  P2_009N = "pop_nhpi_nh",
-  P2_010N = "pop_other_nh"
-)
-
-censusAPI <- decennialAPI <- function(
+decennialAPI <- censusAPI <- function(
   state = NULL,
   geo = "tract",
   county = "*",
@@ -109,15 +6,18 @@ censusAPI <- decennialAPI <- function(
   year = "2020",
   variables = NULL,
   dataset = "pl",
-  ucgid = NULL
+  ucgid = NULL,
+  api_key = Sys.getenv("CENSUS_API_KEY")
 ) {
-
   library(httr)
   library(jsonlite)
 
-
   if (missing(state) || is.null(state) || state == "") {
     stop("State is not defined. Please provide a valid state.")
+  }
+
+  if (is.null(api_key) || api_key == "") {
+    stop("No Census API key found. Set CENSUS_API_KEY in your .Renviron or pass api_key= directly.")
   }
 
   state_fips <- data.frame(
@@ -150,6 +50,24 @@ censusAPI <- decennialAPI <- function(
     stop("Supply `variables` or `table`.")
   }
 
+  # Block-level: Census API requires a specific county — loop over all counties and return early
+  if (geo == "block" && is.null(ucgid) && county == "*") {
+    counties_url <- paste0(
+      base_url, "?get=NAME&for=county:*&in=state:", lookup_fips(state),
+      "&key=", api_key
+    )
+    resp <- httr::GET(counties_url)
+    raw  <- jsonlite::fromJSON(httr::content(resp, as = "text"), simplifyDataFrame = TRUE)
+    all_counties <- raw[-1, "county"]
+    return(do.call(rbind, lapply(all_counties, function(co) {
+      decennialAPI(
+        state = state, geo = "block", table = table,
+        variables = variables, county = co,
+        year = year, dataset = dataset, api_key = api_key
+      )
+    })))
+  }
+
   variable_chunks <- split(get_vars, ceiling(seq_along(get_vars) / 50))
   data_list <- list()
 
@@ -157,56 +75,52 @@ censusAPI <- decennialAPI <- function(
 
     use_ucgid <- !is.null(ucgid)
 
-## ---- GEOGRAPHY LOGIC (2020 PL–CORRECT) ----
-if (use_ucgid) {
+    # ---- GEOGRAPHY LOGIC ----
+    if (use_ucgid) {
+      for_clause <- NULL
+      in_clause  <- paste0("ucgid=", ucgid)
 
-  for_clause <- NULL
-  in_clause  <- paste0("ucgid=", ucgid)
+    } else if (geo == "state") {
+      for_clause <- "state:*"
+      in_clause  <- NULL
 
-} else if (geo == "county") {
+    } else if (geo == "county") {
+      for_clause <- if (county != "*") paste0("county:", county) else "county:*"
+      in_clause  <- paste0("state:", lookup_fips(state))
 
-  for_clause <- if (county != "*") paste0("county:", county) else "county:*"
-  in_clause  <- paste0("state:", lookup_fips(state))
+    } else if (geo == "tract") {
+      for_clause <- "tract:*"
+      in_clause  <- if (county == "*") {
+        paste0("state:", lookup_fips(state))
+      } else {
+        paste0("state:", lookup_fips(state), "+county:", county)
+      }
 
-} else if (geo == "tract") {
+    } else if (geo == "block") {
+      for_clause <- "block:*"
+      in_clause  <- paste0("state:", lookup_fips(state), "+county:", county)
 
-  for_clause <- "tract:*"
-  in_clause <- if (county == "*") {
-    paste0("state:", lookup_fips(state))
-  } else {
-    paste0("state:", lookup_fips(state), "+county:", county)
-  }
-
-} else if (geo == "block") {
-
-  for_clause <- "block:*"
-  in_clause <- if (county == "*") {
-    paste0("state:", lookup_fips(state), "+county:*")
-  } else {
-    paste0("state:", lookup_fips(state), "+county:", county)
-  }
-
-} else if (geo == "state") {
-
-  for_clause <- "state:*"
-  in_clause  <- NULL
-
-} else {
-  stop("Unsupported geography.")
-}
-
+    } else {
+      stop("Unsupported geography. Use: 'state', 'county', 'tract', or 'block'.")
+    }
 
     api_url <- paste0(
       base_url,
       "?get=", paste(chunk, collapse = ","),
       if (!is.null(for_clause)) paste0("&for=", for_clause) else "",
-      if (!is.null(in_clause)) paste0("&in=", in_clause) else ""
-
+      if (!is.null(in_clause))  paste0("&in=",  in_clause)  else "",
+      "&key=", api_key
     )
-    cat(api_url)
+    cat(api_url, "\n")
 
     response <- httr::GET(api_url)
     content  <- httr::content(response, as = "text")
+
+    if (grepl("^\\s*<", content)) {
+      stop("API returned HTML instead of JSON. URL was:\n", api_url,
+           "\nCheck your API key and query parameters.")
+    }
+
     chunk_data <- jsonlite::fromJSON(content, simplifyDataFrame = TRUE)
 
     colnames(chunk_data) <- chunk_data[1, ]
@@ -214,9 +128,10 @@ if (use_ucgid) {
     chunk_data <- as.data.frame(chunk_data, stringsAsFactors = FALSE)
     rownames(chunk_data) <- NULL
 
-    ## drop Census annotation variables
+    # Drop Census annotation columns (end in "NA")
     chunk_data <- chunk_data[, !grepl("NA$", names(chunk_data)), drop = FALSE]
 
+    # Convert P-table columns to numeric
     for (col in grep("^P", names(chunk_data), value = TRUE)) {
       chunk_data[[col]] <- as.numeric(chunk_data[[col]])
     }
