@@ -56,9 +56,13 @@ decennialAPI <- censusAPI <- function(
       base_url, "?get=NAME&for=county:*&in=state:", lookup_fips(state),
       "&key=", api_key
     )
-    resp <- httr::GET(counties_url)
-    raw  <- jsonlite::fromJSON(httr::content(resp, as = "text"), simplifyDataFrame = TRUE)
-    all_counties <- raw[-1, "county"]
+    resp   <- httr::GET(counties_url)
+    raw    <- jsonlite::fromJSON(httr::content(resp, as = "text"), simplifyDataFrame = TRUE)
+    raw_df <- as.data.frame(raw, stringsAsFactors = FALSE)
+    colnames(raw_df) <- raw[1, ]
+    raw_df <- raw_df[-1, ]
+    all_counties <- raw_df[, "county"]
+
     return(do.call(rbind, lapply(all_counties, function(co) {
       decennialAPI(
         state = state, geo = "block", table = table,
