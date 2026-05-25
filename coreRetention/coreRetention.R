@@ -1,4 +1,37 @@
+district_core_table <- function(df,
+                                base_plan,
+                                plan_cols,
+                                pop_col = NULL,
+                                digits = NULL) {
 
+  if (!base_plan %in% plan_cols) {
+    stop("base_plan must be included in plan_cols")
+  }
+
+  plans <- setdiff(plan_cols, base_plan)
+
+  out <- lapply(plans, function(p) {
+
+    dc <- district_core(
+      df        = df,
+      base_plan = base_plan,
+      plan      = p,
+      pop_col   = pop_col
+    )
+
+    vals <- dc[[3]]
+
+    if (!is.null(digits)) {
+      vals <- round(vals * 100, digits)
+    }
+
+    dc[[3]] <- vals
+
+    dc
+  })
+
+  do.call(rbind, out)
+}
 
 district_core <- function(df, base_plan, plan, pop_col = NULL) {
 
