@@ -53,7 +53,7 @@ construct_group_url <- function(table, geography, geo_filter, state_fips, year, 
     
   } else if (geography == "aian") {
     # National‐level AIANNH: summary level 251, root = 0100000US
-    # → "pseudo(0100000US$2510000)"
+    # → "pseudo(0100000US$2500000)"
     ucgid     <- "pseudo(0100000US$2500000)"
     # no URLencode needed (no extra characters besides "(" ")" and "$")
     geo_clause<- paste0("&ucgid=", ucgid)
@@ -137,55 +137,56 @@ normalize_inputs <- function(table, variables, custom_states, state_fips, datase
   )
 }
 
-# get_acs_data <- function(url) {
-#   if (!requireNamespace("httr", quietly = TRUE)) stop("Please install 'httr'.")
-#   resp <- httr::GET(url, httr::timeout(30))
-#   if (httr::http_error(resp)) stop("HTTP error ", httr::status_code(resp))
-#   raw <- httr::content(resp, as = "text", encoding = "UTF-8")
-#   parsed <- tryCatch(jsonlite::fromJSON(raw), error = function(e) stop("Invalid JSON"))
-#   if (!is.list(parsed) && !is.matrix(parsed)) stop("Unexpected API response")
-#   df <- as.data.frame(parsed[-1, , drop = FALSE], stringsAsFactors = FALSE)
-#   names(df) <- unlist(parsed[1, ])
-#   df
-# }
-
 get_acs_data <- function(url, timeout = 300) {
-  # temporarily bump R's download timeout
-  old_to <- getOption("timeout")
-  options(timeout = timeout)
-  on.exit(options(timeout = old_to), add = TRUE)
+  if (!requireNamespace("httr", quietly = TRUE)) stop("Please install 'httr'.")
+  if (!requireNamespace("jsonlite", quietly = TRUE)) stop("Please install 'jsonlite'.")
   
-  # open a libcurl connection and read all lines
-  con <- base::url(url, open = "rb", method = "libcurl")
-  on.exit(close(con), add = TRUE)
-  
-  raw <- tryCatch(
-    readLines(con, warn = FALSE),
-    error = function(e) stop("Download error: ", e$message)
-  )
-  
-  txt <- paste(raw, collapse = "")
+  resp <- httr::GET(url, httr::timeout(timeout))
+  status <- httr::status_code(resp)
+  txt <- httr::content(resp, as = "text", encoding = "UTF-8")
+  ctype <- httr::headers(resp)[["content-type"]]
   
   if (grepl("key must be included", txt, ignore.case = TRUE)) {
     stop("Census API key required. Set CENSUS_API_KEY or pass a key argument.")
   }
   
-  if (grepl("^\\s*<html", txt, ignore.case = TRUE)) {
-    stop("Census API returned HTML instead of JSON. URL: ", url)
+  if (grepl("invalid key", txt, ignore.case = TRUE) || grepl("key provided is not valid", txt, ignore.case = TRUE)) {
+    stop("Census API key appears invalid. Response starts: ", substr(txt, 1, 400))
   }
   
-  # parse JSON
+  if (status >= 400) {
+    stop(
+      "Census API HTTP error ", status,
+      if (!is.null(ctype)) paste0(" (content-type: ", ctype, ")") else "",
+      ". Response starts: ",
+      substr(txt, 1, 400),
+      "\nURL: ", url
+    )
+  }
+  
+  if (grepl("^\\s*<html", txt, ignore.case = TRUE)) {
+    stop(
+      "Census API returned HTML instead of JSON",
+      if (!is.null(ctype)) paste0(" (content-type: ", ctype, ")") else "",
+      ". Response starts: ",
+      substr(txt, 1, 400),
+      "\nURL: ", url
+    )
+  }
+  
   parsed <- tryCatch(
     jsonlite::fromJSON(txt),
-    error = function(e) stop("Invalid JSON from Census API: ", e$message)
+    error = function(e) stop(
+      "Invalid JSON from Census API: ", e$message,
+      "\nResponse starts: ", substr(txt, 1, 400),
+      "\nURL: ", url
+    )
   )
   
-  # sanity check
   if (!(is.matrix(parsed) || is.list(parsed))) {
     stop("Unexpected API response format")
   }
   
-  # turn into a data.frame, using first row as header
   df <- as.data.frame(parsed[-1, , drop = FALSE], stringsAsFactors = FALSE)
   names(df) <- unlist(parsed[1, ])
   df
