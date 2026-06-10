@@ -210,6 +210,8 @@ compute_geoid <- function(df) {
     df$GEOID <- df$state
   } else if ("congressional district" %in% names(df)) {
     df$GEOID <- df[["congressional district"]]
+  } else if ("american indian area/alaska native area/hawaiian home land" %in% names(df)) {
+    df$GEOID <- df[["american indian area/alaska native area/hawaiian home land"]]
   } else {
     stop("Cannot compute GEOID: response lacks GEO_ID/ucgid and no known geographic columns were found.")
   }
