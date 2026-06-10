@@ -199,8 +199,18 @@ compute_geoid <- function(df) {
   } else if ("ucgid" %in% names(df)) {
     df$GEOID <- sub(".*US", "", df$ucgid)
     df$ucgid <- NULL
+  } else if (all(c("state", "county") %in% names(df))) {
+    df$GEOID <- paste0(df$state, df$county)
+  } else if (all(c("state", "place") %in% names(df))) {
+    df$GEOID <- paste0(df$state, df$place)
+  } else if (all(c("state", "county", "county subdivision") %in% names(df))) {
+    df$GEOID <- paste0(df$state, df$county, df[["county subdivision"]])
+  } else if ("state" %in% names(df) && !("county" %in% names(df)) && !("place" %in% names(df))) {
+    df$GEOID <- df$state
+  } else if ("congressional district" %in% names(df)) {
+    df$GEOID <- df[["congressional district"]]
   } else {
-    stop("Cannot compute GEOID")
+    stop("Cannot compute GEOID: response lacks GEO_ID/ucgid and no known geographic columns were found.")
   }
   df
 }
