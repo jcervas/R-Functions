@@ -32,7 +32,12 @@ infer_dataset_from_table <- function(table, acs_year = 5) {
   dataset_map["default"]
 }
 
-construct_group_url <- function(table, geography, geo_filter, state_fips, year, dataset) {
+append_key <- function(url, key = Sys.getenv("CENSUS_API_KEY", "")) {
+  if (is.null(key) || !nzchar(key)) return(url)
+  paste0(url, "&key=", utils::URLencode(key, reserved = TRUE))
+}
+
+construct_group_url <- function(table, geography, geo_filter, state_fips, year, dataset, key = Sys.getenv("CENSUS_API_KEY", "")) {
   # (we'll only use geo_filter/state_fips for county/place/etc.;
   #  for AIANNH, we ignore state_fips entirely)
   
@@ -76,15 +81,16 @@ construct_group_url <- function(table, geography, geo_filter, state_fips, year, 
   }
   
   vars_clause <- paste0("group(", table, ")")
-  paste0(
+  url <- paste0(
     "https://api.census.gov/data/", year, "/", dataset,
     "?get=",     vars_clause,
     geo_clause
   )
+  append_key(url, key)
 }
 
 
-construct_standard_url <- function(variables, geography, state_fips, year, dataset) {
+construct_standard_url <- function(variables, geography, state_fips, year, dataset, key = Sys.getenv("CENSUS_API_KEY", "")) {
   vars_clause <- paste(variables, collapse = ",")
   
   if (grepl("/pums$", dataset)) {
@@ -105,11 +111,12 @@ construct_standard_url <- function(variables, geography, state_fips, year, datas
     )
   }
   
-  paste0(
+  url <- paste0(
     "https://api.census.gov/data/", year, "/", dataset,
     "?get=",     vars_clause,
     geo_clause
   )
+  append_key(url, key)
 }
 
 
@@ -142,21 +149,14 @@ normalize_inputs <- function(table, variables, custom_states, state_fips, datase
 #   df
 # }
 
-set_timeout <- function(timeout = getOption("timeout")) {
-    # temporarily bump R's download timeout
-  old_to <- getOption("timeout")
-  options(timeout = timeout)
-  on.exit(options(timeout = old_to), add = TRUE)
-}
-
-get_acs_data <- function(url, timeout = set_timeout(300)) {
+get_acs_data <- function(url, timeout = 300) {
   # temporarily bump R's download timeout
   old_to <- getOption("timeout")
   options(timeout = timeout)
   on.exit(options(timeout = old_to), add = TRUE)
   
   # open a libcurl connection and read all lines
-  con <- url(url, open = "rb", method = "libcurl")
+  con <- base::url(url, open = "rb", method = "libcurl")
   on.exit(close(con), add = TRUE)
   
   raw <- tryCatch(
@@ -164,10 +164,20 @@ get_acs_data <- function(url, timeout = set_timeout(300)) {
     error = function(e) stop("Download error: ", e$message)
   )
   
+  txt <- paste(raw, collapse = "")
+  
+  if (grepl("key must be included", txt, ignore.case = TRUE)) {
+    stop("Census API key required. Set CENSUS_API_KEY or pass a key argument.")
+  }
+  
+  if (grepl("^\\s*<html", txt, ignore.case = TRUE)) {
+    stop("Census API returned HTML instead of JSON. URL: ", url)
+  }
+  
   # parse JSON
   parsed <- tryCatch(
-    jsonlite::fromJSON(paste(raw, collapse = "")),
-    error = function(e) stop("Invalid JSON: ", e$message)
+    jsonlite::fromJSON(txt),
+    error = function(e) stop("Invalid JSON from Census API: ", e$message)
   )
   
   # sanity check
@@ -202,14 +212,17 @@ make_numeric <- function(df) {
   df
 }
 
-handle_group_logic <- function(use_group, table, variables, geo_filter, geography, state_fips, year, dataset) {
+handle_group_logic <- function(use_group, table, variables, geo_filter, geography, state_fips, year, dataset, key = Sys.getenv("CENSUS_API_KEY", "")) {
   if (!is.null(table) && is.null(variables)) use_group <- TRUE
   if (use_group && is.null(geo_filter)) {
     if (geography == "state") {
       geo_filter <- if (is.null(state_fips)) list("dummy") else list(state_fips)
     } else if (geography == "county") {
-      url <- paste0("https://api.census.gov/data/", year, "/", dataset,
-                    "?get=NAME&for=county:*&in=state:", state_fips)
+      url <- append_key(
+        paste0("https://api.census.gov/data/", year, "/", dataset,
+               "?get=NAME&for=county:*&in=state:", state_fips),
+        key
+      )
       raw <- tryCatch(readLines(url, warn = FALSE), error = function(e) NULL)
       parsed <- tryCatch(jsonlite::fromJSON(raw), error = function(e) NULL)
       if (is.null(parsed) || length(parsed) < 2) stop("Failed to retrieve FIPS codes")
@@ -277,7 +290,8 @@ acsAPI <- function(table = NULL,
                     label = FALSE,
                     var_types = c("E"),
                     use_group = FALSE,
-                    acs_year = 5) {
+                    acs_year = 5,
+                    key = Sys.getenv("CENSUS_API_KEY", "")) {
   if (!requireNamespace("jsonlite", quietly = TRUE)) stop("Please install 'jsonlite'.")
   
   # Validate state_fips for geographies that require it (except "state" which can get all states)
@@ -287,10 +301,10 @@ acsAPI <- function(table = NULL,
   
   norm <- normalize_inputs(table, variables, custom_states, state_fips, dataset, acs_year)
   table <- norm$table; variables <- norm$variables; state_fips <- norm$state_fips; dataset <- norm$dataset
-  gl <- handle_group_logic(use_group, table, variables, geo_filter, geography, state_fips, year, dataset)
+  gl <- handle_group_logic(use_group, table, variables, geo_filter, geography, state_fips, year, dataset, key)
   use_group <- gl$use_group; geo_filter <- gl$geo_filter
   if (use_group) {
-    url <- construct_group_url(table, geography, geo_filter, state_fips, year, dataset)
+    url <- construct_group_url(table, geography, geo_filter, state_fips, year, dataset, key)
     message("Group API URL: ", url)
     df <- get_acs_data(url)
     base_names <- sub("\\.\\d+$", "", names(df))
@@ -307,7 +321,7 @@ acsAPI <- function(table = NULL,
     return(df)
   } else {
     if (is.null(variables)) stop("Must specify variables or set use_group = TRUE.")
-    url <- construct_standard_url(variables, geography, state_fips, year, dataset)
+    url <- construct_standard_url(variables, geography, state_fips, year, dataset, key)
     message("Standard API URL: ", url)
     df <- get_acs_data(url)
     df <- compute_geoid(df)
@@ -331,7 +345,8 @@ get_pums <- function(variables,
                      save_to    = NULL,
                      label      = FALSE,
                      var_types  = NULL,
-                     acs_year   = 5) {
+                     acs_year   = 5,
+                     key        = Sys.getenv("CENSUS_API_KEY", "")) {
   if (is.null(variables) || length(variables) == 0) {
     stop("Must specify at least one variable for PUMS.")
   }
@@ -376,18 +391,19 @@ get_pums <- function(variables,
       geography   = "state",
       state_fips  = state_fips,
       year        = year,
-      dataset     = dataset
+      dataset     = dataset,
+      key         = key
     )
     message(sprintf("PUMS API URL (chunk %d/%d): %s",
                     i, length(chunks), url))
     
     df_chunk <- get_acs_data(url)
     # Coerce both join‐keys to character so merge works perfectly
-    for (key in join_keys) {
-      if (!(key %in% names(df_chunk))) {
-        stop("Join‐key '", key, "' not found in chunk ", i)
+    for (key_name in join_keys) {
+      if (!(key_name %in% names(df_chunk))) {
+        stop("Join‐key '", key_name, "' not found in chunk ", i)
       }
-      df_chunk[[key]] <- as.character(df_chunk[[key]])
+      df_chunk[[key_name]] <- as.character(df_chunk[[key_name]])
     }
     df_list[[i]] <- df_chunk
   }
