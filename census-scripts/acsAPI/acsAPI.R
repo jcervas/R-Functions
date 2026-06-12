@@ -308,7 +308,7 @@ acsAPI <- function(table = NULL,
   if (!requireNamespace("jsonlite", quietly = TRUE)) stop("Please install 'jsonlite'.")
   
   # Validate state_fips for geographies that require it (except "state" which can get all states)
-  if (is.null(state_fips) && !geography %in% c("state", "aian", "cd")) {
+ if (is.null(state_fips) && !geography %in% c("state", "aian", "aiannh", "cd")) {
     stop("state_fips is required for geography '", geography, "'. Please provide a state FIPS code (e.g., '36' for New York).")
   }
   
